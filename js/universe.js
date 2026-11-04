@@ -35,7 +35,7 @@ function makeNoise(seed){
 
 /* ---------- renderer, bloom, scene, camera ---------- */
 const renderer=new THREE.WebGLRenderer({canvas,antialias:true,powerPreference:'high-performance'});
-const PR=Math.min(devicePixelRatio,small?1.5:2);renderer.setPixelRatio(PR);
+const PR=Math.min(devicePixelRatio,1.25);;renderer.setPixelRatio(PR);
 renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.05;
 const scene=new THREE.Scene();scene.background=new THREE.Color(0x010208);
 const camera=new THREE.PerspectiveCamera(42,innerWidth/innerHeight,.05,40000);scene.add(camera);
@@ -60,7 +60,7 @@ const galaxyMat=new THREE.ShaderMaterial({...additive,uniforms:pointUniforms(230
 const dustMat=new THREE.ShaderMaterial({transparent:true,depthWrite:false,blending:THREE.NormalBlending,uniforms:pointUniforms(4200,9),vertexShader:pointVS,
  fragmentShader:`varying vec3 vC;varying float vA;void main(){vec2 c=gl_PointCoord-.5;float a=exp(-dot(c,c)*10.)*vA*.3;if(a<.01)discard;gl_FragColor=vec4(vC,a);}`});
 {
- const N=small?1240000:3620000,ND=small?120000:300000,DB=small?.26:.19; // DB keeps the dense field from over-exposing
+ const N=small?350000:900000,ND=small?30000:80000,DB=small?.26:.19; // DB keeps the dense field from over-exposing
  // typed arrays: millions of stars would be far too slow and memory-hungry as plain arrays
  const pos=new Float32Array(N*3),col=new Float32Array(N*3),siz=new Float32Array(N),dpos=new Float32Array(ND*3),dcol=new Float32Array(ND*3),dsiz=new Float32Array(ND);let nS=0;
  const C=h=>new THREE.Color(h),cCore=C('#ffd89a'),cCream=C('#fff1d6'),cWarm=C('#f3c98f'),cLav=C('#c4cbff'),cBlue=C('#86a2ff'),cPink=C('#ff6aa8'),cRose=C('#ff9ad0'),cIce=C('#dfe8ff'),cTeal=C('#5ff0e0'),cGold=C('#ffc95c'),cViolet=C('#b07cff'),cAqua=C('#7fd4ff'),cCoral=C('#ff8a6b'),c=new THREE.Color();
