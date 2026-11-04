@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Guard Management App – Demo</title>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+--bg:#eef1f5;--sf:#fff;--ink:#16202e;--mut:#5a6577;--ln:#d5dbe4;--brand:#16324f;--brand-ink:#fff;--acc:#f2b01e;--acc-ink:#2a1d00;--ok:#17744a;--okbg:#e2f3ea;--bad:#b3261e;--badbg:#fbe7e5;--warn:#8a5a00;--warnbg:#fff1d0}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1620;--sf:#18222f;--ink:#e8edf3;--mut:#9aa6b6;--ln:#2d3a4a;--brand:#0c2036;--ok:#5fd39b;--okbg:#14382a;--bad:#ff8f86;--badbg:#401d1a;--warn:#f2c460;--warnbg:#3b2d0c}}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 "Segoe UI",system-ui,Roboto,sans-serif}
+.wrap{max-width:760px;margin:0 auto;padding:12px}
+.top{background:var(--brand);color:var(--brand-ink);padding:12px;display:flex;align-items:center;gap:10px;position:sticky;top:env(safe-area-inset-top,0px);z-index:5}
+.mark{background:var(--acc);color:var(--acc-ink);border-radius:8px;width:34px;height:34px;display:grid;place-items:center;font-size:18px}
+.top b{display:block;font-size:15px}.top small{opacity:.8}
+.top .sp{flex:1}
+.tabs{display:flex;gap:6px;overflow-x:auto;padding:10px 12px;background:var(--sf);border-bottom:1px solid var(--ln)}
+.tabs button{flex:none;border:1px solid var(--ln);background:transparent;color:var(--ink);padding:8px 14px;border-radius:20px;font:inherit}
+.tabs button.on{background:var(--brand);color:var(--brand-ink);border-color:var(--brand)}
+.card{background:var(--sf);border:1px solid var(--ln);border-radius:10px;padding:14px;margin-bottom:12px}
+h2{font-size:18px;margin:2px 0 10px}h3{font-size:15px;margin:0 0 8px}
+p.m{color:var(--mut);margin:4px 0 10px}
+.btn{border:0;background:var(--brand);color:var(--brand-ink);padding:11px 16px;border-radius:8px;font:inherit;font-weight:600;cursor:pointer}
+.btn.acc{background:var(--acc);color:var(--acc-ink)}.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--ln)}
+.btn.sm{padding:6px 12px;font-size:13px}.btn:disabled{opacity:.5}
+.big{width:100%;padding:18px;font-size:18px}
+input,select,textarea{width:100%;padding:10px;border:1px solid var(--ln);border-radius:8px;background:var(--bg);color:var(--ink);font:inherit;margin:4px 0 10px}
+label{font-size:13px;color:var(--mut)}
+.pill{display:inline-block;padding:2px 10px;border-radius:12px;font-size:12px;background:var(--warnbg);color:var(--warn)}
+.pill.ok{background:var(--okbg);color:var(--ok)}.pill.bad{background:var(--badbg);color:var(--bad)}
+.row{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:9px 0;border-bottom:1px solid var(--ln)}
+.row:last-child{border-bottom:0}
+.scroll{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:13px;min-width:560px}
+th,td{padding:8px 6px;border-bottom:1px solid var(--ln);text-align:left;white-space:nowrap}
+td.n,th.n{text-align:right}
+.step{color:var(--ok);padding:3px 0}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+.stat{background:var(--sf);border:1px solid var(--ln);border-radius:10px;padding:10px}
+.stat b{font-size:22px;display:block}.stat span{font-size:12px;color:var(--mut)}
+.alert{background:var(--badbg);color:var(--bad);padding:10px 12px;border-radius:8px;margin-bottom:12px}
+.chips button{margin:3px 4px 3px 0}
+#toast{position:fixed;left:12px;right:12px;bottom:calc(14px + env(safe-area-inset-bottom,0px));background:#16202e;color:#fff;padding:12px 14px;border-radius:10px;display:none;z-index:9;max-width:520px;margin:auto}
+.slip td{border:0;padding:4px 0}.slip .t td{border-top:1px solid var(--ln);font-weight:700;padding-top:8px}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div id="toast"></div>
+<script>
+var G=[{n:"Ravi Kumar",site:"Orion Mall, Bengaluru",days:26,rate:650,bal:0,slips:[{m:"Sep 2026",gross:16250,pf:1800,esi:122,ded:0,net:14328,bal:0,days:25}]},
+{n:"Suresh Naik",site:"Orion Mall, Bengaluru",days:24,rate:650,bal:1800,slips:[]},
+{n:"Mohan Raj",site:"Tech Park, Chennai",days:22,rate:700,bal:0,slips:[]},
+{n:"Imran Khan",site:"Green Valley Hospital, Hyderabad",days:27,rate:680,bal:0,slips:[]}];
+var R={guard:{l:"Guard / Supervisor",u:"ravi.k",name:"Ravi Kumar",tabs:[["punch","Punch"],["leave","Leave"],["slips","Payslips"],["req","Items"],["inc","Incident"]]},
+fo:{l:"Field Officer",u:"anil.fo",name:"Anil Shetty",tabs:[["appr","Approvals"],["visit","Site visits"],["train","Training"]]},
+ops:{l:"Operations Manager",u:"meera.ops",name:"Meera Nair",tabs:[["ov","Overview"],["inc","Incidents"],["tr","Training"],["np","Night patrol"]]},
+hr:{l:"Admin / HR",u:"hr.admin",name:"Kavitha R",tabs:[["pay","Attendance & pay"],["bill","Client payments"]]},
+st:{l:"Stores",u:"stores.rec",name:"Prakash S",tabs:[["stock","Stock"],["issue","Issue items"]]},
+trainer:{l:"Trainer",u:"joseph.tr",name:"Trainer Joseph",tabs:[["record","Record training"],["hist","My trainings"]]},
+np:{l:"Night Patrol Officer",u:"dinesh.np",name:"Dinesh P",tabs:[["round","Patrol round"],["rep","My reports"]]}};
+var S={role:null,tab:null,pick:"guard"},inn=false,busy=false,steps=[],plog=[],leaves=[],approved=false,viewSlip=null;
+var reqs=[],visits=[{fo:"Anil Shetty",site:"Orion Mall, Bengaluru",t:"20 Oct, 10:40"},{fo:"Anil Shetty",site:"Tech Park, Chennai",t:"19 Oct, 15:10"},{fo:"Rahul D",site:"Green Valley Hospital, Hyderabad",t:"18 Oct, 11:00"}];
+var trains=[{site:"Orion Mall, Bengaluru",topic:"Fire safety drill",ppl:18,t:"15 Oct",by:"Trainer Joseph"}];
+var incs=[{site:"Tech Park, Chennai",type:"Fire alarm",note:"False alarm, panel reset",by:"Mohan Raj",t:"17 Oct"}];
+var cps={},patrols=[{site:"Orion Mall, Bengaluru",by:"Dinesh P",t:"20 Oct, 23:10",n:4,note:"All clear. Rooftop door was unlocked, secured it."}];
+var stock={Cap:{c:150,q:120},Belt:{c:250,q:80},Shoes:{c:900,q:45},"Uniform set":{c:1800,q:60},Whistle:{c:60,q:200}};
+var CL=[{n:"Orion Mall",amt:182000,due:"10 Oct 2026",od:11,paid:false},{n:"Green Valley Hospital",amt:98000,due:"15 Oct 2026",od:6,paid:false},{n:"Tech Park, Chennai",amt:156000,due:"05 Nov 2026",od:0,paid:false}];
+function $(i){return document.getElementById(i)}
+function rs(n){return "₹"+Number(n).toLocaleString("en-IN")}
+function toast(m){var t=$("toast");t.textContent=m;t.style.display="block";clearTimeout(toast.h);toast.h=setTimeout(function(){t.style.display="none"},3200)}
+function calc(g){var gross=g.days*g.rate,pf=Math.round(Math.min(gross,15000)*.12),esi=gross<=21000?Math.round(gross*.0075):0,ded=Math.min(1000,g.bal);return{gross:gross,pf:pf,esi:esi,ded:ded,net:gross-pf-esi-ded,bal:g.bal-ded,days:g.days}}
+function me(){return G.filter(function(g){return g.n==="Ravi Kumar"})[0]}
+function pill(s){var ok=/Approved|Issued|Received|Done/.test(s),bad=/Rejected|Overdue/.test(s);return '<span class="pill '+(ok?"ok":bad?"bad":"")+'">'+s+'</span>'}
+function now(){return new Date().toLocaleTimeString("en-IN",{hour:"2-digit",minute:"2-digit"})}
+function go(r){S.role=r;S.tab=R[r].tabs[0][0];viewSlip=null;render()}
+function tab(t){S.tab=t;viewSlip=null;render()}
+function login(){var p=R[S.pick];if(!$("pw").value){toast("Enter the password");return}go(S.pick)}
+function pick(r){S.pick=r;render()}
+function out(){S.role=null;render()}
+function render(){var a=$("app");
+if(!S.role){var ch=Object.keys(R).map(function(k){return '<button class="btn sm '+(S.pick===k?"acc":"ghost")+'" onclick="pick(\''+k+'\')">'+R[k].l+'</button>'}).join("");
+a.innerHTML='<div class="top"><div class="mark">🛡</div><div><b>Guard Management App</b><small>Demo with sample data</small></div></div><div class="wrap"><div class="card"><h2>Sign in</h2><p class="m">Each person gets a login from admin and sees only their own area. For this demo, pick a role:</p><div class="chips">'+ch+'</div><label>User ID</label><input value="'+R[S.pick].u+'" readonly><label>Password</label><input id="pw" type="password" value="demo1234"><button class="btn big" onclick="login()">Sign in as '+R[S.pick].l+'</button></div></div>';return}
+var r=R[S.role];
+a.innerHTML='<div class="top"><div class="mark">🛡</div><div><b>'+r.name+'</b><small>'+r.l+'</small></div><div class="sp"></div><button class="btn sm ghost" style="color:#fff;border-color:#ffffff66" onclick="out()">Sign out</button></div><div class="tabs">'+r.tabs.map(function(t){return '<button class="'+(S.tab===t[0]?"on":"")+'" onclick="tab(\''+t[0]+'\')">'+t[1]+'</button>'}).join("")+'</div><div class="wrap">'+(V[S.role+"_"+S.tab]?V[S.role+"_"+S.tab]():"")+'</div>'}
+var V={};
+V.guard_punch=function(){return '<div class="card"><h2>'+(inn?"You are on duty":"Ready to punch in")+'</h2><p class="m">Orion Mall, Bengaluru · Day shift</p><button class="btn acc big" '+(busy?"disabled":"")+' onclick="punch()">'+(busy?"Verifying…":inn?"Punch out":"Punch in")+'</button><div style="margin-top:10px">'+steps.map(function(s){return '<div class="step">✓ '+s+'</div>'}).join("")+'</div></div><div class="card"><h3>Today</h3>'+(plog.length?plog.map(function(l){return '<div class="row"><span>'+l+'</span></div>'}).join(""):'<p class="m">No punches yet.</p>')+'</div>'};
+function punch(){if(busy)return;busy=true;steps=[];render();["Selfie captured","Face matched (97%)","Location inside site boundary (42 m)"].forEach(function(m,i){setTimeout(function(){steps.push(m);if(i===2){inn=!inn;plog.unshift((inn?"Punch in":"Punch out")+" at "+now());busy=false}render()},700*(i+1))})}
+V.guard_leave=function(){return '<div class="card"><h2>Apply for leave</h2><label>From</label><input id="lf" type="date"><label>To</label><input id="lt" type="date"><label>Reason</label><input id="lr" placeholder="Reason"><button class="btn" onclick="addLeave()">Send for approval</button></div><div class="card"><h3>My requests</h3>'+(leaves.length?leaves.map(function(l){return '<div class="row"><span>'+l+'</span>'+pill("Pending approval")+'</div>'}).join(""):'<p class="m">No leave requests.</p>')+'</div>'};
+function addLeave(){if(!$("lf").value||!$("lt").value){toast("Choose both dates");return}leaves.unshift($("lf").value+" to "+$("lt").value+" · "+($("lr").value||"Personal"));render();toast("Leave sent to your field officer")}
+V.guard_slips=function(){var g=me();if(viewSlip!==null){return slip(g,g.slips[viewSlip])}return '<div class="card"><h2>My payslips</h2><p class="m">All months you have worked stay here. Download any time.</p>'+g.slips.map(function(s,i){return '<div class="row"><b>'+s.m+'</b><span>'+rs(s.net)+'</span><button class="btn sm" onclick="viewSlip='+i+';render()">View</button></div>'}).join("")+'</div>'};
+function slip(g,s){return '<div class="card"><h2>Payslip · '+s.m+'</h2><p class="m">'+g.n+' · '+g.site+'</p><table class="slip" style="min-width:0"><tr><td>Duties ('+s.days+' × '+rs(g.rate)+')</td><td class="n">'+rs(s.gross)+'</td></tr><tr><td>PF (12%)</td><td class="n">− '+rs(s.pf)+'</td></tr><tr><td>ESI (0.75%)</td><td class="n">− '+rs(s.esi)+'</td></tr><tr><td>Uniform / items instalment</td><td class="n">− '+rs(s.ded)+'</td></tr><tr class="t"><td>Net pay</td><td class="n">'+rs(s.net)+'</td></tr></table><p class="m">Item balance remaining: '+rs(s.bal)+'</p><button class="btn" onclick="toast(\'The real app saves a PDF here\')">Download PDF</button> <button class="btn ghost" onclick="viewSlip=null;render()">Back</button></div>'}
+V.guard_req=function(){var opts=Object.keys(stock).map(function(k){return '<option>'+k+' ('+rs(stock[k].c)+')</option>'}).join("");var mine=reqs.filter(function(r){return r.g==="Ravi Kumar"});return '<div class="card"><h2>Request an item</h2><p class="m">Approved by your field officer. Cost is deducted from salary, in instalments of ₹1,000 if above ₹1,000.</p><select id="ri">'+opts+'</select><button class="btn" onclick="addReq()">Send request</button></div><div class="card"><h3>My requests</h3>'+(mine.length?mine.map(function(r){return '<div class="row"><span>'+r.i+' · '+rs(r.c)+'</span>'+pill(r.s)+'</div>'}).join(""):'<p class="m">No requests yet.</p>')+'</div>'};
+function addReq(){var k=$("ri").value.replace(/ \(.*/,"");reqs.push({g:"Ravi Kumar",i:k,c:stock[k].c,s:"Pending approval"});render();toast("Request sent to field officer")}
+V.guard_inc=function(){return '<div class="card"><h2>Report an incident</h2><p class="m">For supervisors and security officers.</p><label>Type</label><select id="it"><option>Fire alarm</option><option>Theft</option><option>Trespass</option><option>Medical</option><option>Other</option></select><label>What happened</label><textarea id="in" rows="3"></textarea><button class="btn" onclick="addInc()">Submit incident</button></div>'};
+function addInc(){incs.unshift({site:"Orion Mall, Bengaluru",type:$("it").value,note:$("in").value||"No details",by:"Ravi Kumar",t:"21 Oct"});toast("Incident logged. Operations manager can see it.");render()}
+V.fo_appr=function(){var p=reqs.filter(function(r){return r.s==="Pending approval"});return '<div class="card"><h2>Item requests to approve</h2>'+(p.length?p.map(function(r){var i=reqs.indexOf(r);return '<div class="row"><span>'+r.g+' · '+r.i+' · '+rs(r.c)+'</span><span><button class="btn sm" onclick="setReq('+i+',\'Approved\')">Approve</button> <button class="btn sm ghost" onclick="setReq('+i+',\'Rejected\')">Reject</button></span></div>'}).join(""):'<p class="m">Nothing waiting. Ask the guard login to send a request.</p>')+'</div>'};
+function setReq(i,s){reqs[i].s=s;render();toast(s==="Approved"?"Approved. Stores can now issue it.":"Rejected")}
+V.fo_visit=function(){var m=visits.filter(function(v){return v.fo==="Anil Shetty"});return '<div class="card"><h2>Site visits</h2><label>Site</label><select id="vs"><option>Orion Mall, Bengaluru</option><option>Tech Park, Chennai</option><option>Green Valley Hospital, Hyderabad</option></select><button class="btn acc" onclick="addVisit()">Log visit with my location</button></div><div class="card"><h3>This month: '+m.length+' visits</h3>'+m.map(function(v){return '<div class="row"><span>'+v.site+'</span><span class="m">'+v.t+'</span></div>'}).join("")+'<button class="btn sm ghost" style="margin-top:8px" onclick="toast(\'Excel report would download\')">Export to Excel</button></div>'};
+function addVisit(){visits.unshift({fo:"Anil Shetty",site:$("vs").value,t:"21 Oct, "+now()});render();toast("Visit logged with GPS location")}
+V.fo_train=function(){return '<div class="card"><h2>Record a training</h2><label>Site</label><select id="ts"><option>Orion Mall, Bengaluru</option><option>Tech Park, Chennai</option><option>Green Valley Hospital, Hyderabad</option></select><label>Topics covered</label><input id="tt"><label>Guards who attended</label><input id="tp" type="number" value="10"><button class="btn" onclick="addTrain()">Save training</button></div>'};
+function addTrain(){trains.unshift({site:$("ts").value,topic:$("tt").value||"General",ppl:$("tp").value,t:"21 Oct",by:R[S.role].name});render();toast("Training saved. It shows under the site.")}
+V.ops_ov=function(){var fos={};visits.forEach(function(v){fos[v.fo]=(fos[v.fo]||0)+1});return '<div class="stats"><div class="stat"><b>'+visits.length+'</b><span>Site visits</span></div><div class="stat"><b>'+trains.length+'</b><span>Trainings</span></div><div class="stat"><b>'+incs.length+'</b><span>Incidents</span></div></div><div class="card"><h3>Field officer activity</h3>'+Object.keys(fos).map(function(k){return '<div class="row"><span>'+k+'</span><b>'+fos[k]+' visits</b></div>'}).join("")+'<button class="btn sm ghost" style="margin-top:8px" onclick="toast(\'Excel report would download\')">Export to Excel</button></div>'};
+V.ops_inc=function(){return '<div class="card"><h2>Incidents by site</h2>'+incs.map(function(i){return '<div class="row"><span><b>'+i.type+'</b> · '+i.site+'<br><span class="m">'+i.note+' · '+i.by+'</span></span><span class="m">'+i.t+'</span></div>'}).join("")+'<button class="btn sm ghost" style="margin-top:8px" onclick="toast(\'Excel report would download\')">Export monthly report</button></div>'};
+V.ops_tr=function(){return '<div class="card"><h2>Trainings by site</h2>'+trains.map(function(t){return '<div class="row"><span><b>'+t.site+'</b><br><span class="m">'+t.topic+' · '+t.ppl+' guards · '+t.by+'</span></span><span class="m">'+t.t+'</span></div>'}).join("")+'</div>'};
+V.hr_pay=function(){var rows=G.map(function(g){var c=calc(g);return '<tr><td>'+g.n+'</td><td>'+g.site+'</td><td class="n">'+g.days+'</td><td class="n">'+rs(c.gross)+'</td><td class="n">'+rs(c.pf)+'</td><td class="n">'+rs(c.esi)+'</td><td class="n">'+rs(c.ded)+'</td><td class="n"><b>'+rs(c.net)+'</b></td></tr>'}).join("");return '<div class="card"><h2>October 2026 · Attendance & pay</h2><p class="m">Duties × site rate, minus PF, ESI and item instalments. Rates here are sample values; the real app uses a settings table.</p><div class="scroll"><table><tr><th>Guard</th><th>Site</th><th class="n">Duties</th><th class="n">Gross</th><th class="n">PF</th><th class="n">ESI</th><th class="n">Items</th><th class="n">Net</th></tr>'+rows+'</table></div><div style="margin-top:12px">'+(approved?pill("Approved")+' <span class="m">Payslips created and WhatsApp sent (simulated).</span>':'<button class="btn acc" onclick="approve()">Approve attendance</button>')+' <button class="btn sm ghost" onclick="toast(\'Excel report would download\')">Export to Excel</button></div></div>'};
+function approve(){G.forEach(function(g){var c=calc(g);g.bal=c.bal;g.slips.unshift({m:"Oct 2026",gross:c.gross,pf:c.pf,esi:c.esi,ded:c.ded,net:c.net,bal:c.bal,days:c.days})});approved=true;render();toast("Approved. Payslips generated and sent on WhatsApp (simulated).")}
+V.hr_bill=function(){var od=CL.filter(function(c){return !c.paid&&c.od>0});return (od.length?'<div class="alert"><b>'+od.length+' payments overdue.</b> '+od.map(function(c){return c.n+" ("+c.od+" days)"}).join(", ")+'</div>':'')+'<div class="card"><h2>Client bills</h2>'+CL.map(function(c,i){return '<div class="row"><span><b>'+c.n+'</b><br><span class="m">'+rs(c.amt)+' · due '+c.due+'</span></span><span>'+(c.paid?pill("Received"):(c.od?pill("Overdue "+c.od+"d"):pill("Pending"))+' <button class="btn sm" onclick="paid('+i+')">Mark received</button>')+'</span></div>'}).join("")+'</div>'};
+function paid(i){CL[i].paid=true;render();toast("Payment recorded")}
+V.st_stock=function(){return '<div class="card"><h2>Stock in hand</h2>'+Object.keys(stock).map(function(k){return '<div class="row"><span>'+k+'<br><span class="m">'+rs(stock[k].c)+' each</span></span><b>'+stock[k].q+'</b></div>'}).join("")+'</div>'};
+V.st_issue=function(){var p=reqs.filter(function(r){return r.s==="Approved"});return '<div class="card"><h2>Approved, ready to issue</h2>'+(p.length?p.map(function(r){var i=reqs.indexOf(r);return '<div class="row"><span>'+r.g+' · '+r.i+' · '+rs(r.c)+'</span><button class="btn sm" onclick="issue('+i+')">Issue</button></div>'}).join(""):'<p class="m">Nothing waiting. A guard requests, a field officer approves, then it appears here.</p>')+'</div>'};
+function issue(i){var r=reqs[i];r.s="Issued";stock[r.i].q--;G.forEach(function(g){if(g.n===r.g)g.bal+=r.c});render();toast("Issued. Cost added to salary deductions.")}
+V.trainer_record=function(){return V.fo_train()};
+V.trainer_hist=function(){var m=trains.filter(function(t){return t.by===R.trainer.name});return '<div class="card"><h2>My trainings</h2>'+(m.length?m.map(function(t){return '<div class="row"><span><b>'+t.site+'</b><br><span class="m">'+t.topic+' · '+t.ppl+' guards attended</span></span><span class="m">'+t.t+'</span></div>'}).join(''):'<p class="m">No trainings recorded yet.</p>')+'<button class="btn sm ghost" style="margin-top:8px" onclick="toast(\'Excel report would download\')">Export to Excel</button></div>'};
+var CP=["Main gate","Parking level 1","Loading dock","Rooftop access"];
+V.np_round=function(){return '<div class="card"><h2>Night patrol round</h2><p class="m">Orion Mall, Bengaluru. Scan each checkpoint as you reach it. Time and location are recorded.</p>'+CP.map(function(c,i){return '<div class="row"><span>'+c+'</span>'+(cps[i]?'<span class="pill ok">✓ '+cps[i]+'</span>':'<button class="btn sm acc" onclick="scan('+i+')">Scan</button>')+'</div>'}).join('')+'<label style="display:block;margin-top:10px">Observations</label><textarea id="pn" rows="3" placeholder="Anything unusual?"></textarea><button class="btn" onclick="sendPatrol()">Submit patrol report</button></div>'};
+function scan(i){cps[i]=now();render();toast("Checkpoint recorded with GPS location")}
+function sendPatrol(){var n=Object.keys(cps).length;if(!n){toast("Scan at least one checkpoint first");return}patrols.unshift({site:"Orion Mall, Bengaluru",by:"Dinesh P",t:"21 Oct, "+now(),n:n,note:$("pn").value||"All clear"});cps={};render();toast("Report submitted. Operations manager can see it.")}
+V.np_rep=function(){var m=patrols.filter(function(p){return p.by==="Dinesh P"});return '<div class="card"><h2>My patrol reports</h2>'+m.map(function(p){return '<div class="row"><span><b>'+p.n+' of 4 checkpoints</b><br><span class="m">'+p.note+'</span></span><span class="m">'+p.t+'</span></div>'}).join('')+'</div>'};
+V.ops_np=function(){return '<div class="card"><h2>Night patrol reports</h2>'+patrols.map(function(p){return '<div class="row"><span><b>'+p.site+'</b> · '+p.by+'<br><span class="m">'+p.n+' of 4 checkpoints · '+p.note+'</span></span><span class="m">'+p.t+'</span></div>'}).join('')+'<button class="btn sm ghost" style="margin-top:8px" onclick="toast(\'Excel report would download\')">Export to Excel</button></div>'};
+render();
+</script>
+</body>
+</html>

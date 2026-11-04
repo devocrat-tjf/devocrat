@@ -1,0 +1,110 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Lumière Salon</title>
+<style>
+:root{--bg:#faf6f1;--card:#fff;--tx:#2a2230;--mu:#7a6f80;--ac:#b8487a;--ac2:#f3dbe7;--bd:#e8dfe4;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#17131a;--card:#231d27;--tx:#f1eaf3;--mu:#a99eb0;--ac:#e0709f;--ac2:#3a2634;--bd:#352c3b}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.45 system-ui,sans-serif}
+h1,h2,h3{font-family:Georgia,serif;margin:.2em 0}.w{max-width:760px;margin:auto;padding:14px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:14px;margin:10px 0}
+button,input,select{font:inherit;color:var(--tx)}input,select{background:var(--bg);border:1px solid var(--bd);border-radius:8px;padding:8px;width:100%;margin:4px 0}
+button{background:var(--ac);color:#fff;border:0;border-radius:8px;padding:9px 14px;cursor:pointer}button.g{background:var(--ac2);color:var(--tx)}button.s{padding:5px 9px;font-size:13px}
+.nav{display:flex;gap:6px;overflow-x:auto;padding:8px 0;position:sticky;top:env(safe-area-inset-top,0px);background:var(--bg);z-index:5}.nav button{white-space:nowrap;background:var(--ac2);color:var(--tx)}.nav button.on{background:var(--ac);color:#fff}
+.row{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--bd)}.row:last-child{border:0}
+.sl{display:flex;flex-wrap:wrap;gap:6px}.sl button{background:var(--ac2);color:var(--tx)}.sl button.on{background:var(--ac);color:#fff}.sl button:disabled{opacity:.35}
+.mu{color:var(--mu);font-size:13px}.tag{background:var(--ac2);border-radius:20px;padding:2px 9px;font-size:12px}.hd{display:flex;justify-content:space-between;align-items:center}
+.sw{width:30px;height:30px;border-radius:50%;border:3px solid transparent;padding:0}.sw.on{border-color:var(--tx)}
+.try{position:relative;width:240px;height:280px;margin:auto;border-radius:16px;overflow:hidden;background:#ccc}.try img{width:100%;height:100%;object-fit:cover}.try svg{position:absolute;inset:0}
+td,th{padding:5px;text-align:left;border-bottom:1px solid var(--bd)}table{width:100%;border-collapse:collapse}
+.dd{display:none;position:absolute;right:0;top:44px;width:260px;z-index:20;box-shadow:0 8px 24px #0004}.dd.open{display:block}.hero{text-align:center;padding:36px 14px;border-radius:18px;background:linear-gradient(135deg,var(--ac2),var(--card));border:1px solid var(--bd)}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.grid .card{margin:0;text-align:center}.grid svg{width:100%;height:auto;border-radius:10px;background:var(--ac2)}.av{width:64px;height:64px;border-radius:50%;background:var(--ac2);display:grid;place-items:center;font-size:30px;margin:0 auto 6px}</style></head><body><div class="w" id="app"></div>
+<script>
+const $=id=>document.getElementById(id);
+let S={svc:[{id:1,c:'Hair Cut',n:'Advanced Hair Cut',p:600},{id:2,c:'Hair Cut',n:'Beard Trimming',p:200},{id:3,c:'Hair Cut',n:'Hairstyle & Blow-dry',p:450},
+{id:4,c:'Hair Treatment',n:'Keratin Treatment',p:3500},{id:5,c:'Hair Treatment',n:'Hair Spa',p:1200},{id:6,c:'Hair Colour',n:'Global Colour',p:2800},{id:7,c:'Hair Colour',n:'Highlights',p:3200},
+{id:8,c:'Bridal',n:'Bride Hairstyle',p:6000},{id:9,c:'Bridal',n:'Groom Styling',p:2500},{id:10,c:'Packages',n:'Pamper Package (cut+spa+style)',p:1999}],
+pk:[{n:'Silver',p:999,d:'10% off all services, 1 free hair spa/month'},{n:'Gold',p:1999,d:'20% off, 2 free spas, priority slots'},{n:'Platinum',p:3999,d:'30% off, free beard trim, 1 colour/quarter'}],
+bk:[],lv:[],hol:[{d:'2026-11-08',n:'Diwali'},{d:'2026-12-25',n:'Christmas'}],
+users:{demo:{pw:'demo',r:'c',name:'Demo Customer'},staff1:{pw:'123',r:'s',name:'Priya (Stylist)'},admin:{pw:'admin',r:'a',name:'Owner'}},
+punch:{},nid:20};
+let U=null,tab='',sel={},date='',slot='',lastBk=null,photo='',style=0,col='#6b3a1e';
+const styles=['Layered Bob','Long Waves','Pompadour','Bridal Updo'],cols=['#1c1c1c','#6b3a1e','#b5651d','#c9a227','#8e2a5c','#2f5fa8'];
+const rs=n=>'₹'+n.toLocaleString('en-IN'),slots=['10:00','11:00','12:00','13:00','15:00','16:00','17:00','18:00'];
+const tabs={c:['Book','Try-On','Membership','Updates','Contact'],s:['Today','Leave','Payslip','Work'],a:['Bookings','Leaves','Services','Staff','Packages']};
+function login(role){const u=$('u').value.trim().toLowerCase(),p=$('p').value;let a=S.users[u];
+ if(!a&&u&&p){a=S.users[u]={pw:p,r:'c',name:u};}
+ if(!a||a.pw!==p){$('er').textContent='Wrong username or password';return}
+ U={id:u,...a};tab=tabs[a.r][0];draw()}
+function fill(u,p){$('u').value=u;$('p').value=p}
+function draw(){const a=$('app');if(!U){a.innerHTML=site();return}if(0){a.innerHTML=`<div>
+<div class="card"><h3>Sign in</h3><p class="mu">One login for customers, staff and admin. New customers can just type a new username and password to register.</p>
+<input id="u" placeholder="Username"><input id="p" type="password" placeholder="Password"><div id="er" style="color:#d33"></div><button onclick="login()" style="width:100%">Login</button>
+<p class="mu">Demo logins (tap to fill):</p><div class="sl"><button class="g s" onclick="fill('demo','demo')">Customer</button><button class="g s" onclick="fill('staff1','123')">Staff</button><button class="g s" onclick="fill('admin','admin')">Admin</button></div></div>`;return}
+ const t=tabs[U.r];a.innerHTML=`<div class="hd"><div><h2>✂️ Lumière</h2><span class="mu">${U.name} · ${{c:'Customer',s:'Staff',a:'Admin'}[U.r]}</span></div><button class="g s" onclick="U=null;draw()">Logout</button></div>
+<div class="nav">${t.map(x=>`<button class="${x==tab?'on':''}" onclick="tab='${x}';draw()">${x}</button>`).join('')}</div><div id="v"></div>`;
+ $('v').innerHTML=V[U.r+'_'+tab]()}
+const tot=()=>S.svc.filter(s=>sel[s.id]).reduce((a,s)=>a+s.p,0);
+function pick(id){sel[id]=!sel[id];keep()}function keep(){const y=scrollY;draw();scrollTo(0,y)}
+function setSlot(s){slot=s;keep()}
+function checkout(){const it=S.svc.filter(s=>sel[s.id]);if(!it.length||!date||!slot)return alert('Select services, a date and a time slot');
+ lastBk={id:S.nid++,cust:U.name,cid:U.id,date,slot,items:it.map(s=>s.n),total:tot(),st:'Pending',staff:'staff1'};S.bk.push(lastBk);sel={};slot='';tab='Book';draw()}
+function gcal(b){const d=b.date.replace(/-/g,''),h=b.slot.replace(':',''),e=String(+b.slot.slice(0,2)+1).padStart(2,'0')+b.slot.slice(3);
+ return'https://calendar.google.com/calendar/render?action=TEMPLATE&text='+encodeURIComponent('Salon: '+b.items.join(', '))+'&dates='+d+'T'+h+'00/'+d+'T'+e.replace(':','')+'00&details='+encodeURIComponent('Lumière Salon booking. Total '+rs(b.total))+'&location='+encodeURIComponent('Lumière Salon')}
+function hair(){const c=col,p=[
+`<path d="M40 150 Q30 40 120 35 Q210 40 200 150 L185 110 Q120 70 55 110Z" fill="${c}"/><path d="M40 150 Q35 190 55 205 L60 130Z M200 150 Q205 190 185 205 L180 130Z" fill="${c}"/>`,
+`<path d="M38 140 Q30 40 120 32 Q210 40 202 140 L200 270 L170 230 L180 110 Q120 65 62 110 L70 230 L40 270Z" fill="${c}"/>`,
+`<path d="M45 110 Q40 20 120 14 Q205 20 195 110 Q190 70 120 62 Q50 70 45 110Z" fill="${c}"/><ellipse cx="120" cy="26" rx="62" ry="20" fill="${c}"/>`,
+`<path d="M48 120 Q40 40 120 34 Q200 40 192 120 Q120 75 48 120Z" fill="${c}"/><circle cx="120" cy="22" r="26" fill="${c}"/><circle cx="148" cy="30" r="5" fill="#fff" opacity=".8"/>`];
+ return`<svg viewBox="0 0 240 280">${p[style]}</svg>`}
+function pic(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{photo=r.result;keep()};r.readAsDataURL(f)}
+const V={
+c_Book(){const cats=[...new Set(S.svc.filter(s=>s.on!==false).map(s=>s.c))];const mn=new Date().toISOString().slice(0,10);
+ const taken=S.bk.filter(b=>b.date==date&&b.st!='Rejected').map(b=>b.slot);
+ let h=lastBk?`<div class="card" style="border-color:var(--ac)"><h3>✅ Booked for ${lastBk.date} at ${lastBk.slot}</h3><p class="mu">${lastBk.items.join(', ')} · ${rs(lastBk.total)} · awaiting salon approval</p><a href="${gcal(lastBk)}" target="_blank" rel="noopener"><button>📅 Add to Google Calendar</button></a></div>`:'';
+ h+=cats.map(c=>`<div class="card"><h3>${c}</h3>${S.svc.filter(s=>s.c==c&&s.on!==false).map(s=>`<label class="row"><span><input type="checkbox" style="width:auto" ${sel[s.id]?'checked':''} onchange="pick(${s.id})"> ${s.n}</span><b>${rs(s.p)}</b></label>`).join('')}</div>`).join('');
+ h+=`<div class="card"><h3>Pick date &amp; time</h3><input type="date" min="${mn}" value="${date}" onchange="date=this.value;keep()"><div class="sl">${slots.map(s=>`<button class="${slot==s?'on':''}" ${taken.includes(s)?'disabled':''} onclick="setSlot('${s}')">${s}</button>`).join('')}</div>
+ <div class="hd" style="margin-top:12px"><h3>Total ${rs(tot())}</h3><button onclick="checkout()">Checkout</button></div></div>`;
+ const mine=S.bk.filter(b=>b.cid==U.id);if(mine.length)h+=`<div class="card"><h3>My bookings</h3>${mine.map(b=>`<div class="row"><span>${b.date} ${b.slot}<br><span class="mu">${b.items.join(', ')}</span></span><span class="tag">${b.st}</span></div>`).join('')}</div>`;return h},
+c_TryOn(){return`<div class="card"><h3>Hairstyle Try-On</h3><p class="mu">Upload your photo, then pick a style and colour. (Prototype overlay — the production version would call a real AI face try-on API, about ₹2–10 per image.)</p><input type="file" accept="image/*" onchange="pic(event)">
+<div class="try">${photo?`<img src="${photo}">`:'<div style="padding:110px 20px;text-align:center;color:#555">Upload a photo</div>'}${hair()}</div>
+<div class="sl" style="margin:10px 0">${styles.map((s,i)=>`<button class="${style==i?'on':''}" onclick="style=${i};keep()">${s}</button>`).join('')}</div>
+<p class="mu">Colour palette</p><div class="sl">${cols.map(c=>`<button class="sw ${c==col?'on':''}" style="background:${c}" onclick="col='${c}';keep()"></button>`).join('')}</div></div>`},
+c_Membership(){return S.pk.map(p=>`<div class="card"><div class="hd"><h3>${p.n}</h3><b>${rs(p.p)}/mo</b></div><p class="mu">${p.d}</p><button onclick="alert('Membership request sent to salon (demo)')">Join ${p.n}</button></div>`).join('')},
+c_Updates(){return`<div class="card"><h3>📰 News</h3><p>New keratin range arrives this month.</p></div><div class="card"><h3>🎁 Offers</h3><p>Diwali special: 20% off Hair Colour. Bridal booking: free trial look.</p></div>
+<div class="card"><h3>😄 Quote of the day</h3><p><i>“A bad hair day is just a good hair day waiting for an appointment.”</i></p></div>
+<div class="card"><h3>🔥 New hairstyles</h3><div class="sl">${styles.map(s=>`<span class="tag">${s}</span>`).join('')}</div></div>
+<div class="card"><h3>🎬 Before &amp; After</h3><div style="display:flex;gap:8px"><div style="flex:1;height:110px;background:#999;border-radius:10px;display:grid;place-items:center;color:#fff">Before</div><div style="flex:1;height:110px;background:var(--ac);border-radius:10px;display:grid;place-items:center;color:#fff">After ▶</div></div><p class="mu">Short clips will play here.</p></div>
+<div class="card"><h3>⭐ Customer feedback</h3><p>“Best bridal look ever!” – Meena ★★★★★</p><input id="fb" placeholder="Write your feedback"><button onclick="alert('Thanks for your feedback!');$('fb').value=''">Send</button></div>`},
+c_Contact(){return`<div class="card"><h3>Contact us</h3><p>📍 12 Main Road, Your City<br>📞 +91 98765 43210<br>✉️ hello@lumieresalon.in<br>🕘 Mon–Sun, 10am–8pm</p><div style="height:120px;border-radius:10px;background:var(--ac2);display:grid;place-items:center">Google Map goes here</div></div>`},
+s_Today(){const k=new Date().toISOString().slice(0,10),pu=S.punch[U.id+k]||{};const mine=S.bk.filter(b=>b.staff==U.id&&b.st=='Approved');
+ return`<div class="card"><h3>Attendance</h3><p class="mu">In: ${pu.i||'—'} · Out: ${pu.o||'—'}</p><button ${pu.i?'disabled':''} onclick="pn('i')">Punch In</button> <button class="g" ${!pu.i||pu.o?'disabled':''} onclick="pn('o')">Punch Out</button></div>
+ <div class="card"><h3>Clients</h3><table><tr><td>Today</td><td>${mine.filter(b=>b.date==k).length}</td></tr><tr><td>This week</td><td>${mine.length+6}</td></tr><tr><td>This month</td><td>${mine.length+24}</td></tr></table></div>
+ <div class="card"><h3>My appointments</h3>${mine.map(b=>`<div class="row"><span>${b.date} ${b.slot} · ${b.cust}</span><span class="mu">${b.items.join(', ')}</span></div>`).join('')||'<p class="mu">None approved yet</p>'}</div>`},
+s_Leave(){return`<div class="card"><h3>Apply leave</h3><input type="date" id="ld"><input id="lr" placeholder="Reason"><button onclick="S.lv.push({id:S.nid++,who:U.id,d:$('ld').value,r:$('lr').value,st:'Pending'});alert('Sent to admin');draw()">Apply</button></div>
+<div class="card"><h3>My leaves</h3>${S.lv.filter(l=>l.who==U.id).map(l=>`<div class="row"><span>${l.d} · ${l.r}</span><span class="tag">${l.st}</span></div>`).join('')||'<p class="mu">None</p>'}</div>
+<div class="card"><h3>Holidays</h3>${S.hol.map(h=>`<div class="row"><span>${h.n}</span><span>${h.d}</span></div>`).join('')}</div>`},
+s_Payslip(){return`<div class="card"><h3>Payslip – October 2026</h3><table><tr><td>Basic</td><td>₹22,000</td></tr><tr><td>Incentives</td><td>₹3,400</td></tr><tr><td>Deductions</td><td>−₹1,200</td></tr><tr><th>Net pay</th><th>₹24,200</th></tr></table></div>`},
+s_Work(){return`<div class="card"><h3>Duty roster</h3><table><tr><td>Mon–Fri</td><td>10:00–19:00</td></tr><tr><td>Sat</td><td>10:00–20:00</td></tr><tr><td>Sun</td><td>Off</td></tr></table></div>`},
+a_Bookings(){return`<div class="card"><h3>Slot requests</h3>${S.bk.map(b=>`<div class="row"><span>${b.date} ${b.slot} · ${b.cust}<br><span class="mu">${b.items.join(', ')} · ${rs(b.total)}</span></span><span>${b.st=='Pending'?`<button class="s" onclick="bs(${b.id},'Approved')">✔</button> <button class="s g" onclick="bs(${b.id},'Rejected')">✖</button>`:`<span class="tag">${b.st}</span>`}</span></div>`).join('')||'<p class="mu">No bookings yet. Book as a customer first.</p>'}</div>`},
+a_Leaves(){return`<div class="card"><h3>Leave requests</h3>${S.lv.map(l=>`<div class="row"><span>${S.users[l.who].name} · ${l.d}<br><span class="mu">${l.r}</span></span>${l.st=='Pending'?`<span><button class="s" onclick="ls(${l.id},'Approved')">✔</button> <button class="s g" onclick="ls(${l.id},'Rejected')">✖</button></span>`:`<span class="tag">${l.st}</span>`}</div>`).join('')||'<p class="mu">None</p>'}</div>
+<div class="card"><h3>Holidays</h3>${S.hol.map(h=>`<div class="row"><span>${h.n}</span><span>${h.d}</span></div>`).join('')}<input type="date" id="hd"><input id="hn" placeholder="Holiday name"><button onclick="S.hol.push({d:$('hd').value,n:$('hn').value});draw()">Add holiday</button></div>`},
+a_Services(){return`<div class="card"><h3>Services &amp; prices</h3><p class="mu">Changes show instantly in the customer portal.</p>${S.svc.map(s=>`<div class="row"><span>${s.n}</span><span><input style="width:90px" type="number" value="${s.p}" onchange="S.svc.find(x=>x.id==${s.id}).p=+this.value"> <button class="s g" onclick="S.svc.find(x=>x.id==${s.id}).on=${s.on===false};draw()">${s.on===false?'Show':'Hide'}</button></span></div>`).join('')}</div>
+<div class="card"><h3>Add service</h3><input id="nc" placeholder="Category"><input id="nn" placeholder="Name"><input id="np" type="number" placeholder="Price"><button onclick="S.svc.push({id:S.nid++,c:$('nc').value,n:$('nn').value,p:+$('np').value});draw()">Add</button></div>`},
+a_Staff(){return`<div class="card"><h3>Create staff ID</h3><input id="sn" placeholder="Name"><input id="si" placeholder="Staff ID"><input id="sp" placeholder="Password"><button onclick="S.users[$('si').value.toLowerCase()]={pw:$('sp').value,r:'s',name:$('sn').value};draw()">Create</button></div>
+<div class="card"><h3>Staff</h3>${Object.entries(S.users).filter(([k,v])=>v.r=='s').map(([k,v])=>`<div class="row"><span>${v.name}</span><span class="mu">${k}</span></div>`).join('')}</div>`},
+a_Packages(){return S.pk.map((p,i)=>`<div class="card"><h3>${p.n}</h3><input type="number" value="${p.p}" onchange="S.pk[${i}].p=+this.value"><input value="${p.d}" onchange="S.pk[${i}].d=this.value"></div>`).join('')}};
+function pn(t){const k=new Date().toISOString().slice(0,10),id=U.id+k;S.punch[id]=S.punch[id]||{};S.punch[id][t]=new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});draw()}
+function bs(id,s){S.bk.find(b=>b.id==id).st=s;draw()}function ls(id,s){S.lv.find(b=>b.id==id).st=s;draw()}
+let pg='Home';const PGS=['Home','Services','Styles','Team','Contact'];
+function hs(i,c){const H=[`<path d="M40 150 Q30 40 120 35 Q210 40 200 150 L185 110 Q120 70 55 110Z M40 150 Q35 190 55 205 L60 130Z M200 150 Q205 190 185 205 L180 130Z"/>`,`<path d="M38 140 Q30 40 120 32 Q210 40 202 140 L200 270 L170 230 L180 110 Q120 65 62 110 L70 230 L40 270Z"/>`,`<path d="M45 110 Q40 20 120 14 Q205 20 195 110 Q190 70 120 62 Q50 70 45 110Z"/><ellipse cx="120" cy="26" rx="62" ry="20"/>`,`<path d="M48 120 Q40 40 120 34 Q200 40 192 120 Q120 75 48 120Z"/><circle cx="120" cy="22" r="26"/>`,`<path d="M52 105 Q50 45 120 40 Q190 45 188 105 Q150 60 80 85Z"/>`,`<path d="M55 100 Q55 50 120 48 Q185 50 185 100 Q120 70 55 100Z"/>`,`<path d="M58 150 Q60 120 70 118 Q120 150 170 118 Q180 120 182 150 Q175 235 120 245 Q65 235 58 150Z"/><path d="M52 105 Q50 45 120 40 Q190 45 188 105 Q120 75 52 105Z"/>`,`<path d="M35 160 Q20 20 120 20 Q220 20 205 160 Q190 60 120 60 Q50 60 35 160Z"/><circle cx="175" cy="45" r="10" fill="#e8a0c0"/>`];
+ return`<svg viewBox="0 0 240 280"><ellipse cx="120" cy="140" rx="62" ry="80" fill="#f0c9a8"/><circle cx="98" cy="135" r="5" fill="#333"/><circle cx="142" cy="135" r="5" fill="#333"/><path d="M105 180 Q120 192 135 180" stroke="#b55" stroke-width="4" fill="none"/><rect x="100" y="215" width="40" height="65" fill="#f0c9a8"/><g fill="${c}">${H[i]}</g></svg>`}
+const GAL=[['Layered Bob',0,'#6b3a1e'],['Long Waves',1,'#1c1c1c'],['Pompadour',2,'#1c1c1c'],['Bridal Updo',3,'#b5651d'],['Pixie Cut',4,'#c9a227'],['Classic Fade',5,'#1c1c1c'],['Full Beard',6,'#3a2a20'],['Bridal Bun',7,'#8e2a5c']];
+const PG={Home(){return`<div class="hero"><h1>Look good. Feel brilliant.</h1><p class="mu">Hair cuts · Colour · Treatments · Beard · Bridal &amp; Groom styling</p><button onclick="$('dd').classList.add('open');scrollTo(0,0)">Login to book a slot</button></div>
+<div class="card"><h3>Why Lumière</h3><p>✔ Expert stylists &nbsp;✔ Premium products &nbsp;✔ Online booking &nbsp;✔ Membership savings</p></div>
+<div class="card"><h3>🎁 Offers</h3><p>Diwali special: 20% off Hair Colour. Bridal booking: free trial look.</p></div>
+<h3>Popular styles</h3><div class="grid">${GAL.slice(0,4).map(g=>`<div class="card">${hs(g[1],g[2])}<b>${g[0]}</b></div>`).join('')}</div>
+<div class="card"><h3>⭐ Happy clients</h3><p>“Best bridal look ever!” – Meena ★★★★★</p></div>`},
+Services(){const cats=[...new Set(S.svc.filter(s=>s.on!==false).map(s=>s.c))];return cats.map(c=>`<div class="card"><h3>${c}</h3>${S.svc.filter(s=>s.c==c&&s.on!==false).map(s=>`<div class="row"><span>${s.n}</span><b>${rs(s.p)}</b></div>`).join('')}</div>`).join('')+`<div class="card"><h3>Membership</h3>${S.pk.map(p=>`<div class="row"><span><b>${p.n}</b><br><span class="mu">${p.d}</span></span><b>${rs(p.p)}/mo</b></div>`).join('')}</div><p class="mu">Login to select services and book a slot.</p>`},
+Styles(){return`<h3>Hairstyle &amp; beard gallery</h3><p class="mu">Sample illustrations — real photos will be placed here.</p><div class="grid">${GAL.map(g=>`<div class="card">${hs(g[1],g[2])}<b>${g[0]}</b></div>`).join('')}</div>`},
+Team(){const t=[['👩‍💼','Ananya Rao','Owner &amp; Master Stylist'],['💇‍♀️','Priya','Colour Specialist'],['💈','Rahul','Barber &amp; Beard Expert'],['👰','Meera','Bridal Makeup &amp; Hair Artist'],['🧖','Karan','Hair Treatment Specialist']];return`<h3>Meet our team</h3><div class="grid">${t.map(x=>`<div class="card"><div class="av">${x[0]}</div><b>${x[1]}</b><br><span class="mu">${x[2]}</span></div>`).join('')}</div>`},
+Contact(){return`<div class="card"><h3>Find us</h3><p>📍 12 Main Road, Your City<br>📞 +91 98765 43210<br>✉️ hello@lumieresalon.in<br>🕘 Mon–Sun, 10am–8pm</p><div style="height:150px;border-radius:10px;background:var(--ac2);display:grid;place-items:center">Google Map goes here</div></div><div class="card"><h3>Feedback</h3><input id="fb" placeholder="Write your feedback"><button onclick="alert('Thanks!');$('fb').value=''">Send</button></div>`}};
+function site(){return`<div class="hd"><h2>✂️ Lumière</h2><div style="position:relative"><button onclick="$('dd').classList.toggle('open')">Login ▾</button><div id="dd" class="dd card"><h3>Login</h3><p class="mu">Customers, staff and admin use the same login.</p><input id="u" placeholder="Username"><input id="p" type="password" placeholder="Password"><div id="er" style="color:#d33"></div><button style="width:100%" onclick="login()">Login</button><p class="mu">Demo (tap to fill):</p><div class="sl"><button class="g s" onclick="fill('demo','demo')">Customer</button><button class="g s" onclick="fill('staff1','123')">Staff</button><button class="g s" onclick="fill('admin','admin')">Admin</button></div></div></div></div><div class="nav">${PGS.map(x=>`<button class="${x==pg?'on':''}" onclick="pg='${x}';draw()">${x}</button>`).join('')}</div>`+PG[pg]()}
+draw();
+</script></body></html>
