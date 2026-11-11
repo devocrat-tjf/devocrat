@@ -35,7 +35,7 @@ function makeNoise(seed){
 
 /* ---------- renderer, bloom, scene, camera ---------- */
 const renderer=new THREE.WebGLRenderer({canvas,antialias:true,powerPreference:'high-performance'});
-const PR=Math.min(devicePixelRatio,1.25);;renderer.setPixelRatio(PR);
+const PR=Math.min(devicePixelRatio,small?1.5:2);renderer.setPixelRatio(PR);
 renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.05;
 const scene=new THREE.Scene();scene.background=new THREE.Color(0x010208);
 const camera=new THREE.PerspectiveCamera(42,innerWidth/innerHeight,.05,40000);scene.add(camera);
@@ -60,7 +60,7 @@ const galaxyMat=new THREE.ShaderMaterial({...additive,uniforms:pointUniforms(230
 const dustMat=new THREE.ShaderMaterial({transparent:true,depthWrite:false,blending:THREE.NormalBlending,uniforms:pointUniforms(4200,9),vertexShader:pointVS,
  fragmentShader:`varying vec3 vC;varying float vA;void main(){vec2 c=gl_PointCoord-.5;float a=exp(-dot(c,c)*10.)*vA*.3;if(a<.01)discard;gl_FragColor=vec4(vC,a);}`});
 {
- const N=small?350000:900000,ND=small?30000:80000,DB=small?.26:.19; // DB keeps the dense field from over-exposing
+ const N=small?1240000:3620000,ND=small?120000:300000,DB=small?.26:.19; // DB keeps the dense field from over-exposing
  // typed arrays: millions of stars would be far too slow and memory-hungry as plain arrays
  const pos=new Float32Array(N*3),col=new Float32Array(N*3),siz=new Float32Array(N),dpos=new Float32Array(ND*3),dcol=new Float32Array(ND*3),dsiz=new Float32Array(ND);let nS=0;
  const C=h=>new THREE.Color(h),cCore=C('#ffd89a'),cCream=C('#fff1d6'),cWarm=C('#f3c98f'),cLav=C('#c4cbff'),cBlue=C('#86a2ff'),cPink=C('#ff6aa8'),cRose=C('#ff9ad0'),cIce=C('#dfe8ff'),cTeal=C('#5ff0e0'),cGold=C('#ffc95c'),cViolet=C('#b07cff'),cAqua=C('#7fd4ff'),cCoral=C('#ff8a6b'),c=new THREE.Color();
@@ -467,7 +467,7 @@ const state={phase:'intro',hover:-1,sel:-1,focus:-1,speed:1,spin:.02,last:-1,nea
 const tweens=[];
 const tween=(dur,fn,ease)=>new Promise(res=>tweens.push({t:0,dur,fn,res,ease}));
 const wait=ms=>new Promise(r=>setTimeout(r,ms));
-const show=(el,on)=>{el.classList.toggle('in',on);el.classList.toggle('out',!on)};
+const show=(el,on)=>{if(!el)return;el.classList.toggle('in',on);el.classList.toggle('out',!on)};
 const GALAXY_IMG="",GALAXY_CORE=[.54,.43],GALAXY_ASPECT=1672/941; // core position in the photo (u, v from top)
 const photo=new THREE.Mesh(new THREE.PlaneGeometry(1,1),new THREE.MeshBasicMaterial({transparent:true,opacity:0,depthTest:false,depthWrite:false,toneMapped:false}));
 photo.renderOrder=-10;photo.position.z=-50;photo.visible=false;camera.add(photo);
@@ -485,6 +485,7 @@ async function intro(){
  await tween(1800*T,e=>setFade(e));
  await wait(300*T);
  const hoi=$('introHoi'),wel=$('introWelcome');
+ if(!hoi||!wel)return; // the plain-buttons fallback took over and removed the greeting
  // dim the galaxy behind both greetings so the words read clearly
  introEl.classList.add('dim');tween(700*T,e=>setFade(1-.5*e));await wait(300*T);
  show(hoi,true);await wait(2000*T);show(hoi,false);await wait(900*T);
@@ -522,7 +523,7 @@ async function quickArrive(){ // later visits in the same session
  arrive();
 }
 let firstArrive=true;
-function arrive(){state.phase='system';applyView(systemView());hint.textContent=touchUI?'Tap a planet to pause & see its world · tap it again to enter':'Hover a planet to pause & see its world · click to enter';hint.classList.add('show');if(firstArrive){firstArrive=false;queueDetails()}}
+function arrive(){state.phase='system';applyView(systemView());hint.textContent=touchUI?'Drag to spin the planets · tap a planet to see its world · tap again to enter':'Drag to spin the planets · hover a planet to see its world · click to enter';hint.classList.add('show');if(firstArrive){firstArrive=false;queueDetails()}}
 
 /* ---------- picking, label, entering ---------- */
 const ray=new THREE.Raycaster(),ndc=new THREE.Vector2(),tmp=new V3();
@@ -577,7 +578,22 @@ addEventListener('devocrat:world',e=>{
 
 /* pointer: mouse hovers, touch taps (first tap = pause + detailed planet, second tap = enter) */
 let down=null;
-canvas.addEventListener('pointermove',e=>{if(e.pointerType==='touch')return;state.hover=state.phase==='system'?pickAt(e.clientX,e.clientY):-1});
+/* drag to spin: hold and drag (mouse or finger) to push every planet along its own orbit, much faster
+   than normal — right/up = forwards, left/down = backwards. Let go and the planets glide for a moment,
+   then carry on with their usual motion. Short taps and clicks still open the worlds as before. */
+const DRAG_TIME=24;            // one drag across the smaller side of the screen = 24 seconds of orbit
+let drag=null,dragAdd=0,dragVel=0;
+canvas.addEventListener('pointerdown',e=>{if(state.phase==='system')drag={id:e.pointerId,sx:e.clientX,sy:e.clientY,lx:e.clientX,ly:e.clientY,t:performance.now(),on:false}});
+canvas.addEventListener('pointermove',e=>{
+ if(!drag||e.pointerId!==drag.id)return;
+ if(!drag.on){if(Math.hypot(e.clientX-drag.sx,e.clientY-drag.sy)<=12)return;drag.on=true;try{canvas.setPointerCapture(e.pointerId)}catch(_){}state.sel=-1;state.hover=-1;shown=-1;root.classList.add('dragging');drag.lx=e.clientX;drag.ly=e.clientY}
+ const now=performance.now(),add=((e.clientX-drag.lx)-(e.clientY-drag.ly))/Math.min(innerWidth,innerHeight)*DRAG_TIME;
+ drag.lx=e.clientX;drag.ly=e.clientY;dragAdd+=add;
+ const v=add/Math.max(.008,(now-drag.t)/1000);dragVel+=(v-dragVel)*.5;drag.t=now;
+});
+const endDrag=e=>{if(drag&&(!e||e.pointerId===drag.id)){if(drag.on)root.classList.remove('dragging');drag=null}};
+canvas.addEventListener('pointerup',endDrag);canvas.addEventListener('pointercancel',endDrag);canvas.addEventListener('lostpointercapture',endDrag);
+canvas.addEventListener('pointermove',e=>{if(e.pointerType==='touch'||(drag&&drag.on))return;state.hover=state.phase==='system'?pickAt(e.clientX,e.clientY):-1});
 canvas.addEventListener('pointerleave',()=>{state.hover=-1});
 canvas.addEventListener('pointerdown',e=>{down={x:e.clientX,y:e.clientY,type:e.pointerType}});
 canvas.addEventListener('pointerup',e=>{
@@ -609,22 +625,28 @@ function frame(now){
  const act=state.phase==='system'?active():-1,goal=act>=0||state.phase==='enter'||state.phase==='world'?0:1;
  state.speed+=(goal-state.speed)*(1-Math.exp(-Math.min(real,250)/1000*14));if(Math.abs(goal-state.speed)<.01)state.speed=goal;
  const sp=state.speed*(reduce?.45:1),k=1-Math.exp(-Math.min(real,250)/1000*9);
+ // extra orbit time from dragging: what the pointer moved this frame, plus a short glide after letting go
+ let boost=dragAdd;dragAdd=0;
+ if(drag&&drag.on)dragVel*=Math.exp(-dt*10);          // holding still stops the glide
+ else if(dragVel){boost+=dragVel*dt;dragVel*=Math.exp(-dt*3.2);if(Math.abs(dragVel)<.05)dragVel=0}
+ if(state.phase!=='system'){boost=0;dragVel=0}
+ const tAdv=dt*sp+boost;
  if(act>=0)ensureDetail(planets[act]);
  camera.updateMatrixWorld();fwd.set(0,0,-1).applyQuaternion(camera.quaternion);upNow.setFromMatrixColumn(camera.matrixWorld,1);
  upL.copy(Y).addScaledVector(fwd,-Y.dot(fwd)).normalize();qRoll.setFromUnitVectors(upL,upNow);
  planets.forEach((p,i)=>{
   p.pivot.getWorldQuaternion(qPar);p.holder.quaternion.copy(qPar.invert().multiply(qRoll));
-  p.angle+=p.omega*dt*sp;p.holder.position.set(Math.cos(p.angle)*p.r,0,-Math.sin(p.angle)*p.r);
+  p.angle+=p.omega*tAdv;p.holder.position.set(Math.cos(p.angle)*p.r,0,-Math.sin(p.angle)*p.r);
   const on=i===act||(p.lock&&state.phase!=='system');
   if(on&&p.capital){p.drift=(p.drift||0)+dt*.07;const cl=p.body.worldToLocal(camera.position.clone());let d=Math.atan2(cl.x,cl.z)-Math.atan2(p.capital.x,p.capital.z)+p.drift-p.spin.rotation.y;d=Math.atan2(Math.sin(d),Math.cos(d));p.spin.rotation.y+=d*(1-Math.exp(-Math.min(real,250)/1000*4))}
-  else{p.drift=0;p.spin.rotation.y+=dt*.15*sp}
+  else{p.drift=0;p.spin.rotation.y+=.15*tAdv}
   if(on){const rp=pxRadius(p,planetBase),T=Math.min(.3*Math.min(innerWidth,innerHeight),rp*4.6);p.grow=Math.max(1.8,T/rp)}
   p.hl+=((on?1:0)-p.hl)*k;p.scale=planetBase*(1+(p.grow-1)*easeOut(p.hl));p.holder.scale.setScalar(p.scale);p.atmo.material.opacity=.45+.3*p.hl;
   const det=p.detail&&p.hl>.06;p.simple.visible=p.textured||!det;
   if(p.detail){p.detail.spinPart.visible=p.detail.still.visible=det;if(det){p.detail.clouds.rotation.y+=dt*.04;p.detail.ships.forEach(s=>s.piv.rotation.y+=s.w*dt)}}
  });
- moons.forEach(m=>{m.a+=m.w*dt*sp;m.mesh.position.set(Math.cos(m.a)*m.r,0,Math.sin(m.a)*m.r);m.mesh.rotation.y+=dt*.3});
- asteroidBelt.rotation.y+=dt*.02*sp;kuiperBelt.rotation.y+=dt*.006*sp;
+ moons.forEach(m=>{m.a+=m.w*tAdv;m.mesh.position.set(Math.cos(m.a)*m.r,0,Math.sin(m.a)*m.r);m.mesh.rotation.y+=dt*.3});
+ asteroidBelt.rotation.y+=.02*tAdv;kuiperBelt.rotation.y+=.006*tAdv;
  sun.rotation.y+=dt*.03;
  updateLabel();
  composer.render();

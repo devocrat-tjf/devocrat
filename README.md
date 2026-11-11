@@ -10,7 +10,13 @@ css/style.css           All styling. Each world has its own block, e.g. "theme-k
 js/content.js           ★ ALL TEXT: headlines, About, Services, prototypes, names, phone, email.
 js/languages.js         Bilingual button labels (desktop hover feature).
 js/app.js               How the worlds work (pages, lab, form, scroll scenes, photo frames).
-js/effects.js           Cursor and floating theme icons.
+js/effects.js           Floating theme icons and button marks.
+js/motion.js            Motion core: smooth scroll, the dot + ring cursor, shared helpers, and loading
+                        each world's own effects when it opens (and removing them when it closes).
+js/worlds/<id>.js       One file per world with that world's own effects (the section map at the top
+                        of each file lists which effect lives in which section).
+css/motion.css          Styles for the motion core and every world (one block per world).
+js/vendor/              GSAP, ScrollTrigger and Lenis (stored locally, no CDN needed).
 js/universe.js          Galaxy, intro text, solar system and planets (3D).
 js/universe-fallback.js Simple world buttons if 3D can't start.
 images/logo.png         DEVOCRAT logo (transparent background).

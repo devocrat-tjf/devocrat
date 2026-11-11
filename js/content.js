@@ -624,6 +624,58 @@ const APP_BLURB={
   "pica": "An editorial website with a working interactive typewriter."
 };
 
+// Hospital world: the "How we work" steps (sticky list on the left, details on the right).
+// Each step: [title, text]. Edit freely; keep the quotes and commas.
+const HOSPITAL_PROCESS = {
+  "kicker": "HOW WE WORK",
+  "title": "From first visit to full recovery.",
+  "steps": [
+    ["Consultation", "We listen first. You tell us how your day runs, who is involved and where things slow down."],
+    ["Diagnosis", "We map the problem: who will use the system, what each person needs and what gets in their way."],
+    ["Treatment plan", "Lucky designs clear, accessible screens. You see and review them before anything is built."],
+    ["Procedure", "Venky builds it: the software, the data and the integrations, tested as each part comes together."],
+    ["Recovery and care", "We launch, show your team how to use it and stay in touch for fixes and improvements."]
+  ]
+};
+
+// Interior world: text for its extra sections and the hero greeting. Edit freely; keep the quotes and commas.
+const INTERIOR_COPY = {
+  "greetings": {
+    "morning": ["Good morning.", "The sun’s just coming in."],
+    "day": ["Good afternoon.", "Plenty of daylight in here."],
+    "evening": ["Good evening.", "We’ve switched the lamp on for you."],
+    "night": ["Working late?", "The lamp’s on and the moon is out."]
+  },
+  "plan": { "kicker": "THE PLAN", "title": "From a line on paper to a place you live in.", "text": "Every product starts as a plan. Lucky draws it, Venky builds it, and it comes to life one layer at a time — just like a room." },
+  "room": { "kicker": "THE ROOM", "title": "Watch a room come together.", "steps": ["Walls", "Floor", "Light", "Furniture", "Details"] },
+  "palette": { "title": "Try a palette", "text": "Point at a colour to try it on the room. Click to keep it." },
+  "compare": { "title": "Before and after", "text": "Drag the handle. Same room, same space — designed with care." },
+  "walk": { "kicker": "STEP INSIDE", "title": "Walk in. Look around.", "wall": "Your space, designed.", "button": "Let’s talk →" }
+};
+
+// Architect world: text for the 3D model section and the drawing sheets in About. Edit freely; keep the quotes and commas.
+// Model floors go from the ground up: [floor name, what it means in your product].
+const ARCH_COPY = {
+  "model": { "kicker": "STRUCTURE", "title": "Every layer, engineered.", "text": "Software is built like a building. Scroll to turn it and open it up, floor by floor.",
+    "floors": [["Foundation", "Hosting, security and backups"], ["Data", "Databases and integrations"], ["Logic", "The rules your business runs on"], ["Interface", "The screens people actually use"]] },
+  "sheets": [["A-01", "PLAN", "How it is laid out"], ["A-02", "ELEVATION", "How it looks"], ["A-03", "SECTION", "How it works inside"]]
+};
+
+// Automotive world: text for the turntable and tunnel sections. Edit freely; keep the quotes and commas.
+const AUTO_COPY = {
+  "turntable": { "kicker": "360° VIEW", "title": "Look at it from every angle.", "text": "Scroll to spin it round. We build every side of your product with the same care.",
+    "callouts": [["DESIGN", "Lucky shapes every line"], ["ENGINEERING", "Venky tunes what’s under the hood"], ["PERFORMANCE", "Fast, smooth and reliable"], ["SERVICE", "We stay with you after launch"]] },
+  "warp": { "kicker": "FULL THROTTLE", "title": "From idea to launch — fast.", "text": "Keep scrolling. The faster you scroll, the faster you go." }
+};
+
+// Futuristic world: text for its extra sections and hidden messages. Edit freely; keep the quotes and commas.
+const FUTURE_COPY = {
+  "dive": { "word": "INTO THE FUTURE", "hint": "SCROLL TO DIVE IN" },
+  "bento": { "clock": "LOCAL TIME", "radar": "SCANNING FOR IDEAS", "tag": "DESIGN × CODE", "tagText": "Two minds, one system. Lucky designs it, Venky engineers it." },
+  "torch": { "hint": "Move your pointer (or finger) to light the dark.", "secrets": ["// NEW OFFERS LOADING", "CLASSIFIED", "SEE YOU SOON, EXPLORER", "◇ STAY TUNED ◇", "SIGNAL DETECTED"] },
+  "warp": { "kicker": "HYPERSPACE", "title": "Engaging warp drive.", "text": "Scroll faster to jump further." }
+};
+
 // Accessible name of each world's scroll-built scene (read by screen readers).
 const SCROLL_COPY={
   "modern": {

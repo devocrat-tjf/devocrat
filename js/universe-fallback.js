@@ -7,7 +7,15 @@ function showUniverseFallback(){
  WORLDS.forEach(w=>{const b=document.createElement('button');b.style.setProperty('--pc',PLANET_ACCENT[w.id]);b.textContent=w.name;b.addEventListener('click',e=>openWorld(w.id,e));grid.appendChild(b)});
  document.querySelector('#universe .intro')?.remove();fb.hidden=false;
 }
-// any failure before the universe draws its first frame (no WebGL, old browser, blocked CDN) → plain world buttons
-addEventListener('error',()=>{if(!window.devocratUniverseReady)showUniverseFallback()});
-addEventListener('unhandledrejection',()=>{if(!window.devocratUniverseReady)showUniverseFallback()});
-setTimeout(showUniverseFallback,15000);
+// any failure of the 3D universe before it draws its first frame (no WebGL, old browser, blocked CDN) → plain world buttons.
+// Only errors from the universe / three.js count, so a problem elsewhere on the page can't switch it off.
+const uniError=src=>!src||/universe|three|jsdelivr|es-module-shims/i.test(src);
+addEventListener('error',e=>{if(!window.devocratUniverseReady&&uniError(e.filename))showUniverseFallback()});
+addEventListener('unhandledrejection',e=>{const s=(e.reason&&e.reason.stack)||'';if(!window.devocratUniverseReady&&uniError(s))showUniverseFallback()});
+// Give up after 15s without a first frame — but not while the tab is in the background, where browsers pause drawing.
+function fallbackIfStuck(){
+ if(window.devocratUniverseReady)return;
+ if(document.hidden){document.addEventListener('visibilitychange',()=>setTimeout(fallbackIfStuck,4000),{once:true});return}
+ showUniverseFallback();
+}
+setTimeout(fallbackIfStuck,15000);
