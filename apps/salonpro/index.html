@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>DEVOCRAT Salon</title>
+    <meta name="description" content="DEVOCRAT Salon – luxury unisex salon & spa. Customer booking app, reception desk, stylist chair view and manager dashboards." />
+    <meta property="og:title" content="DEVOCRAT Salon" />
+    <meta property="og:description" content="DEVOCRAT Salon – luxury unisex salon & spa. Customer booking app, reception desk, stylist chair view and manager dashboards." />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <!-- Installable app. Staff app by default; the customer app (?portal=customer) gets its own manifest.
+         Relative paths so it works at "/" (Netlify) and at "/repo-name/" (GitHub Pages). -->
+    <link rel="manifest" id="app-manifest" href="manifest.webmanifest" />
+    <script>
+      if (new URLSearchParams(location.search).get('portal') === 'customer')
+        document.getElementById('app-manifest').setAttribute('href', 'manifest-customer.webmanifest');
+    </script>
+    <meta name="theme-color" content="#060913" />
+    <link rel="icon" type="image/svg+xml" href="icon.svg" />
+    <link rel="apple-touch-icon" href="icon-192.png" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="DEVOCRAT" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <script type="module" crossorigin src="./assets/index-_anbbbWH.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-oS2QT4Cy.css">
+  </head>
+  <body class="bg-slate-50 text-slate-900 antialiased font-sans selection:bg-amber-100 selection:text-amber-900">
+    <div id="root"></div>
+    <script src="demo.js"></script>
+  </body>
+</html>

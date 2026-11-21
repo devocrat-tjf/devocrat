@@ -584,7 +584,8 @@ const HIGHLIGHT_ICONS={
   ]
 };
 
-// Prototypes shown in the lab. Each id needs a matching file in apps/<id>.html.
+// Prototypes shown in the lab. Each id needs a matching file in apps/<id>.html, or a folder given as "path".
+// "lazyMobile": true = the phone preview loads only when the visitor taps "Load phone preview" (for heavy apps).
 const appMeta=[
   {
     "id": "guard",
@@ -605,7 +606,8 @@ const appMeta=[
     "name": "Manoj Interior Studio",
     "kind": "3D design tool",
     "icon": "⌂",
-    "desc": "Interactive room and interior design workspace"
+    "desc": "Interactive room and interior design workspace",
+    "lazyMobile": true
   },
   {
     "id": "pica",
@@ -613,6 +615,48 @@ const appMeta=[
     "kind": "Website",
     "icon": "⌨️",
     "desc": "Editorial website with interactive typewriter"
+  },
+  {
+    "id": "sahakarya",
+    "name": "Sahakārya",
+    "kind": "Activity tracker",
+    "icon": "✅",
+    "desc": "Team activity tracker and to-do list",
+    "path": "sahakarya/index.html"
+  },
+  {
+    "id": "apparel",
+    "name": "DEVOCRAT Apparels",
+    "kind": "Online store",
+    "icon": "👗",
+    "desc": "Clothing store with cart, orders and store admin",
+    "path": "apparel/index.html"
+  },
+  {
+    "id": "hospital",
+    "name": "Devocrat Multi-Speciality Hospital",
+    "kind": "Hospital management",
+    "icon": "🏥",
+    "desc": "Reception, doctors, nurses, lab, pharmacy and patients",
+    "path": "hospital/index.html"
+  },
+  {
+    "id": "salonpro",
+    "name": "DEVOCRAT Salon",
+    "kind": "Salon management",
+    "icon": "💇",
+    "desc": "Bookings, billing, stylists, attendance and payroll",
+    "path": "salonpro/index.html",
+    "lazyMobile": true
+  },
+  {
+    "id": "restaurant",
+    "name": "Devocrat Restaurant & Bar",
+    "kind": "QR ordering & restaurant",
+    "icon": "🍽",
+    "desc": "Table QR ordering, kitchen screen, floor and reports",
+    "path": "restaurant/index.html",
+    "mobilePath": "restaurant/index.html?demo=guest"
   }
 ];
 
@@ -621,7 +665,12 @@ const APP_BLURB={
   "guard": "Role-based security operations, from guards to admin.",
   "salon": "Salon bookings, style try-on and memberships.",
   "interior": "Design and arrange a room interactively in 3D.",
-  "pica": "An editorial website with a working interactive typewriter."
+  "pica": "An editorial website with a working interactive typewriter.",
+  "sahakarya": "Team activities, steps, deadlines and a shared to-do list.",
+  "apparel": "1,000-product clothing store with cart, checkout and store admin.",
+  "hospital": "Reception, doctors, nurses, lab, X-ray, pharmacy and patient app.",
+  "salonpro": "Reception desk, bookings, billing, stylists, attendance and payroll.",
+  "restaurant": "Guests order from the table QR (phone); staff see it live (desktop)."
 };
 
 // Hospital world: the "How we work" steps (sticky list on the left, details on the right).

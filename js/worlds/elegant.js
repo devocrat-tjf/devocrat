@@ -123,7 +123,7 @@ DevoMotion.world('elegant', api => {
   /* ---------- PROTOTYPES: filterable gallery (L3) ---------- */
   const picker = view.querySelector('.picker');
   if (picker) {
-    const TAGS = { guard: 'apps', salon: 'apps', interior: '3d', pica: 'sites' };
+    const TAGS = { guard: 'apps', salon: 'apps', interior: '3d', pica: 'sites', sahakarya: 'apps', apparel: 'sites', hospital: 'apps', restaurant: 'apps', salonpro: 'apps' };
     const bar = document.createElement('div'); bar.className = 'm-filter'; bar.setAttribute('role', 'group'); bar.setAttribute('aria-label', 'Filter prototypes');
     [['all', 'All'], ['apps', 'Apps'], ['sites', 'Websites'], ['3d', '3D']].forEach(([k, label], i) => {
       const b = document.createElement('button'); b.type = 'button'; b.textContent = label; b.dataset.f = k; b.dataset.v3decorated = '1';

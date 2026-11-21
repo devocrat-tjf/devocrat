@@ -1,0 +1,24 @@
+{
+  "name": "DEVOCRAT Apparels",
+  "short_name": "DEVOCRAT",
+  "description": "Clothing for men, women and kids. Cash on delivery.",
+  "id": "./",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#ffffff",
+  "theme_color": "#2b1b3d",
+  "categories": ["shopping", "lifestyle"],
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "Men", "url": "./#men", "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }] },
+    { "name": "Women", "url": "./#women", "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }] },
+    { "name": "Kids", "url": "./#kids", "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }] },
+    { "name": "My orders", "url": "./#orders", "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }] }
+  ]
+}

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Devocrat Multi-Speciality Hospital</title>
+<meta name="description" content="Hospital management for Devocrat Multi-Speciality Hospital — reception, doctors, nurses, lab, X-ray & scan, pharmacy and patients.">
+<meta name="theme-color" content="#035e6b">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Sora:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+<div id="root"><div style="display:grid;place-items:center;min-height:100vh;font:600 16px system-ui;color:#58717d">Loading Devocrat Multi-Speciality Hospital…</div></div>
+<div id="modal" class="modal" role="dialog" aria-modal="true"><div class="mbox"><button class="x" data-a="close" aria-label="Close">×</button><div id="mbody"></div></div></div>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+<script src="config.js"></script>
+<!-- Website demo: the hospital's own Google Apps Script runs in the browser on sample data (see ../_gas/gas.js) -->
+<script src="../_gas/gas.js"></script>
+<script src="backend.js"></script>
+<script src="demo.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

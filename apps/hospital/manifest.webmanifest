@@ -1,0 +1,16 @@
+{
+  "name": "Devocrat Multi-Speciality Hospital",
+  "short_name": "Devocrat Hospital",
+  "description": "Hospital management — reception, doctors, nurses, lab, X-ray & scan, pharmacy and patients.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#035e6b",
+  "theme_color": "#035e6b",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
