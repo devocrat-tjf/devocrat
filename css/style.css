@@ -507,34 +507,6 @@ body.overlay-open #themeObjects{display:none!important}
 #worldView.theme-kids .enquiry input,#worldView.theme-kids .enquiry select,#worldView.theme-kids .enquiry textarea{border:2px solid #bfe0f7;border-radius:18px;background:#f5fbff;font-size:16px}
 #worldView.theme-kids .footer{background:#1d3b63;color:#fff;font-weight:800}
 
-/* ================= AUTOMOTIVE: carbon fibre, red slashes, italic speed type ================= */
-#worldView.theme-auto{--bg:#0e0e10;--fg:#f2f2f2;--accent:#e10600;--accent2:#ffb400;--surface:#18181b;--line:#34343a;--radius:0px;font-family:"Rajdhani",sans-serif;font-weight:500;font-size:16px;background:conic-gradient(from 90deg at 2px 2px,#0000 90deg,#ffffff06 0) 0 0/6px 6px,repeating-linear-gradient(45deg,#ffffff05 0 2px,transparent 2px 6px),#0e0e10}
-#worldView.theme-auto .worldnav{background:#0e0e10f2;border-bottom:3px solid #e10600}
-#worldView.theme-auto .wlinks a{font-family:"Oswald";text-transform:uppercase;letter-spacing:.12em;border-radius:0}
-#worldView.theme-auto .wlinks a:hover{background:#e10600;color:#fff;transform:skewX(-12deg)}
-#worldView.theme-auto h1,#worldView.theme-auto h2,#worldView.theme-auto h3{font-family:"Oswald";text-transform:uppercase;font-style:italic;letter-spacing:.01em;font-weight:700}
-#worldView.theme-auto .whero{background:linear-gradient(115deg,transparent 0 58%,#e1060018 58% 74%,transparent 74%)}
-#worldView.theme-auto .whero h1{font-size:clamp(2.8rem,6.4vw,6rem);line-height:.95}
-#worldView.theme-auto .whero h1:after{content:"";display:block;width:140px;height:8px;margin-top:18px;background:linear-gradient(90deg,#e10600 0 60%,transparent 60% 66%,#e10600 66% 76%,transparent 76% 82%,#e10600 82%);transform:skewX(-30deg)}
-#worldView.theme-auto .kicker{font:600 13px "Oswald";letter-spacing:.3em;color:#ffb400}
-#worldView.theme-auto .wheel{animation:spin 1s linear infinite;transform-box:fill-box;transform-origin:center}
-#worldView.theme-auto .needle{animation:rev 2.4s ease-in-out infinite;transform-origin:0 0}@keyframes rev{0%,100%{transform:rotate(-40deg)}50%{transform:rotate(18deg)}}
-#worldView.theme-auto .speed{animation:zoom .6s linear infinite}@keyframes zoom{to{transform:translateX(-30px);opacity:.5}}
-#worldView.theme-auto .wsection{border-top:0;position:relative}
-#worldView.theme-auto .wsection:before{content:"";position:absolute;left:0;right:0;top:0;height:12px;background:conic-gradient(#f2f2f2 25%,#0e0e10 0 50%,#f2f2f2 0 75%,#0e0e10 0) 0 0/12px 12px;opacity:.5}
-#worldView.theme-auto .service,#worldView.theme-auto .project,#worldView.theme-auto .contact-card,#worldView.theme-auto .offer-soon{background:#18181b;border:1px solid #34343a;border-radius:0;clip-path:polygon(16px 0,100% 0,100% calc(100% - 16px),calc(100% - 16px) 100%,0 100%,0 16px)}
-#worldView.theme-auto .service{padding:28px 22px;border-left:4px solid #e10600;transition:transform .2s}
-#worldView.theme-auto .service:hover{transform:translateX(6px);background:#1f1f23}
-#worldView.theme-auto .service i{font-style:normal;color:#e10600;font-size:24px}
-#worldView.theme-auto .service .num{font:700 34px "Oswald";font-style:italic;opacity:.15;top:10px}
-#worldView.theme-auto .cta,#worldView.theme-auto .ghostbtn{font-family:"Oswald";text-transform:uppercase;letter-spacing:.14em;border-radius:0;transform:skewX(-12deg)}
-#worldView.theme-auto .cta{background:#e10600;color:#fff;border:0;padding:14px 30px}
-#worldView.theme-auto .ghostbtn{background:transparent;border:1px solid #f2f2f2;color:#f2f2f2}
-#worldView.theme-auto .lab{background:#121214}#worldView.theme-auto .device{background:#000;border:1px solid #34343a;border-radius:0}
-#worldView.theme-auto .enquiry input,#worldView.theme-auto .enquiry select,#worldView.theme-auto .enquiry textarea{background:#0e0e10;border:1px solid #34343a;border-bottom:2px solid #e10600;border-radius:0;color:#f2f2f2}
-#worldView.theme-auto .person a{color:#ffb400}
-#worldView.theme-auto .footer{background:#e10600;color:#fff;font-family:"Oswald";font-style:italic}
-
 /* ================= FUTURISTIC: HUD panels, neon edges, hex grid, scanlines ================= */
 #worldView.theme-future{--bg:#05060f;--fg:#d6f6ff;--accent:#00e5ff;--accent2:#ff2bd6;--surface:#0b1022;--line:#00e5ff44;--radius:0px;font-family:"Rajdhani",sans-serif;font-weight:500;font-size:16px;background:radial-gradient(ellipse at 50% -20%,#00e5ff1f,transparent 60%),#05060f}
 #worldView.theme-future:after{content:"";position:fixed;inset:0;pointer-events:none;background:repeating-linear-gradient(#ffffff05 0 1px,transparent 1px 3px);z-index:25}
@@ -571,7 +543,6 @@ body.overlay-open #themeObjects{display:none!important}
 #worldView.theme-salon #services .service:hover h3{color:#d4607c}
 #worldView.theme-interior .service:hover{transform:translateY(-6px);box-shadow:0 20px 40px #38372f22}
 #worldView.theme-modern .highlights .service:hover{transform:translateY(-5px)}
-#worldView.theme-auto .highlights .service:hover{transform:translateX(6px)}
 #worldView.theme-future .highlights .service:hover{transform:translateY(-4px);box-shadow:inset 0 0 40px #00e5ff33}
 #worldView.theme-kids .highlights .service:hover{transform:translateY(-6px) scale(1.02)}
 /* About highlight icons visible in every style (elegant and interior hide service icons) */
@@ -714,15 +685,6 @@ body.overlay-open #themeObjects{display:none!important}
 @media(max-width:560px){#worldView .team{grid-template-columns:repeat(2,minmax(0,1fr));gap:22px}#worldView .tm figcaption strong{font-size:16px}#worldView .tm figcaption small{font-size:9px}
  #worldView.theme-kids .tm-frame{padding:8px 8px 34px;border-radius:18px}#worldView.theme-kids .tm-sticker{width:42px;height:42px;font-size:18px;right:-10px}
  #worldView.theme-arch .tm-tag{left:20px;bottom:20px;font-size:9px;padding:4px 6px}}
-/* AUTOMOTIVE: carbon-fibre frame, clipped corners, racing stripes, chequered flag, race number */
-#worldView.theme-auto .tm-frame{padding:12px;background:conic-gradient(from 90deg at 2px 2px,#0000 90deg,#ffffff10 0) 0 0/6px 6px,#18181b;clip-path:polygon(22px 0,100% 0,100% calc(100% - 22px),calc(100% - 22px) 100%,0 100%,0 22px);transition:translate .3s}
-#worldView.theme-auto .tm-frame img{clip-path:polygon(14px 0,100% 0,100% calc(100% - 14px),calc(100% - 14px) 100%,0 100%,0 14px)}
-#worldView.theme-auto .tm-frame:before{content:"";position:absolute;left:0;top:0;bottom:0;width:12px;background:linear-gradient(#e10600 0 48%,transparent 48% 52%,#e10600 52%);z-index:2}
-#worldView.theme-auto .tm-frame:after{content:"";position:absolute;left:12px;right:0;bottom:0;height:16px;background:conic-gradient(#f2f2f2 25%,#0e0e10 0 50%,#f2f2f2 0 75%,#0e0e10 0) 0 0/16px 16px;z-index:2}
-#worldView.theme-auto .tm-tag{display:block;position:absolute;right:0;top:22px;padding:7px 14px 7px 18px;background:#e10600;color:#fff;font:700 13px "Oswald",sans-serif;font-style:italic;letter-spacing:.14em;clip-path:polygon(10px 0,100% 0,100% 100%,0 100%);z-index:3}
-#worldView.theme-auto .tm:hover .tm-frame{translate:8px 0}
-#worldView.theme-auto .tm figcaption strong{font-family:"Oswald",sans-serif;font-style:italic;text-transform:uppercase;letter-spacing:.04em}
-#worldView.theme-auto .tm figcaption small{color:#ffb400}#worldView.theme-auto .tm figcaption a{color:#ffb400}
 /* FUNNY: comic-panel frame, chunky outline, offset shadow, burst sticker, wobble */
 #worldView.theme-funny .tm-frame{padding:12px;background:#fff;border:5px solid #2b1b3d;border-radius:22px;box-shadow:10px 10px 0 #2b1b3d;rotate:calc(-2.5deg + var(--i) * 5deg);transition:rotate .2s}
 #worldView.theme-funny .tm-dev .tm-frame{background:#3ec6e0}#worldView.theme-funny .tm-des .tm-frame{background:#ffe45e}
@@ -875,3 +837,7 @@ body.world-open .topbar{display:none}
 @media(prefers-reduced-motion:reduce){.brand>span:last-child{animation:none!important}.dev-shot,.dev-bullet-trail{animation-duration:1ms!important}}
 /* Muzzle flash: SVG-native styling (HTML box properties do not apply to SVG shapes). */
 #patrolBuddy .dev-muzzle-flash{position:static;width:auto;height:auto;border-radius:0;background:none;fill:#ffd878;stroke:#fff5c8;stroke-width:1;transform-box:fill-box;transform-origin:center;opacity:0;filter:drop-shadow(0 0 6px #ff9b22)}
+/* AUTOMOTIVE world = drive.html, shown full screen. The page has its own cursor and controls, so the site's cursor and effects step aside. */
+.driveframe{position:fixed;inset:0;width:100%;height:100%;border:0;display:block;background:#0d0c0a;z-index:1}
+body.drive-open #cursor,body.drive-open #fx,body.drive-open .m-cursor-dot,body.drive-open .m-cursor-ring{display:none!important}
+body.drive-open,body.drive-open *{cursor:auto!important}
