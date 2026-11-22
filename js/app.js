@@ -457,16 +457,18 @@ function openWorld(id,event){
  const x=event&&Number.isFinite(event.clientX)?event.clientX:window.innerWidth/2;
  const y=event&&Number.isFinite(event.clientY)?event.clientY:window.innerHeight/2;
  view.style.setProperty('--cx',x+'px');view.style.setProperty('--cy',y+'px');document.documentElement.style.setProperty('--cursor',({modern:'#5b4ff5',elegant:'#b89458',hospital:'#0b95a6',salon:'#d4607c',illus:'#e76f51',mandala:'#c8391f',interior:'#66765a',arch:'#8bbcff',funny:'#ff5d8f',kids:'#ff7a1a',auto:'#e10600',future:'#00e5ff'})[id]||'#a78bfa');view.className='open theme-'+id;view.setAttribute('aria-hidden','false');
- if(id==='auto'){openDrive();return}
+ if(FULL_WORLDS[id]){openFullWorld(id);return}
  view.innerHTML=worldPage(w,id);prepareLabels();initScrolly();
  view.scrollTop=0;document.body.style.overflow='hidden';mobileOn=false;observeLab();const uni=document.getElementById('universe');if(uni)uni.inert=true;const firstBtn=view.querySelector('.worldnav button');if(firstBtn)firstBtn.focus({preventScroll:true});setTimeout(()=>{view.classList.add('ready')},500);
  dispatchEvent(new CustomEvent('devocrat:world',{detail:{open:true,id}}));
 }
-/* The automotive world is its own drivable page (drive.html): each pit stop there is one section of the site. */
-function openDrive(){view.innerHTML='<iframe class="driveframe" src="drive.html" title="DEVOCRAT automotive world: drive between pit stops" allow="fullscreen; accelerometer; gyroscope; autoplay" allowfullscreen></iframe>';
+/* Some worlds are their own full-screen 3D page; each place in that page is one section of the site.
+   auto = drive.html (drive between pit stops), interior = studio.html (look around a living room). */
+const FULL_WORLDS={auto:['drive.html','DEVOCRAT automotive world: drive between pit stops'],interior:['studio.html','DEVOCRAT Interior Designer Studio: look around the room']};
+function openFullWorld(id){const [src,title]=FULL_WORLDS[id];view.innerHTML='<iframe class="driveframe" src="'+src+'" title="'+title+'" allow="fullscreen; accelerometer; gyroscope; autoplay" allowfullscreen></iframe>';
  view.scrollTop=0;document.body.style.overflow='hidden';document.body.classList.add('drive-open');const uni=document.getElementById('universe');if(uni)uni.inert=true;
  const f=view.querySelector('.driveframe');f.addEventListener('load',()=>{try{f.focus();f.contentWindow.focus()}catch(_){}});
- setTimeout(()=>{view.classList.add('ready')},500);dispatchEvent(new CustomEvent('devocrat:world',{detail:{open:true,id:'auto'}}));}
+ setTimeout(()=>{view.classList.add('ready')},500);dispatchEvent(new CustomEvent('devocrat:world',{detail:{open:true,id}}));}
 function closeWorld(){const df=view.querySelector('.driveframe');if(df){df.src='about:blank';df.remove()}document.body.classList.remove('drive-open');view.className='';document.body.classList.remove('overlay-open');view.setAttribute('aria-hidden','true');document.body.style.overflow='';if(labObserver){labObserver.disconnect();labObserver=null}['desktopPreview','mobilePreview'].forEach(i=>{const f=document.getElementById(i);if(f){f.removeAttribute('srcdoc');f.src='about:blank'}});toggleFamily(false);if(lastOpener&&lastOpener.focus){try{lastOpener.focus({preventScroll:true})}catch(_){}}lastOpener=null;dispatchEvent(new CustomEvent('devocrat:world',{detail:{open:false}}));}
 function selectApp(id){currentApp=id;mobileOn=false;view.querySelectorAll('.picker .project').forEach(b=>{const on=b.dataset.app===id;b.classList.toggle('active',on);b.setAttribute('aria-selected',on)});loadApp(id)}
 function previewPlaceholder(a){const what=a&&a.id==='interior'?'The 3D studio':'This app';return '<!DOCTYPE html><meta name="viewport" content="width=device-width,initial-scale=1"><body style="margin:0;height:100vh;display:grid;place-items:center;background:#0d0e16;color:#e8e4d6;font:14px/1.5 system-ui,sans-serif;text-align:center;padding:20px;box-sizing:border-box"><div><p style="margin:0 0 14px">'+what+' is heavy to run twice.<br>Load the phone preview when you need it.</p><button onclick="parent.postMessage(\'devocrat-load-mobile\',\'*\')" style="padding:10px 16px;border:1px solid #d1a92a;background:transparent;color:#f5e9c7;border-radius:4px;font:inherit;cursor:pointer">Load phone preview</button></div></body>'}

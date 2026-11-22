@@ -406,31 +406,6 @@ body.overlay-open #themeObjects{display:none!important}
 #worldView.theme-illus .enquiry input,#worldView.theme-illus .enquiry select,#worldView.theme-illus .enquiry textarea{font-family:"Patrick Hand";font-size:17px;border:2px solid #243b4a;border-radius:12px 4px 14px 6px;background:#fff}
 #worldView.theme-illus .footer{border-top:3px dashed #243b4a;font-family:"Caveat";font-size:24px;letter-spacing:.1em;text-transform:none}
 
-/* ================= INTERIOR: editorial, linen + olive + terracotta, arched frames, material swatches ================= */
-#worldView.theme-interior{--bg:#efe8dc;--fg:#38372f;--accent:#66765a;--accent2:#b5643c;--surface:#f8f3ea;--line:#cdbfa8;--radius:16px;font-family:"Jost",sans-serif}
-#worldView.theme-interior .worldnav{background:#efe8dcf2;border-bottom:1px solid #cdbfa8}
-#worldView.theme-interior h1,#worldView.theme-interior h2,#worldView.theme-interior h3{font-family:"DM Serif Display",serif;font-weight:400;letter-spacing:-.01em}
-#worldView.theme-interior .whero h1{font-size:clamp(2.8rem,6.4vw,5.8rem)}
-#worldView.theme-interior .kicker{font:500 11px/1 "Jost";letter-spacing:.32em;color:#b5643c}
-#worldView.theme-interior .hart{filter:drop-shadow(0 30px 40px #38372f22)}
-#worldView.theme-interior .wsection{border-top:1px solid #cdbfa8;counter-increment:isec}
-#worldView.theme-interior{counter-reset:isec}
-#worldView.theme-interior .wsection>.kicker:before,#worldView.theme-interior .wsection .kicker:first-child:before{content:"0" counter(isec) " — "}
-#worldView.theme-interior .service{background:#f8f3ea;border:0;border-radius:140px 140px 12px 12px;padding:96px 22px 26px;overflow:hidden;text-align:center}
-#worldView.theme-interior .service:before{content:"";position:absolute;inset:0 0 auto;height:72px;border-radius:140px 140px 0 0}
-#worldView.theme-interior .servicegrid>:nth-child(1):before{background:repeating-linear-gradient(100deg,#b8875a 0 6px,#a5764b 6px 9px,#c4936a 9px 16px)}
-#worldView.theme-interior .servicegrid>:nth-child(2):before{background:repeating-linear-gradient(0deg,#d9cfbf 0 2px,#e7dfd2 2px 4px),#e7dfd2}
-#worldView.theme-interior .servicegrid>:nth-child(3):before{background:radial-gradient(#c7704a 1px,transparent 1.5px) 0 0/8px 8px,#b5643c}
-#worldView.theme-interior .servicegrid>:nth-child(4):before{background:linear-gradient(135deg,#7d8a63,#66765a)}
-#worldView.theme-interior .service i{display:none}#worldView.theme-interior .service .num{top:84px;right:auto;left:50%;transform:translateX(-50%)}
-#worldView.theme-interior .service h3{font-size:22px}
-#worldView.theme-interior .project,#worldView.theme-interior .contact-card,#worldView.theme-interior .highlights .service,#worldView.theme-interior .offer-soon{background:#f8f3ea;border:1px solid #cdbfa8;border-radius:16px;text-align:left;padding:22px}
-#worldView.theme-interior .highlights .service:before{display:none}
-#worldView.theme-interior .cta{background:#38372f;color:#efe8dc;border:0;border-radius:999px;letter-spacing:.12em;text-transform:uppercase;font-size:12px}
-#worldView.theme-interior .ghostbtn{border-radius:999px;background:transparent;border:1px solid #38372f;color:#38372f}
-#worldView.theme-interior .lab{background:#e3d9c8}#worldView.theme-interior .device{background:#38372f;border-radius:18px}
-#worldView.theme-interior .footer{background:#66765a;color:#efe8dc;border:0}
-
 /* ================= ARCHITECT: blueprint grid, technical linework, crop marks ================= */
 #worldView.theme-arch{--bg:#0d3b6e;--fg:#eaf3ff;--accent:#ffffff;--accent2:#8bbcff;--surface:#0f4580;--line:#ffffff55;--radius:0px;font-family:"Space Grotesk",sans-serif;background:linear-gradient(#ffffff12 1px,transparent 1px) 0 0/100% 24px,linear-gradient(90deg,#ffffff12 1px,transparent 1px) 0 0/24px 100%,linear-gradient(#ffffff22 1px,transparent 1px) 0 0/100% 120px,linear-gradient(90deg,#ffffff22 1px,transparent 1px) 0 0/120px 100%,#0d3b6e}
 #worldView.theme-arch .worldnav{background:#0b335ff2;border-bottom:1px solid #ffffff66}
@@ -718,13 +693,6 @@ body.overlay-open #themeObjects{display:none!important}
 #worldView.theme-illus .tm:hover .tm-frame{rotate:0deg}
 #worldView.theme-illus .tm figcaption strong{font-family:"Caveat",cursive;font-size:30px}
 #worldView.theme-illus .tm figcaption small{font-family:"Patrick Hand",cursive;font-size:14px;letter-spacing:.06em;color:#e76f51}
-/* INTERIOR: arched window frame in warm wood, linen mat, brass name plaque */
-#worldView.theme-interior .tm-frame{padding:16px;background:linear-gradient(135deg,#a5764b,#7a5534);border-radius:999px 999px 10px 10px;box-shadow:0 24px 40px #38372f33,inset 0 0 0 3px #c8a47a;transition:translate .35s,box-shadow .35s}
-#worldView.theme-interior .tm-frame img{border-radius:999px 999px 4px 4px;border:10px solid #f3ece0;box-sizing:border-box}
-#worldView.theme-interior .tm-tag{display:block;position:absolute;left:50%;bottom:-16px;translate:-50% 0;padding:8px 18px;background:linear-gradient(#e2c27a,#b08a3e);border-radius:4px;color:#38372f;font:600 11px "Jost",sans-serif;letter-spacing:.22em;text-transform:uppercase;box-shadow:0 4px 10px #0003;white-space:nowrap}
-#worldView.theme-interior .tm:hover .tm-frame{translate:0 -6px;box-shadow:0 34px 50px #38372f44,inset 0 0 0 3px #c8a47a}
-#worldView.theme-interior .tm figcaption{margin-top:34px}#worldView.theme-interior .tm figcaption strong{font-family:"DM Serif Display",serif;font-weight:400;font-size:24px}
-#worldView.theme-interior .tm figcaption small{color:#b5643c}
 /* LUXURY: gilded gallery frame, double gold border, deep mat, engraved plaque, warm glow */
 #worldView.theme-elegant .tm-frame{padding:22px;background:linear-gradient(135deg,#f6e3a6,#b8955a 25%,#f1d58a 50%,#8a6a2e 75%,#e8c66a);box-shadow:0 26px 50px #2b211c55,inset 0 0 0 2px #fff6d8aa;transition:box-shadow .4s}
 #worldView.theme-elegant .tm-frame:before{content:"";position:absolute;inset:10px;border:1px solid #2b211c88;pointer-events:none}

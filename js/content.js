@@ -62,7 +62,7 @@ const WORLDS=[
   },
   {
     "id": "interior",
-    "name": "Interior Designer",
+    "name": "Interior Designer Studio",
     "desc": "Natural materials, warm tones and spatial calm.",
     "icon": "⌂",
     "tag": "07 / SPACE & FORM",
