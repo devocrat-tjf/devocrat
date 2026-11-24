@@ -271,6 +271,7 @@ html.nocur #cur{display:none!important}html.nocur.curon,html.nocur.curon *{curso
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="js/content.js"></script>
+<script src="js/nav.js"></script>
 <script>
 {
 /* Seated photos for the sofa (background removed, transparent WebP in images/team).
@@ -290,8 +291,8 @@ const phone=()=>innerWidth<=760;
 const COPY=WORLD_COPY.interior,AB=ABOUT.interior,SV=SERVICES;
 const PHOTO=(TEAM_PHOTOS.interior||{});
 const TEAM=[
- {k:'des',tag:(TEAM_TAGS.interior||[])[0]||'The Designer',name:'MANOJ',aka:'Lucky',tel:'7418566607',role:'Designer · creative direction',line:'Plans the visual structure, interface and user experience.'},
- {k:'dev',tag:(TEAM_TAGS.interior||[])[1]||'The Developer',name:'VENKATESH KUMAR',aka:'Venky',tel:'6383941862',role:'Developer · engineering',line:'Builds the functional framework, software and technical systems.'}];
+ {k:'des',tag:(TEAM_TAGS.interior||[])[0]||'The Design Director',name:'MANOJ',aka:'Lucky',tel:'7418566607',role:'Design Director',line:'Plans the visual structure, interface and user experience.'},
+ {k:'dev',tag:(TEAM_TAGS.interior||[])[1]||'The Code Crafter',name:'VENKATESH KUMAR',aka:'Venky',tel:'6383941862',role:'Code Crafter',line:'Builds the functional framework, software and technical systems.'}];
 const HOT=[
  {id:'about',obj:'The wall',sec:'About'},
  {id:'family',obj:'Sofa',sec:'Meet the family'},
@@ -335,23 +336,26 @@ $('#textBody').innerHTML=`<h2 class="serif" style="font-size:44px;margin-top:10p
  HOT.map(h=>{let html=h.id==='family'?`<p class="kick">${h.sec}</p><h2>Meet the family.</h2>${TEAM.map(p=>`<h3>${p.name} aka ${p.aka}</h3><p>${esc(p.role)}. ${esc(p.line)} <a href="tel:+91${p.tel}">${p.tel}</a></p>`).join('')}`:PANEL[h.id]();
   const d=document.createElement('div');d.innerHTML=html;d.querySelectorAll('.foot,.row,form,.rule,.film,.cap').forEach(n=>n.remove());return `<section>${d.innerHTML}</section>`}).join('')+
  `<section><p class="kick">Talk to us</p><p>WhatsApp <a href="https://wa.me/${ENQUIRY_WHATSAPP}">+${ENQUIRY_WHATSAPP}</a> · Email <a href="mailto:${ENQUIRY_EMAIL}">${ENQUIRY_EMAIL}</a></p></section>`;
-const openText=()=>{$('#textv').hidden=false;$('#textX').focus()};
-$('#bText').onclick=openText;$('#bText0').onclick=()=>{$('#loader').style.display='none';openText()};
-$('#textX').onclick=()=>{$('#textv').hidden=true};
+const rawCloseText=()=>{$('#textv').hidden=true};
+const openText=(noStep)=>{$('#textv').hidden=false;$('#textX').focus();if(noStep!==true)window.DVCNav?.open('stext',rawCloseText,(window.DVCNav.hash||(s=>'#'+s))('text'))};
+const closeText=()=>{rawCloseText();window.DVCNav?.closed('stext')};
+$('#bText').onclick=()=>openText();$('#bText0').onclick=()=>{$('#loader').style.display='none';openText()};
+$('#textX').onclick=closeText;
 $('#bWorlds').onclick=()=>{try{if(parent!==window&&typeof parent.closeWorld==='function'){parent.closeWorld();return}}catch(e){}location.href='index.html'};
 
 /* ---------------- prototype viewer ---------------- */
 let curApp=(appMeta[0]||{}).id,mobileOn=false;
 const appUrl=(id,phoneSide)=>{const a=appMeta.find(x=>x.id===id);return 'apps/'+((a&&phoneSide&&a.mobilePath)||(a&&a.path)||id+'.html')};
 const placeholder=a=>'<!DOCTYPE html><meta name="viewport" content="width=device-width,initial-scale=1"><body style="margin:0;height:100vh;display:grid;place-items:center;background:#f4ead8;color:#22180f;font:14px/1.5 system-ui,sans-serif;text-align:center;padding:20px;box-sizing:border-box"><div><p style="margin:0 0 14px">'+(a.id==='interior'?'The 3D studio':'This app')+' is heavy to run twice.<br>Load the phone preview when you need it.</p><button onclick="parent.postMessage(\'devocrat-load-mobile\',\'*\')" style="padding:10px 16px;border:1px solid #b8892f;background:#fff;color:#22180f;border-radius:999px;font:inherit;cursor:pointer">Load phone preview</button></div></body>';
-function setFrame(f,id,ph){f.removeAttribute('srcdoc');f.src=appUrl(id,ph)}
+function setFrame(f,id,ph){if(window.dvcFrame)return dvcFrame(f,{src:appUrl(id,ph)});f.removeAttribute('srcdoc');f.src=appUrl(id,ph)}
 function loadApp(id){const a=appMeta.find(x=>x.id===id);if(!a)return;curApp=id;$('#protoName').textContent=a.name;
- const d=$('#pvD'),m=$('#pvM');setFrame(d,id);if(a.lazyMobile&&!mobileOn){m.removeAttribute('src');m.srcdoc=placeholder(a)}else setFrame(m,id,true);$('#pvOpen').href=appUrl(id)}
+ const d=$('#pvD'),m=$('#pvM');setFrame(d,id);if(a.lazyMobile&&!mobileOn){if(window.dvcFrame)dvcFrame(m,{srcdoc:placeholder(a)});else{m.removeAttribute('src');m.srcdoc=placeholder(a)}}else setFrame(m,id,true);$('#pvOpen').href=appUrl(id)}
 addEventListener('message',e=>{const m=$('#pvM');if(e.data==='devocrat-load-mobile'&&e.source===m.contentWindow){mobileOn=true;setFrame(m,curApp,true)}});
 $('#pvReload').onclick=()=>loadApp(curApp);
 const api={};
-function openProto(id){mobileOn=false;$('#proto').hidden=false;document.documentElement.classList.add('nocur');Music.duck(true);loadApp(id);$('#protoBack').focus();api.pause?.(true)}
-function closeProto(){$('#proto').hidden=true;document.documentElement.classList.remove('nocur');Music.duck(false);['pvD','pvM'].forEach(i=>{const f=$('#'+i);f.removeAttribute('srcdoc');f.src='about:blank'});api.pause?.(false);api.afterProto?.()}
+function openProto(id){mobileOn=false;$('#proto').hidden=false;document.documentElement.classList.add('nocur');Music.duck(true);loadApp(id);$('#protoBack').focus();api.pause?.(true);window.DVCNav?.open('sproto',rawCloseProto,(window.DVCNav.hash||(s=>'#'+s))('app-'+id))}
+function closeProto(){rawCloseProto();window.DVCNav?.closed('sproto')}
+function rawCloseProto(){if($('#proto').hidden)return;$('#proto').hidden=true;document.documentElement.classList.remove('nocur');Music.duck(false);['pvD','pvM'].forEach(i=>{const f=$('#'+i);if(window.dvcFrame)dvcFrame(f,null);else{f.removeAttribute('srcdoc');f.src='about:blank'}});api.pause?.(false);api.afterProto?.()}
 $('#protoBack').onclick=closeProto;
 
 /* ---------------- mild music, made live in the browser (no audio files) ----------------
@@ -918,14 +922,17 @@ const dotEls=Object.fromEntries($$('.dot').map(d=>[d.dataset.go,d]));
 document.addEventListener('click',e=>{const g=e.target.closest('[data-go]');if(g){e.preventDefault();go(g.dataset.go)}if(e.target.closest('[data-back]'))back()});
 
 function showUI(on){$('#bar').hidden=!on;$('#dots').hidden=!on;$('#back').hidden=on}
-function go(id){if(!VIEWS[id])return;if(mode==='focus'&&focus===id)return;closePanel();if(focus)onLeave(focus);if(mode==='home')homeLook={yaw:cam.yaw,pitch:cam.pitch};
+// back-button steps (js/nav.js): flying to an object, the prototype viewer and the text view are each one step in the browser history
+const NAV=window.DVCNav||{open(){},closed(){},hash:s=>'#'+s},NH=s=>NAV.hash?NAV.hash(s):'#'+s;
+function go(id){if(!VIEWS[id])return;if(mode==='focus'&&focus===id)return;NAV.open('spot',rawBack,NH(id));closePanel();if(focus)onLeave(focus);if(mode==='home')homeLook={yaw:cam.yaw,pitch:cam.pitch};
  mode='fly';focus=id;showUI(false);$('#hint').classList.add('off');const v=VIEWS[id];
  setShiftFor(id);flyTo(id==='services'?tvPos():viewPos(v),new V3(...v.look),1.5,()=>{mode='focus';openPanel(id)})}
 // tall phone screens see less from side to side, so step back from the object (and a little up)
 function viewPos(v){const p=new V3(...v.pos),l=new V3(...v.look),a=innerWidth/innerHeight;if(a>=1)return p;const k=clamp(.62/a,1,1.55);const q=l.clone().add(p.sub(l).multiplyScalar(k));q.y+=(k-1)*.35;return q}
-function back(){if(mode==='home')return;closePanel();onLeave(focus);mode='fly';focus=null;shiftT={x:0,y:0};flyAngles(HOME.pos,homeLook.yaw,homeLook.pitch,1.3,()=>{mode='home';showUI(true)})}
+function back(){if(mode==='home')return;rawBack();NAV.closed('spot')}
+function rawBack(){if(mode==='home')return;if(!$('#proto').hidden)rawCloseProto();closePanel();onLeave(focus);mode='fly';focus=null;shiftT={x:0,y:0};flyAngles(HOME.pos,homeLook.yaw,homeLook.pitch,1.3,()=>{mode='home';showUI(true)})}
 $('#back').onclick=back;
-addEventListener('keydown',e=>{if(e.key==='Escape'){if(!$('#lightMenu').hidden){$('#lightMenu').hidden=true;$('#bLight').setAttribute('aria-expanded','false');$('#bLight').focus()}else if(brew&&$('#proto').hidden)skipBrew();else if(!$('#proto').hidden)closeProto();else if(!$('#textv').hidden)$('#textv').hidden=true;else back()}});
+addEventListener('keydown',e=>{if(e.key==='Escape'){if(!$('#lightMenu').hidden){$('#lightMenu').hidden=true;$('#bLight').setAttribute('aria-expanded','false');$('#bLight').focus()}else if(brew&&$('#proto').hidden)skipBrew();else if(!$('#proto').hidden)closeProto();else if(!$('#textv').hidden)closeText();else back()}});
 function setShiftFor(id){const sideP=id!=='family'&&id!=='prototypes';if(phone()){shiftT={x:0,y:sideP?innerHeight*.24:id==='family'?innerHeight*.2:innerHeight*.12}}else{shiftT={x:sideP?Math.min(440,innerWidth*.4)/2+12:0,y:0}}}
 
 /* ---------- panels ---------- */

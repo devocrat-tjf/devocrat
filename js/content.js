@@ -846,13 +846,13 @@ const TEAM_ROLES={
   "des": [
     "Manoj",
     "aka Lucky",
-    "Designer · Creative direction",
+    "Design Director",
     "7418566607"
   ],
   "dev": [
     "Venkatesh Kumar",
     "aka Venky",
-    "Developer · Engineering",
+    "Code Crafter",
     "6383941862"
   ]
 };
@@ -888,8 +888,8 @@ const TEAM_TAGS={
     "UNIT-02 // CODE"
   ],
   "interior": [
-    "The Designer",
-    "The Developer"
+    "The Design Director",
+    "The Code Crafter"
   ],
   "elegant": [
     "Creative Direction",
