@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://devocrat-tjf.github.io/devocrat/sitemap.xml
