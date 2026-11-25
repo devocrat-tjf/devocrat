@@ -464,7 +464,7 @@ function openWorld(id,event){
 }
 /* Some worlds are their own full-screen 3D page; each place in that page is one section of the site.
    auto = drive.html (drive between pit stops), interior = studio.html (look around a living room). */
-const FULL_WORLDS={auto:['drive.html','DEVOCRAT automotive world: drive between pit stops'],interior:['studio.html','DEVOCRAT Interior Designer Studio: look around the room']};
+const FULL_WORLDS={auto:['drive.html','DEVOCRAT automotive world: drive between pit stops'],interior:['studio.html','DEVOCRAT Interior Designer Studio: look around the room'],hospital:['hospital.html','DEVOCRAT Hospital: walk through the 3D hospital']};
 function openFullWorld(id){const [src,title]=FULL_WORLDS[id];view.innerHTML='<iframe class="driveframe" src="'+src+'" title="'+title+'" allow="fullscreen; accelerometer; gyroscope; autoplay" allowfullscreen></iframe>';
  view.scrollTop=0;document.body.style.overflow='hidden';document.body.classList.add('drive-open');const uni=document.getElementById('universe');if(uni)uni.inert=true;
  const f=view.querySelector('.driveframe');f.addEventListener('load',()=>{try{f.focus();f.contentWindow.focus()}catch(_){}});
