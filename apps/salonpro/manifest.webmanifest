@@ -1,7 +1,7 @@
 {
-  "name": "DEVOCRAT Salon – Staff",
-  "short_name": "DEVOCRAT Staff",
-  "description": "Salon management for DEVOCRAT: reception, stylists, manager and admin.",
+  "name": "SALONcrat – Staff",
+  "short_name": "SALONcrat Staff",
+  "description": "SALONcrat salon management: reception, stylists, manager and admin.",
   "id": "./",
   "start_url": "./",
   "scope": "./",

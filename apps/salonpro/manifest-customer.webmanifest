@@ -1,7 +1,7 @@
 {
-  "name": "DEVOCRAT Salon",
-  "short_name": "DEVOCRAT",
-  "description": "Book appointments, explore services & stylists, and manage your DEVOCRAT Salon membership.",
+  "name": "SALONcrat",
+  "short_name": "SALONcrat",
+  "description": "Book appointments, explore services & stylists, and manage your SALONcrat membership.",
   "id": "./?portal=customer",
   "start_url": "./?portal=customer",
   "scope": "./",

@@ -25,7 +25,7 @@ button{font:inherit;color:inherit;cursor:pointer}
 :focus-visible{outline:2px solid var(--brass);outline-offset:2px}
 .serif{font-family:"Cormorant Garamond",Georgia,serif}
 .logo{font:800 20px/1 Manrope,sans-serif;letter-spacing:.14em;color:var(--ivory);text-shadow:0 1px 8px rgba(0,0,0,.45)}
-.logo b{color:var(--brass-hi);font-weight:800}
+.logo b{font-weight:800;background:linear-gradient(180deg,#fff1bd 0%,#e3bd5e 38%,#a87a22 52%,#d9b04e 70%,#f6dc8c 100%);-webkit-background-clip:text;background-clip:text;color:transparent;text-shadow:none}   /* DEV metallic gold, OCRAT ivory (brand rule) */
 /* top */
 #top{position:fixed;z-index:6;top:0;left:0;right:0;display:flex;align-items:flex-start;justify-content:space-between;gap:10px;padding:max(14px,env(safe-area-inset-top)) max(16px,env(safe-area-inset-right)) 0 max(16px,env(safe-area-inset-left));pointer-events:none}
 #top>*{pointer-events:auto}
@@ -215,7 +215,7 @@ html.nocur #cur{display:none!important}html.nocur.curon,html.nocur.curon *{curso
 <div id="loader" role="dialog" aria-label="Welcome">
  <div>
   <div class="arch" aria-hidden="true"></div>
-  <div class="logo" style="margin-top:22px">DEV<b>OCRAT</b></div>
+  <div class="logo" style="margin-top:22px"><b>DEV</b>OCRAT</div>
   <h1>Interior Designer Studio</h1>
   <p>Step inside our home studio. Drag to look around and tap the glowing dots: every object holds part of our story.</p>
   <div class="meter"><i id="lbar"></i></div>
@@ -228,7 +228,7 @@ html.nocur #cur{display:none!important}html.nocur.curon,html.nocur.curon *{curso
 <header id="top">
  <div class="brandrow">
   <button class="chip" id="bWorlds" aria-label="Back to all worlds"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 5l-7 7 7 7"/></svg><span class="lbl">All worlds</span></button>
-  <div class="brand"><div class="logo" aria-label="DEVOCRAT">DEV<b>OCRAT</b></div><small>Interior Designer Studio</small></div>
+  <div class="brand"><div class="logo" aria-label="DEVOCRAT"><b>DEV</b>OCRAT</div><small>Interior Designer Studio</small></div>
  </div>
  <div class="btns">
   <button class="chip" id="bMusic" aria-pressed="false" title="Music on or off"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l11-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="17" cy="16" r="3"/></svg><span class="lbl" id="bMusicT">Music off</span></button>
@@ -301,7 +301,7 @@ const HOT=[
  {id:'offers',obj:'Dining table',sec:'Offers'},
  {id:'discuss',obj:'Swing',sec:'Discuss'}];
 const H=Object.fromEntries(HOT.map(h=>[h.id,h]));
-const SHORT={guard:'Guard',salon:'Lumière',interior:'Interior',pica:'Pica & Co.',sahakarya:'Sahakārya',apparel:'Apparels',hospital:'Hospital',salonpro:'Salon',restaurant:'Restaurant'};
+const SHORT={guard:'Guard',interior:'Interior',pica:'Pica & Co.',sahakarya:'Sahakārya',apparel:'E-COMcrat',hospital:'HMScrat',salonpro:'SALONcrat',restaurant:'RESTOcrat'};
 const shortName=a=>SHORT[a.id]||a.name.split(' ').slice(0,2).join(' ');
 const nextOf=id=>HOT[(HOT.findIndex(h=>h.id===id)+1)%HOT.length];
 const foot=id=>{const n=nextOf(id);return `<div class="foot"><button class="ghost" data-back>← The room</button><button class="ghost" data-go="${n.id}">${esc(n.obj)} · ${esc(n.sec)} →</button></div>`};

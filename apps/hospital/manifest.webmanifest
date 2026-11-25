@@ -1,7 +1,7 @@
 {
-  "name": "Devocrat Multi-Speciality Hospital",
-  "short_name": "Devocrat Hospital",
-  "description": "Hospital management — reception, doctors, nurses, lab, X-ray & scan, pharmacy and patients.",
+  "name": "HMScrat — Hospital Management",
+  "short_name": "HMScrat",
+  "description": "HMScrat by DEVOCRAT — hospital management for reception, doctors, nurses, lab, X-ray & scan, pharmacy and patients.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",

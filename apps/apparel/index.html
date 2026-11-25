@@ -3,11 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Clothing E-commerce Website – Live Demo | DEVOCRAT</title>
-<meta name="description" content="Online clothing store demo with 1,000 products, cart, checkout, cash on delivery and a store admin. E-commerce website development by DEVOCRAT, Bangalore &amp; Coimbatore." data-seo>
+<title>E-COMcrat – Clothing E-commerce Website – Live Demo | DEVOCRAT</title>
+<meta name="description" content="Try E-COMcrat, an online clothing store with 1,000 products, cart, checkout, cash on delivery and a store admin. E-commerce website development by DEVOCRAT, Bangalore &amp; Coimbatore." data-seo>
 <link rel="canonical" href="https://devocrat-tjf.github.io/devocrat/apps/apparel/index.html">
 <meta property="og:type" content="website"><meta property="og:site_name" content="DEVOCRAT">
-<meta property="og:title" content="Clothing E-commerce Website – Live Demo | DEVOCRAT"><meta property="og:description" content="Online clothing store demo with 1,000 products, cart, checkout, cash on delivery and a store admin. E-commerce website development by DEVOCRAT, Bangalore &amp; Coimbatore.">
+<meta property="og:title" content="E-COMcrat – Clothing E-commerce Website – Live Demo | DEVOCRAT"><meta property="og:description" content="Try E-COMcrat, an online clothing store with 1,000 products, cart, checkout, cash on delivery and a store admin. E-commerce website development by DEVOCRAT, Bangalore &amp; Coimbatore.">
 <meta property="og:url" content="https://devocrat-tjf.github.io/devocrat/apps/apparel/index.html"><meta property="og:image" content="https://devocrat-tjf.github.io/devocrat/images/og-devocrat.jpg">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#2b1b3d">
@@ -21,7 +21,7 @@
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="DEVOCRAT">
+<meta name="apple-mobile-web-app-title" content="E-COMcrat">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&display=swap" rel="stylesheet">
 <style>
@@ -158,7 +158,7 @@ footer{background:var(--plum);color:#dcd2e8;font-size:14px}footer .wrap{display:
 </defs></svg>
 
 <header><div class="hd">
-  <a class="logo" href="#">DEVO<b>CRAT</b><small>Apparels</small></a>
+  <a class="logo" href="#" aria-label="E-COMcrat home">E-COM<b>crat</b><small>by DEVOCRAT</small></a>
   <nav class="main" id="nav"><a href="#men">Men</a><a href="#women">Women</a><a href="#kids">Kids</a><a href="#new">New</a><a href="#sale">Sale</a></nav>
   <form class="srch" id="srch" role="search"><input id="q" type="search" placeholder="Search kurtas, jeans, frocks…" aria-label="Search products"></form>
   <div class="icons" style="display:flex;align-items:center;gap:2px">
@@ -172,7 +172,7 @@ footer{background:var(--plum);color:#dcd2e8;font-size:14px}footer .wrap{display:
 <main id="view"><div class="empty">Loading the catalogue…</div></main>
 
 <footer class="band"><div class="wrap">
-  <div><b>DEVOCRAT Apparels</b>Clothing for men, women and kids. A working demo store by DEVOCRAT.</div>
+  <div><b>E-COMcrat</b>Clothing for men, women and kids. A store app by DEVOCRAT.</div>
   <div><b>Shop</b><a href="#men">Men</a> · <a href="#women">Women</a> · <a href="#kids">Kids</a> · <a href="#sale">Sale</a></div>
   <div><b>Help</b>Cash on Delivery · Free delivery over ₹999 · 7-day returns</div>
   <div><b>Store</b><a href="#admin">Store admin</a> · <button class="lnk" id="iosHint" style="color:inherit;padding:0">Install this app</button><div id="net" class="note" style="color:#dcd2e8"></div></div>
@@ -184,7 +184,7 @@ footer{background:var(--plum);color:#dcd2e8;font-size:14px}footer .wrap{display:
 <aside class="drawer" id="cd" aria-label="Shopping bag"></aside>
 <div class="dlg" id="dlg"><div><h3 id="dlgT"></h3><p id="dlgM" style="margin:0"></p><div class="row" style="justify-content:flex-end"><button class="btn ghost sm" id="dlgNo">Cancel</button><button class="btn acc sm" id="dlgYes">Confirm</button></div></div></div>
 <div class="toast" id="toast"></div>
-<div class="dlg" id="iosDlg"><div><h3>Install DEVOCRAT Apparels</h3><p style="margin:0" id="iosMsg"></p><div class="row" style="justify-content:flex-end"><button class="btn sm" id="iosOk">Got it</button></div></div></div>
+<div class="dlg" id="iosDlg"><div><h3>Install E-COMcrat</h3><p style="margin:0" id="iosMsg"></p><div class="row" style="justify-content:flex-end"><button class="btn sm" id="iosOk">Got it</button></div></div></div>
 
 <script>
 {
@@ -411,7 +411,7 @@ function orders(){
 /* ---------- admin ---------- */
 const A={tab:'dash',q:'',g:'',shown:50,stock:''};
 function admin(){
-  if(!isAdmin){V.innerHTML=online?`<section class="band"><div class="wrap" style="max-width:420px"><h1 style="font-size:36px;margin-bottom:6px">Store admin</h1><p class="note" style="margin:0 0 18px">Enter the admin password you set in the Google Sheet (DEVOCRAT Store menu). Customers don’t need an account.</p>
+  if(!isAdmin){V.innerHTML=online?`<section class="band"><div class="wrap" style="max-width:420px"><h1 style="font-size:36px;margin-bottom:6px">Store admin</h1><p class="note" style="margin:0 0 18px">Enter the admin password you set in the Google Sheet (E-COMcrat Store menu). Customers don’t need an account.</p>
     <form class="form" id="lgf"><input type="hidden" name="email" value="admin" autocomplete="username"><label>Password<input name="password" type="password" autocomplete="current-password" required></label><div class="err" id="lgErr"></div><button class="btn acc">Sign in</button></form></div></section>`
     :`<section class="band"><div class="wrap empty"><h2>Google Sheet not connected</h2><p>${API?'The store’s Google Sheet could not be reached. Check your internet connection and try again.':'Add your Apps Script web app URL to config.js to turn on the admin panel.'}</p><a class="btn" href="#">Back to the store</a></div></section>`;return}
   const tot=P.length,out=P.filter(p=>stockOf(p)===0).length,low=P.filter(p=>{const s=stockOf(p);return s>0&&s<10}).length,units=P.reduce((a,p)=>a+stockOf(p),0),hid=P.filter(p=>p.hidden).length,pend=allOrders.filter(o=>o.status==='Placed').length;

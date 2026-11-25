@@ -1,11 +1,11 @@
-/* DEVOCRAT Apparels — website demo set-up.
+/* E-COMcrat — website demo set-up.
    First visit: create the Products and Orders tabs (the script's own setup), load the 1,000 sample
    products, set the admin password and add a few sample orders. Everything stays on this device. */
 DevoGAS.install({
   url: 'https://script.google.com/macros/s/DEVOCRAT-WEBSITE-DEMO-apparel/exec',
   key: 'devo-demo-apparel',
   alsoClear: ['devo-cart', 'devo-wish', 'devo-orders', 'devo-tok', 'devo-sheet'],
-  name: 'DEVOCRAT Apparels — demo',
+  name: 'E-COMcrat — demo',
   badge: { text: 'admin password <b>demo1234</b>' },
   async seed({ fn, ss, props }) {
     fn('setup')();

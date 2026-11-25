@@ -1,7 +1,7 @@
 {
-  "name": "Devocrat Restaurant & Bar",
-  "short_name": "Devocrat",
-  "description": "QR table ordering, kitchen display, live orders and reports for Devocrat Restaurant & Bar.",
+  "name": "RESTOcrat",
+  "short_name": "RESTOcrat",
+  "description": "QR table ordering, kitchen display, live orders and reports — RESTOcrat by DEVOCRAT.",
   "id": "/",
   "start_url": "/",
   "scope": "/",

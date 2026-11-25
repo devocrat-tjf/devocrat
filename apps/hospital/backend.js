@@ -1,13 +1,13 @@
-/* Devocrat Multi-Speciality Hospital — its Google Apps Script (Code.gs), wrapped to run in the browser for the website demo. Generated; edit the original Code.gs. */
+/* HMScrat — its Google Apps Script (Code.gs), wrapped to run in the browser for the website demo. Generated; edit the original Code.gs. */
 window.__GAS_BACKEND = function (SpreadsheetApp, PropertiesService, CacheService, LockService, Utilities, ContentService, HtmlService, DriveApp, Session, MailApp, GmailApp, UrlFetchApp, ScriptApp, Logger) {
 /**
- * DEVOCRAT HMS — Google Sheets backend (trial edition)
+ * HMScrat — hospital management by DEVOCRAT · Google Sheets backend (trial edition)
  * Devocrat Multi-Speciality Hospital
  *
  * Paste this whole file into Extensions → Apps Script of the hospital Google Sheet,
  * run `setup` once, then Deploy → New deployment → Web app (Execute as: Me, Who has access: Anyone).
  * The License tab controls the trial: edit the expiry date or status there, or use the
- * "DEVOCRAT HMS" menu in the Sheet.
+ * "HMScrat" menu in the Sheet.
  */
 var TZ = 'Asia/Kolkata';
 var HOSP_DEFAULT = 'Devocrat Multi-Speciality Hospital';
@@ -504,8 +504,8 @@ function licenseTab_() {
   if (sh) return sh;
   sh = ss_().insertSheet(LICENSE_TAB, 0);
   var start = new Date(), exp = new Date(Date.now() + 14 * 864e5);
-  sh.getRange('A1').setValue('DEVOCRAT HMS — Trial licence').setFontSize(16).setFontWeight('bold').setFontColor('#0b4f5c');
-  sh.getRange('A2').setValue('Edit the Value column. Changes apply within a minute. You can also use the DEVOCRAT HMS menu above.').setFontColor('#58717d');
+  sh.getRange('A1').setValue('HMScrat — Trial licence').setFontSize(16).setFontWeight('bold').setFontColor('#0b4f5c');
+  sh.getRange('A2').setValue('Edit the Value column. Changes apply within a minute. You can also use the HMScrat menu above.').setFontColor('#58717d');
   var rows = [['Setting', 'Value', 'Notes'],
     ['Licensed to', 'Trial client', 'Client / hospital name shown on the login screen'],
     ['Plan', 'Trial', 'Shown to users, e.g. Trial, Standard'],
@@ -513,7 +513,7 @@ function licenseTab_() {
     ['Expiry date', exp, 'The app locks for everyone after this date. Change it to extend the trial.'],
     ['Status', 'Active', 'Active = app works · Suspended = app locked immediately'],
     ['Hospital name', HOSP_DEFAULT, 'Name shown across the app and on reports'],
-    ['Message when expired', 'Your trial period has ended. Please contact DEVOCRAT to continue using the hospital app.', 'Shown on the lock screen'],
+    ['Message when expired', 'Your trial period has ended. Please contact DEVOCRAT to continue using HMScrat.', 'Shown on the lock screen'],
     ['Support phone', '', 'Shown on the lock screen'],
     ['Support email', '', 'Shown on the lock screen']];
   sh.getRange(4, 1, rows.length, 3).setValues(rows);
@@ -545,7 +545,7 @@ function licenseState() {
 }
 function onEdit(e) { try { if (e && e.range && e.range.getSheet().getName() === LICENSE_TAB) CacheService.getScriptCache().remove('lic'); } catch (x) {} }
 function onOpen() {
-  SpreadsheetApp.getUi().createMenu('DEVOCRAT HMS')
+  SpreadsheetApp.getUi().createMenu('HMScrat')
     .addItem('Extend trial by 7 days', 'extend7').addItem('Extend trial by 30 days', 'extend30')
     .addSeparator().addItem('Suspend app now', 'suspendApp').addItem('Activate app', 'activateApp')
     .addSeparator().addItem('Set up / reset sample data…', 'setupConfirm').addItem('Clear app cache', 'clearCache').addToUi();
@@ -593,7 +593,7 @@ function setup() {
 function scanFolder_() {
   var id = meta('scan_folder'), f = null;
   if (id) try { f = DriveApp.getFolderById(id); } catch (e) {}
-  if (!f) { f = DriveApp.createFolder('DEVOCRAT HMS — scan images'); meta('scan_folder', f.getId()); }
+  if (!f) { f = DriveApp.createFolder('HMScrat — scan images'); meta('scan_folder', f.getId()); }
   return f;
 }
 
@@ -719,6 +719,5 @@ function file_(u, b) {
   var blob = DriveApp.getFileById(o.img).getBlob();
   return { ok: true, data: 'data:' + blob.getContentType() + ';base64,' + Utilities.base64Encode(blob.getBytes()) };
 }
-
 ;return function (__n) { return eval(__n); };
 };

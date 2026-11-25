@@ -1,7 +1,7 @@
-/* DEVOCRAT Apparels — its Google Apps Script (Code.gs), wrapped to run in the browser for the website demo. Generated; edit the original Code.gs. */
+/* E-COMcrat — its Google Apps Script (Code.gs), wrapped to run in the browser for the website demo. Generated; edit the original Code.gs. */
 window.__GAS_BACKEND = function (SpreadsheetApp, PropertiesService, CacheService, LockService, Utilities, ContentService, HtmlService, DriveApp, Session, MailApp, GmailApp, UrlFetchApp, ScriptApp, Logger) {
 /**
- * DEVOCRAT Apparels — Google Sheets backend (Google Apps Script web app)
+ * E-COMcrat — Google Sheets backend (Google Apps Script web app)
  *
  * Paste this whole file into Extensions → Apps Script of the store's Google Sheet,
  * then follow README.md: set the admin password, deploy as a Web app, and copy the URL
@@ -14,7 +14,7 @@ window.__GAS_BACKEND = function (SpreadsheetApp, PropertiesService, CacheService
 
 const PRODUCTS = 'Products';
 const ORDERS = 'Orders';
-const PHOTO_FOLDER = 'DEVOCRAT Apparels Photos';
+const PHOTO_FOLDER = 'E-COMcrat Photos';
 const FREE_DELIVERY_FROM = 999;   // ₹ — orders at or above this ship free
 const DELIVERY_FEE = 79;          // ₹
 const TOKEN_DAYS = 7;             // admin sign-in lasts this many days
@@ -29,7 +29,7 @@ const STATUSES = ['Placed', 'Confirmed', 'Shipped', 'Delivered', 'Cancelled'];
 /* ------------------------------------------------------------------ menu & setup */
 
 function onOpen() {
-  SpreadsheetApp.getUi().createMenu('DEVOCRAT Store')
+  SpreadsheetApp.getUi().createMenu('E-COMcrat Store')
     .addItem('1. Set up sheets', 'setup')
     .addItem('2. Set admin password', 'setAdminPassword')
     .addToUi();
@@ -50,7 +50,7 @@ function setup() {
   const o = ss.getSheetByName(ORDERS);
   o.getRange('C2:C').setDataValidation(SpreadsheetApp.newDataValidation().requireValueInList(STATUSES, true).build());
   secret_();
-  try { SpreadsheetApp.getUi().alert('Sheets are ready. Next: DEVOCRAT Store → Set admin password.'); } catch (e) {}
+  try { SpreadsheetApp.getUi().alert('Sheets are ready. Next: E-COMcrat Store → Set admin password.'); } catch (e) {}
 }
 
 /** Asks for the admin password used to sign in to the store's admin panel. */
@@ -104,7 +104,7 @@ function out_(o) { return ContentService.createTextOutput(JSON.stringify(o)).set
 function msg_(err) { return String((err && err.message) || err); }
 function sheet_(name) {
   const sh = SpreadsheetApp.getActive().getSheetByName(name);
-  if (!sh) throw new Error('The "' + name + '" tab is missing. Run DEVOCRAT Store → Set up sheets.');
+  if (!sh) throw new Error('The "' + name + '" tab is missing. Run E-COMcrat Store → Set up sheets.');
   return sh;
 }
 function withLock_(fn) {
@@ -167,7 +167,7 @@ function sign_(text) {
 }
 function login_(password) {
   const pw = PropertiesService.getScriptProperties().getProperty('ADMIN_PASSWORD');
-  if (!pw) throw new Error('No admin password yet. In the Google Sheet use DEVOCRAT Store → Set admin password.');
+  if (!pw) throw new Error('No admin password yet. In the Google Sheet use E-COMcrat Store → Set admin password.');
   if (String(password || '') !== pw) { Utilities.sleep(1500); throw new Error('Wrong password.'); }
   const exp = String(Date.now() + TOKEN_DAYS * 864e5);
   return { ok: true, token: exp + '.' + sign_(exp), sheetUrl: SpreadsheetApp.getActive().getUrl() };
@@ -286,6 +286,5 @@ function setStatus_(oid, status) {
     return { ok: true, status: status, deducted: take ? true : giveBack ? false : o.deducted, changedStock: take || giveBack };
   });
 }
-
 ;return function (__n) { return eval(__n); };
 };

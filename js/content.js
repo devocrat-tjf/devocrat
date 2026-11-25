@@ -595,13 +595,6 @@ const appMeta=[
     "desc": "Role-based security operations demo"
   },
   {
-    "id": "salon",
-    "name": "Lumière Salon",
-    "kind": "Booking app",
-    "icon": "✂️",
-    "desc": "Salon bookings, try-on and memberships"
-  },
-  {
     "id": "interior",
     "name": "Manoj Interior Studio",
     "kind": "3D design tool",
@@ -626,7 +619,7 @@ const appMeta=[
   },
   {
     "id": "apparel",
-    "name": "DEVOCRAT Apparels",
+    "name": "E-COMcrat",
     "kind": "Online store",
     "icon": "👗",
     "desc": "Clothing store with cart, orders and store admin",
@@ -634,7 +627,7 @@ const appMeta=[
   },
   {
     "id": "hospital",
-    "name": "Devocrat Multi-Speciality Hospital",
+    "name": "HMScrat",
     "kind": "Hospital management",
     "icon": "🏥",
     "desc": "Reception, doctors, nurses, lab, pharmacy and patients",
@@ -642,7 +635,7 @@ const appMeta=[
   },
   {
     "id": "salonpro",
-    "name": "DEVOCRAT Salon",
+    "name": "SALONcrat",
     "kind": "Salon management",
     "icon": "💇",
     "desc": "Bookings, billing, stylists, attendance and payroll",
@@ -651,7 +644,7 @@ const appMeta=[
   },
   {
     "id": "restaurant",
-    "name": "Devocrat Restaurant & Bar",
+    "name": "RESTOcrat",
     "kind": "QR ordering & restaurant",
     "icon": "🍽",
     "desc": "Table QR ordering, kitchen screen, floor and reports",
@@ -663,7 +656,6 @@ const appMeta=[
 // One-line description of each prototype.
 const APP_BLURB={
   "guard": "Role-based security operations, from guards to admin.",
-  "salon": "Salon bookings, style try-on and memberships.",
   "interior": "Design and arrange a room interactively in 3D.",
   "pica": "An editorial website with a working interactive typewriter.",
   "sahakarya": "Team activities, steps, deadlines and a shared to-do list.",

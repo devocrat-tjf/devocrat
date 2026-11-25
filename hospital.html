@@ -9,7 +9,7 @@
 <meta property="og:type" content="website"><meta property="og:site_name" content="DEVOCRAT">
 <meta property="og:title" content="DEVOCRAT Hospital – Walk-through 3D World"><meta property="og:image" content="https://devocrat-tjf.github.io/devocrat/images/og-devocrat.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=DM+Serif+Display&family=Cinzel:wght@600;700&family=Lexend:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 /* VOICE: a calm, bright, modern private hospital: white walls, teal care colour, warm DEVOCRAT gold for the brand.
    Six rooms, each one part of the site: Reception = About, Laboratory = Prototypes, Consultation = Discuss,
@@ -25,7 +25,9 @@ button{font:inherit;color:inherit;cursor:pointer}
 #top{position:fixed;z-index:6;top:0;left:0;right:0;display:flex;align-items:flex-start;justify-content:space-between;gap:10px;padding:max(12px,env(safe-area-inset-top)) max(14px,env(safe-area-inset-right)) 0 max(14px,env(safe-area-inset-left));pointer-events:none}
 #top>*{pointer-events:auto}
 .brandrow{display:flex;align-items:center;gap:12px}
-.logo{font:800 19px/1 Manrope;letter-spacing:.14em;color:var(--ink)}.logo b{color:var(--gold)}
+.logo{font:700 20px/1 Cinzel,Georgia,serif;letter-spacing:.1em;color:#111}
+/* the DEVOCRAT wordmark: DEV metallic gold, OCRAT black on light / ivory on dark */
+.wm .d{background:linear-gradient(180deg,#fff1bd 0%,#e3bd5e 38%,#a87a22 52%,#d9b04e 70%,#f6dc8c 100%);-webkit-background-clip:text;background-clip:text;color:transparent}.wm .o{color:#111}.dark .wm .o,.wm.dark .o{color:#f3ead8}
 .brand small{display:block;margin-top:4px;font:700 12px/1 Manrope;letter-spacing:.16em;text-transform:uppercase;color:var(--teal-d)}
 .chip{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 15px;border-radius:999px;border:1px solid var(--line);background:var(--glass);color:var(--ink);font-weight:700;font-size:14px;box-shadow:0 4px 16px rgba(10,40,44,.12)}
 .chip:hover{border-color:var(--teal)}.chip.on{background:var(--teal);color:#fff;border-color:var(--teal)}
@@ -37,7 +39,8 @@ button{font:inherit;color:inherit;cursor:pointer}
 #room.show{opacity:1;transform:translate(-50%,0)}
 body.touch #room{top:max(176px,calc(env(safe-area-inset-top) + 164px))}
 #room b{display:block;font:400 30px/1.1 "DM Serif Display",Georgia,serif;color:var(--ink);text-shadow:0 2px 12px rgba(255,255,255,.9)}
-#room span{display:inline-block;margin-top:6px;padding:4px 12px;border-radius:999px;background:var(--teal);color:#fff;font:800 11px/1.4 Manrope;letter-spacing:.16em;text-transform:uppercase}
+#room>span{display:inline-block;margin-top:6px;padding:4px 12px;border-radius:999px;background:var(--teal);color:#fff;font:800 11px/1.4 Manrope;letter-spacing:.16em;text-transform:uppercase}
+#room .wm{font-family:Cinzel,Georgia,serif;font-weight:700;letter-spacing:.08em}#room .wm .d{filter:drop-shadow(0 0 1px rgba(0,0,0,.35))}
 /* minimap */
 #mini{position:fixed;z-index:5;left:max(14px,env(safe-area-inset-left));bottom:max(14px,env(safe-area-inset-bottom));width:150px;height:118px;border-radius:14px;border:1px solid var(--line);background:var(--glass);box-shadow:var(--shadow);cursor:pointer}
 body.touch #mini{top:max(70px,calc(env(safe-area-inset-top) + 58px));bottom:auto;width:118px;height:93px}
@@ -76,7 +79,7 @@ body.touch #toast{bottom:max(170px,calc(env(safe-area-inset-bottom) + 150px))}
 <div id="load">Opening the hospital…</div>
 <header id="top">
  <div class="brandrow"><button class="chip" id="bWorlds" aria-label="All worlds"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg><span class="t">All worlds</span></button>
-  <div class="brand"><div class="logo">DEV<b>OCRAT</b></div><small>Hospital</small></div></div>
+  <div class="brand"><div class="logo wm"><span class="d">DEV</span><span class="o">OCRAT</span></div><small>Hospital</small></div></div>
  <div class="btns"><button class="chip" id="bMap" title="Map (M)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 4l-6 2v14l6-2 6 2 6-2V4l-6 2-6-2zM9 4v14M15 6v14"/></svg><span class="t">Map</span></button>
   <button class="chip" id="bSound" title="Sound" aria-label="Sound"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5L6 9H3v6h3l5 4V5z"/><path d="M15.5 8.5a5 5 0 010 7M18.5 6a9 9 0 010 12" class="w"/></svg></button></div>
 </header>
@@ -87,7 +90,7 @@ body.touch #toast{bottom:max(170px,calc(env(safe-area-inset-bottom) + 150px))}
 <div id="toast" role="status"></div>
 <section class="scrim" id="mapM" aria-label="Hospital map"><div class="card"><p class="kick">Hospital map</p><h2>Where would you like to go?</h2><p>Tap a room and you will walk there.</p><canvas id="bigmap" width="720" height="560"></canvas><div class="row"><button class="ghost" data-close>Close</button></div></div></section>
 <section class="scrim open" id="intro" aria-label="Welcome"><div class="card">
- <p class="kick">DEVOCRAT · Hospital world</p><h2>Welcome to the DEVOCRAT Hospital</h2>
+ <p class="kick"><span class="wm"><span class="d">DEV</span><span class="o">OCRAT</span></span> · Hospital world</p><h2>Welcome to the <span class="wm" style="font-family:Cinzel,Georgia,serif"><span class="d">DEV</span><span class="o">OCRAT</span></span> Hospital</h2>
  <p>Walk through the hospital: reception tells you about us, the lab shows our apps, the pharmacy our services, the X-ray room how we work, billing our offers, and the consultation room is where you talk to us.</p>
  <p style="margin:0;font-weight:800">Who will you walk in as?</p>
  <div class="who"><button data-who="m" aria-pressed="true"><svg viewBox="0 0 64 64"><circle cx="32" cy="18" r="10" fill="#3a2a1e"/><circle cx="32" cy="20" r="9" fill="#c08a62"/><path d="M14 60c0-12 8-22 18-22s18 10 18 22z" fill="#0b8f9f"/></svg>A man</button>
@@ -95,12 +98,14 @@ body.touch #toast{bottom:max(170px,calc(env(safe-area-inset-bottom) + 150px))}
  <div class="row" style="justify-content:center"><button class="cta" id="bEnterS">Enter with sound</button><button class="ghost" id="bEnterM">Enter muted</button></div>
  <p class="keys" id="keysPC">Walk with <kbd>↑</kbd> <kbd>↓</kbd> (or <kbd>W</kbd> <kbd>S</kbd>), turn with <kbd>←</kbd> <kbd>→</kbd>, hold <kbd>Shift</kbd> to hurry. Drag to look around, <kbd>M</kbd> for the map.</p>
  <p class="keys" id="keysTouch" hidden>Move with the joystick (push further to hurry). Drag the screen to look around. Tap the map to walk to a room.</p>
+ <p class="keys" style="font-size:11px;opacity:.6;margin-top:6px">Ambience recordings from Freesound, incl. “hospital room ambience” by nixeno (CC BY 4.0). Characters &amp; motions: Mixamo.</p>
 </div></section>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/environments/RoomEnvironment.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/libs/meshopt_decoder.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/utils/SkeletonUtils.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/utils/BufferGeometryUtils.js"></script>
 <script src="js/content.js"></script>
 <script src="js/nav.js"></script>
 <script>
@@ -280,6 +285,71 @@ function chair(x,z,ry,p=scene,col=M.seatF){const g=grp(x,0,z,ry,p);
  const top=new THREE.Mesh(shellRim,col);top.castShadow=true;g.add(top);
  [[-1,-1],[1,-1],[-1,1],[1,1]].forEach(([a,b])=>{const l=new THREE.Mesh(new THREE.CylinderGeometry(.012,.018,.46,8),M.black);l.position.set(a*.17,.22,b*.15);l.rotation.set(-b*.12,0,a*.12);l.castShadow=true;g.add(l)});
  if(p===scene){solid(x,z,.52,.52);blob(x,z,.7,.7,.35)}return g}   // solid: nobody walks through a chair
+// merge a built piece of furniture into one mesh per material (a velvet chair goes from ~16 draw calls to 3)
+function bake(g){g.updateMatrixWorld(true);const inv=new THREE.Matrix4().copy(g.matrixWorld).invert(),by=new Map();
+ g.traverse(m=>{if(!m.isMesh)return;const geo=m.geometry.index?m.geometry.toNonIndexed():m.geometry.clone();geo.applyMatrix4(new THREE.Matrix4().multiplyMatrices(inv,m.matrixWorld));
+  for(const k of Object.keys(geo.attributes))if(!['position','normal','uv'].includes(k))geo.deleteAttribute(k);if(!geo.attributes.uv)geo.setAttribute('uv',new THREE.Float32BufferAttribute(new Float32Array(geo.attributes.position.count*2),2));
+  geo.clearGroups();if(!by.has(m.material))by.set(m.material,[]);by.get(m.material).push(geo)});
+ [...g.children].forEach(c=>g.remove(c));by.forEach((list,mat)=>{const mm=new THREE.Mesh(THREE.BufferGeometryUtils.mergeBufferGeometries(list),mat);mm.castShadow=mm.receiveShadow=true;g.add(mm)});return g}
+/* ---- velvet: a crushed-velvet pile texture (light/shade only, coloured by the material), shifted and turned per chair so no two look stamped out ---- */
+const velvetBase=(()=>{const c=document.createElement('canvas');c.width=c.height=256;const x=c.getContext('2d');x.fillStyle='#b8b8b8';x.fillRect(0,0,256,256);
+ for(let i=0;i<2600;i++){const v=150+RND()*105|0;x.fillStyle=`rgba(${v},${v},${v},${.05+RND()*.12})`;const r=4+RND()*26;x.beginPath();x.ellipse(RND()*256,RND()*256,r,r*(.3+RND()*.5),RND()*3.14,0,7);x.fill()}
+ for(let i=0;i<420;i++){x.strokeStyle=`rgba(255,255,255,${.04+RND()*.06})`;x.lineWidth=1+RND()*2;x.beginPath();const X=RND()*256,Y=RND()*256;x.moveTo(X,Y);x.quadraticCurveTo(X+RND()*30-15,Y+20,X+RND()*20-10,Y+40+RND()*30);x.stroke()}
+ return c})();
+function velvet(hex,seed=0,sheen=0xcfe9e4){const t=new THREE.CanvasTexture(velvetBase);t.wrapS=t.wrapT=THREE.RepeatWrapping;t.encoding=THREE.sRGBEncoding;t.repeat.set(1.6+(seed%3)*.25,1.6);t.offset.set((seed*.37)%1,(seed*.61)%1);t.rotation=(seed%5)*.4;
+ return new THREE.MeshPhysicalMaterial({color:C(hex),map:t,roughness:.92,metalness:0,sheen:new THREE.Color(sheen).multiplyScalar(.55),side:THREE.DoubleSide,envMapIntensity:.35})}
+const shade=(hex,k)=>{const c=new THREE.Color(hex);const h={};c.getHSL(h);c.setHSL(h.h+(k-.5)*.025,h.s*(.9+k*.2),h.l*(.88+k*.24));return c.getHex()};
+// a curved upholstered surface between angles ±A round the seat: radius r(θ,v), height from y0 to top(θ)
+function shellGeo(A,y0,top,r,U=72,V=10){const pos=[],uv=[],idx=[];for(let i=0;i<=U;i++){const th=-A+2*A*i/U;for(let j=0;j<=V;j++){const v=j/V,y=y0+v*(top(th)-y0),R=r(th,v);pos.push(R*Math.sin(th),y,-R*Math.cos(th));uv.push(i/U*2.2,y*1.6)}}
+ for(let i=0;i<U;i++)for(let j=0;j<V;j++){const a=i*(V+1)+j,b=a+V+1;idx.push(a,b,a+1,b,b+1,a+1)}const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));g.setAttribute('uv',new THREE.Float32BufferAttribute(uv,2));g.setIndex(idx);g.computeVertexNormals();return g}
+// waiting-room chair (user's photo): velvet scalloped shell back with vertical channels, round cushion, black tapered legs with gold tips, a footrest ring
+function velvetChair(x,z,ry,seed){const g=grp(x,0,z,ry),col=shade(0x164a45,(seed*.618)%1),mat=velvet(col,seed),A=1.62,n=5,y0=.47;
+ const petal=th=>{const t=((th+A)/(2*A)*n)%1;return t},top=th=>.9-.13*Math.pow(Math.abs(th)/A,2.2)-.045*(1-Math.sin(Math.PI*petal(th)));
+ const out=new THREE.Mesh(shellGeo(A,y0,top,(th,v)=>.255+.02*v+.012*Math.sin(Math.PI*petal(th))),mat);out.castShadow=true;g.add(out);
+ const inn=new THREE.Mesh(shellGeo(A,y0+.02,th=>top(th)-.01,(th,v)=>.205+.015*v-.014*Math.sin(Math.PI*petal(th))),mat);g.add(inn);
+ const edge=[];for(let i=0;i<=90;i++){const th=-A+2*A*i/90,R=.236;edge.push(new V3(R*Math.sin(th),top(th)-.004,-R*Math.cos(th)))}
+ g.add(Object.assign(new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(edge),120,.026,8),mat),{castShadow:true}));
+ [-A,A].forEach(th=>{const R=.232,p=[];for(let i=0;i<=6;i++){const y=y0+.01+(top(th)-.01-y0-.01)*i/6;p.push(new V3(R*Math.sin(th),y,-R*Math.cos(th)))}g.add(new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(p),8,.027,8),mat))});   /* rolled side edges close the shell */
+ const prof=[[0,0],[.25,0],[.275,.025],[.28,.065],[.265,.098],[.2,.112],[0,.115]].map(([a,b])=>new THREE.Vector2(a,b));const seat=new THREE.Mesh(new THREE.LatheGeometry(prof,40),mat);seat.position.y=.385;seat.castShadow=seat.receiveShadow=true;g.add(seat);
+ cyl(.2,.2,.025,M.black,0,.375,0,g);
+ [[-1,-1],[1,-1],[-1,1],[1,1]].forEach(([a,b])=>{const L=new THREE.Mesh(new THREE.CylinderGeometry(.016,.011,.39,10),M.black);L.position.set(a*.17,.19,b*.17);L.rotation.set(-b*.1,0,a*.1);L.castShadow=true;g.add(L);
+  const f=new THREE.Mesh(new THREE.CylinderGeometry(.0115,.0105,.05,10),M.gold);f.position.set(a*.189,.025,b*.189);f.rotation.copy(L.rotation);g.add(f)});
+ const ring=new THREE.Mesh(new THREE.TorusGeometry(.2,.007,6,4),M.black);ring.rotation.set(Math.PI/2,0,Math.PI/4);ring.position.y=.13;g.add(ring);
+ solid(x,z,.56,.56);blob(x,z,.72,.72,.35);return bake(g)}
+// Lucky & Venky's royal chair (user's photo): tall blue velvet back, carved gold frame and crest, gold medallion, padded arms with gold scrolls, gold cabriole legs
+function royalChair(x,z,ry,seed=0){const g=grp(x,0,z,ry),bl=velvet(0x1d2f8f,seed+11,0x9fb3ff),G=M.gold,W=.64;
+ const seat=rbox(W,.12,.56,.04,bl,0,.53,.02,g);rbox(W+.1,.11,.62,.03,G,0,.43,.02,g);
+ for(let i=-2;i<=2;i++){const s=new THREE.Mesh(new THREE.SphereGeometry(.022,10,8),G);s.position.set(i*.12,.4,.34);s.scale.set(1.6,.8,.6);g.add(s)}
+ [[-1,-1],[1,-1],[-1,1],[1,1]].forEach(([a,b])=>{const c=new THREE.CatmullRomCurve3([new V3(a*.33,.4,b*.27),new V3(a*.35,.27,b*.3),new V3(a*.31,.12,b*.27),new V3(a*.34,.03,b*.31)]);
+  g.add(Object.assign(new THREE.Mesh(new THREE.TubeGeometry(c,16,.034,10),G),{castShadow:true}));const ft=new THREE.Mesh(new THREE.SphereGeometry(.04,12,10),G);ft.position.set(a*.345,.03,b*.315);ft.scale.y=.6;g.add(ft)});
+ // tall back: an arched panel with rounded shoulders, gold rope frame, crest and medallion
+ const s=new THREE.Shape(),hw=W/2,h0=0,h1=1.02;s.moveTo(-hw,h0);s.lineTo(hw,h0);s.lineTo(hw,h1-.25);s.quadraticCurveTo(hw+.02,h1-.08,hw-.1,h1-.05);s.quadraticCurveTo(0,h1+.1,-hw+.1,h1-.05);s.quadraticCurveTo(-hw-.02,h1-.08,-hw,h1-.25);s.lineTo(-hw,h0);
+ const bk=new THREE.Mesh(new THREE.ExtrudeGeometry(s,{depth:.07,bevelEnabled:true,bevelThickness:.03,bevelSize:.03,bevelSegments:4,curveSegments:16}),bl);const back=grp(0,.58,-.28,0,g);back.rotation.x=-.1;bk.position.z=-.05;bk.castShadow=true;back.add(bk);
+ const outline=s.getPoints(40).map(p=>new V3(p.x*1.06,p.y*1.02-.01,.06));back.add(Object.assign(new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(outline,true),160,.026,8),G),{castShadow:true}));
+ const crest=grp(0,h1+.06,.06,0,back);[[0,.06,.07],[-.09,.02,.05],[.09,.02,.05]].forEach(([cx,cy,r])=>{const t=new THREE.Mesh(new THREE.TorusGeometry(r,.016,8,20,Math.PI*1.6),G);t.position.set(cx,cy,0);t.rotation.z=cx<0?.6:cx>0?2.5:-.3;crest.add(t)});
+ const top=new THREE.Mesh(new THREE.SphereGeometry(.035,12,10),G);top.position.y=.16;crest.add(top);const leaf=new THREE.Mesh(new THREE.ConeGeometry(.03,.09,8),G);leaf.position.y=.22;crest.add(leaf);
+ const med=grp(0,.66,.075,0,back);med.add(new THREE.Mesh(new THREE.TorusGeometry(.085,.012,8,28),G));[[-1,0],[1,0],[0,1],[0,-1]].forEach(([a,b])=>{const p=new THREE.Mesh(new THREE.TorusGeometry(.035,.009,6,14),G);p.position.set(a*.05,b*.05,0);med.add(p)});const mc=new THREE.Mesh(new THREE.SphereGeometry(.028,12,10),G);mc.scale.z=.5;med.add(mc);
+ for(let r=0;r<3;r++)for(let c=-1;c<=1;c++){if((r+c)%2)continue;const b=new THREE.Mesh(new THREE.SphereGeometry(.011,8,6),std(0x0e1a52,.6));b.position.set(c*.16,.2+r*.14,.058);back.add(b)}
+ // arms: padded rolls with gold scrolled fronts on gold supports
+ [-1,1].forEach(a=>{const X=a*(W/2+.05);const roll=new THREE.Mesh(new THREE.CylinderGeometry(.055,.055,.5,18),bl);roll.rotation.x=Math.PI/2;roll.position.set(X,.74,-.02);roll.castShadow=true;g.add(roll);
+  const sc=new THREE.Mesh(new THREE.TorusGeometry(.05,.022,10,22,Math.PI*1.7),G);sc.position.set(X,.73,.24);sc.rotation.set(0,Math.PI/2,-.4);g.add(sc);
+  const sup=new THREE.CatmullRomCurve3([new V3(X,.48,.24),new V3(X+a*.02,.6,.27),new V3(X,.7,.24)]);g.add(new THREE.Mesh(new THREE.TubeGeometry(sup,10,.03,10),G));rbox(.08,.24,.46,.03,bl,X,.6,-.02,g)});
+ solid(x,z,.84,.78);blob(x,z,1,.95,.42);return bake(g)}
+// saddle stool for the lab technicians and the consultants (user's photo): green fabric saddle seat, small backrest on a chrome post,
+// chrome gas lift, five-star base on castors. Open at the sides, so arms never pass through it; set higher, so hands clear the desk.
+const saddleGeo=(()=>{const g=new THREE.SphereGeometry(1,40,20),p=g.attributes.position;
+ for(let i=0;i<p.count;i++){let x=p.getX(i),y=p.getY(i),z=p.getZ(i);x*=1-.32*Math.max(0,z);   // narrower towards the front (the pommel)
+  if(y>0)y=y*.55+.55*z*z-.35*x*x+.25*Math.max(0,-z);else y*=.5;                         // dips at the sides, rises at the back and front
+  p.setXYZ(i,x*.23,y*.07,z*.21)}g.computeVertexNormals();return g})();
+function saddleStool(x,z,ry,h=.56){const g=grp(x,0,z,ry),fab=M.saddle||(M.saddle=Object.assign(M.seatF.clone(),{color:C(0x9db06c)}));
+ const seat=new THREE.Mesh(saddleGeo,fab);seat.position.y=h;seat.castShadow=seat.receiveShadow=true;g.add(seat);
+ box(.12,.025,.12,M.black,0,h-.05,0,g);box(.02,.012,.14,M.black,.09,h-.07,.08,g,false);                        // mechanism + lever
+ cyl(.022,.022,h-.2,M.chrome,0,(h+.12)/2,0,g);cyl(.034,.034,.18,M.black,0,.2,0,g);                              // gas lift
+ for(let i=0;i<5;i++){const a=i/5*Math.PI*2,arm=new THREE.Mesh(new THREE.BoxGeometry(.03,.025,.3),M.chrome);arm.position.set(Math.sin(a)*.15,.085,Math.cos(a)*.15);arm.rotation.set(-.12*Math.cos(a)*0,a,0);arm.rotation.x=0;g.add(arm);
+  const w=new THREE.Mesh(new THREE.CylinderGeometry(.028,.028,.025,12),M.black);w.rotation.z=Math.PI/2;w.position.set(Math.sin(a)*.29,.03,Math.cos(a)*.29);w.rotation.y=a;g.add(w);arm.castShadow=true}
+ const post=new THREE.Mesh(new THREE.TubeGeometry(new THREE.QuadraticBezierCurve3(new V3(0,h-.04,-.12),new V3(0,h-.02,-.26),new V3(0,h+.26,-.25)),12,.012,8),M.chrome);post.castShadow=true;g.add(post);
+ const back=new THREE.Mesh(new THREE.SphereGeometry(1,24,12,0,Math.PI*2,0,Math.PI),fab);back.scale.set(.19,.11,.032);back.position.set(0,h+.31,-.265);back.rotation.x=-.12;back.castShadow=true;g.add(back);
+ solid(x,z,.5,.5);blob(x,z,.62,.62,.32);return bake(g)}
 // white bar stool on a chrome frame with a foot ring (the kitchen's breakfast counter)
 function stool(x,z,ry=0,p=scene){const g=grp(x,0,z,ry,p);const s=new THREE.Mesh(new THREE.SphereGeometry(.2,20,10,0,Math.PI*2,0,Math.PI/2),M.white);s.scale.set(1,.35,.9);s.position.y=.68;s.rotation.x=Math.PI;s.castShadow=true;g.add(s);
  const top=new THREE.Mesh(new THREE.CylinderGeometry(.2,.19,.04,24),M.white);top.scale.z=.9;top.position.y=.7;g.add(top);
@@ -287,11 +357,108 @@ function stool(x,z,ry=0,p=scene){const g=grp(x,0,z,ry,p);const s=new THREE.Mesh(
  const ring=new THREE.Mesh(new THREE.TorusGeometry(.19,.008,6,24),M.chrome);ring.rotation.x=Math.PI/2;ring.position.y=.24;g.add(ring);if(p===scene){solid(x,z,.42,.42);blob(x,z,.55,.55,.3)}return g}
 // oval marble table on a black pedestal (the kitchen's dining table), and a round marble side table
 function marbleTable(x,z,w,d,h=.74,ry=0){const g=grp(x,0,z,ry);const t=new THREE.Mesh(new THREE.CylinderGeometry(.5,.5,.04,40),M.marble);t.scale.set(w,1,d);t.position.y=h;t.castShadow=t.receiveShadow=true;g.add(t);cyl(.06,.06,h-.04,M.black,0,(h-.04)/2,0,g);const b=cyl(.22,.26,.04,M.black,0,.02,0,g);b.scale.set(Math.max(1,w*.9),1,Math.max(1,d*.9));solid(x,z,w*.9,d*.9);blob(x,z,w+.3,d+.3,.45);return g}
-function desk(x,z,w,d,ry=0){const g=grp(x,0,z,ry);rbox(w,.04,d,.012,M.marble,0,.75,0,g);box(w+.004,.008,.006,M.gold,0,.73,d/2,g,false);[[-1,-1],[1,-1],[-1,1],[1,1]].forEach(([a,b])=>box(.035,.73,.035,M.black,a*(w/2-.06),.365,b*(d/2-.06),g));box(w-.14,.25,.02,M.cream,0,.6,-(d/2-.06),g);solid(x,z,ry%Math.PI?d:w,ry%Math.PI?w:d);blob(x,z,w+.3,d+.3,.45);return g}
-function screenTex(lines,bg='#33423a',fg='#fbf7ee'){return tex(cnv(512,300,(x,w,h)=>{const g=x.createLinearGradient(0,0,w,h);g.addColorStop(0,bg);g.addColorStop(1,'#1c241f');x.fillStyle=g;x.fillRect(0,0,w,h);x.fillStyle=fg;x.textAlign='center';x.textBaseline='middle';lines.forEach((l,i)=>{x.font=(i?'600 28px':'800 46px')+' Manrope, sans-serif';x.fillText(l,w/2,h/2+(i-(lines.length-1)/2)*58)})}))}
-function laptop(p,x,z,ry,label){const g=grp(x,.775,z,ry,p);rbox(.36,.018,.25,.008,std(0xb9bec2,.3,.8),0,.01,0,g);box(.3,.002,.13,M.black,0,.02,.02,g,false);const s=new THREE.Group();s.position.set(0,.02,-.12);s.rotation.x=-.3;g.add(s);rbox(.36,.24,.01,.006,std(0xb9bec2,.3,.8),0,.12,-.004,s);
- const sc=new THREE.Mesh(new THREE.PlaneGeometry(.33,.2),new THREE.MeshBasicMaterial({map:screenTex([label||'DEVOCRAT','Prototype'])}));sc.position.set(0,.12,.002);s.add(sc);g.userData.lid=s;return g}
-function monitor(x,y,z,ry,p,lines){const g=grp(x,y,z,ry,p);box(.04,.02,.18,M.black,0,.01,0,g);box(.03,.2,.03,M.black,0,.11,-.04,g);rbox(.56,.34,.03,.01,M.black,0,.33,0,g);const s=new THREE.Mesh(new THREE.PlaneGeometry(.52,.3),new THREE.MeshBasicMaterial({map:screenTex(lines||['DEVOCRAT','Patient desk'])}));s.position.set(0,.33,.017);g.add(s);return g}
+function desk(x,z,w,d,ry=0,panel=true){const g=grp(x,0,z,ry);rbox(w,.04,d,.012,M.marble,0,.75,0,g);box(w+.004,.008,.006,M.gold,0,.73,d/2,g,false);[[-1,-1],[1,-1],[-1,1],[1,1]].forEach(([a,b])=>box(.035,.73,.035,M.black,a*(w/2-.06),.365,b*(d/2-.06),g));if(panel)box(w-.14,.25,.02,M.cream,0,.6,-(d/2-.06),g);solid(x,z,ry%Math.PI?d:w,ry%Math.PI?w:d);blob(x,z,w+.3,d+.3,.45);return g}
+// any in-world sign screen, in the DEVOCRAT OS look (black, metallic gold, ivory, Art Deco lines); a line containing DEVOCRAT is drawn as the wordmark
+function screenTex(lines){return uiScreen(768,450,(x,w,h)=>{osBack(x,w,h);x.textAlign='center';x.textBaseline='middle';
+ lines.forEach((l,i)=>{const Y=h/2+(i-(lines.length-1)/2)*92;if(/DEVOCRAT/.test(l)){const [a,b]=l.split('DEVOCRAT');wordLine(x,a,b,w/2,Y,i?40:66)}
+  else{x.font=i?`500 34px ${F_UI}`:`700 62px ${F_TITLE}`;x.fillStyle=i?OS.mute:OS.ivory;x.fillText(l,w/2,Y)}});x.textAlign='left'})}
+// the laptop deck: black keys (with letters) and a glass trackpad on brushed aluminium
+const deckTex=(()=>{const c=document.createElement('canvas');c.width=1024;c.height=680;const x=c.getContext('2d');const g=x.createLinearGradient(0,0,0,680);g.addColorStop(0,'#c9ced2');g.addColorStop(1,'#b3b8bc');x.fillStyle=g;x.fillRect(0,0,1024,680);
+ for(let i=0;i<500;i++){x.fillStyle=`rgba(255,255,255,${RND()*.05})`;x.fillRect(0,RND()*680,1024,1)}
+ const rows=['`1234567890-=','QWERTYUIOP[]','ASDFGHJKL;\'','ZXCVBNM,./'],kw=62,gap=8,X0=60,Y0=40;x.textAlign='center';x.textBaseline='middle';
+ const key=(X,Y,w,h,t)=>{rr(x,X,Y,w,h,7);x.fillStyle='#1b1d20';x.fill();x.strokeStyle='#0c0d0e';x.lineWidth=2;x.stroke();if(t){x.fillStyle='#d8dbe0';x.font='600 22px Lexend, Arial, sans-serif';x.fillText(t,X+w/2,Y+h/2)}};
+ for(let i=0;i<14;i++)key(X0+i*((904)/14),Y0-8,(904)/14-gap,30,'');
+ rows.forEach((r,ri)=>{const off=[0,40,56,86][ri],Y=Y0+32+ri*(kw+gap);[...r].forEach((ch,ci)=>key(X0+off+ci*(kw+gap),Y,kw,kw,ch));
+  const end=X0+off+r.length*(kw+gap);if(end<X0+904)key(end,Y,X0+904-end,kw,'')});
+ key(X0+150,Y0+32+4*(kw+gap),560,kw,'');key(X0,Y0+32+4*(kw+gap),140,kw,'');key(X0+720,Y0+32+4*(kw+gap),184,kw,'');
+ rr(x,312,430,400,230,16);x.fillStyle='#bfc4c8';x.fill();x.strokeStyle='#a2a7ab';x.lineWidth=3;x.stroke();   /* trackpad */
+ const t=new THREE.CanvasTexture(c);t.encoding=THREE.sRGBEncoding;t.anisotropy=8;return t})();
+const deckM=new THREE.MeshStandardMaterial({map:deckTex,roughness:.45,metalness:.35});
+function laptop(p,x,z,ry,label,shot,hex=0xc9ced3){const g=grp(x,.775,z,ry,p),body=finishM(hex);rbox(.36,.018,.25,.008,body,0,.01,0,g);const dkM=M['deck'+hex]||(M['deck'+hex]=Object.assign(deckM.clone(),{color:new THREE.Color(hex).lerp(new THREE.Color(0xffffff),.25)}));const dk=new THREE.Mesh(new THREE.PlaneGeometry(.34,.226),dkM);dk.rotation.x=-Math.PI/2;dk.position.set(0,.0238,.005);g.add(dk);const s=new THREE.Group();s.position.set(0,.02,-.12);s.rotation.x=-.3;g.add(s);rbox(.36,.24,.01,.006,body,0,.12,-.004,s);
+ const sc=new THREE.Mesh(new THREE.PlaneGeometry(.33,.206),new THREE.MeshBasicMaterial({map:shot?shotTex(shot):screenTex([label||'DEVOCRAT','Prototype']),toneMapped:false}));sc.position.set(0,.12,.002);s.add(sc);
+ const lg=new THREE.Mesh(new THREE.PlaneGeometry(.2,.133),lidM(hex));lg.rotation.y=Math.PI;lg.position.set(0,.125,-.0098);s.add(lg);g.userData.lid=s;   /* D mark · DEVOCRAT · THE JOINT FAMILY on the lid */g.userData.screen=sc;return g}
+// a real capture of the prototype's own start screen (models/hospital/screens/<id>-d.webp laptop, -m.webp phone)
+const shotL=new THREE.TextureLoader();function shotTex(f){const t=shotL.load('models/hospital/screens/'+f+'.webp');t.encoding=THREE.sRGBEncoding;t.anisotropy=4;return t}
+// a mouse on a leather pad, to the technician's right; it is moved by their hand (see mouseHand)
+function deskMouse(x,z){rbox(.3,.004,.24,.01,std(0x2b2723,.75),x-.02,.777,z+.01);const g=grp(x,.779,z,0);
+ const b=new THREE.Mesh(new THREE.SphereGeometry(1,20,12,0,Math.PI*2,0,Math.PI/2),std(0x2a2c30,.35,.2));b.scale.set(.032,.02,.055);g.add(b);
+ const w=new THREE.Mesh(new THREE.CylinderGeometry(.006,.006,.006,12),std(0x6c7076,.4,.5));w.rotation.z=Math.PI/2;w.position.set(0,.019,.025);g.add(w);
+ box(.001,.004,.03,std(0x111214,.5),0,.02,.03,g,false);g.userData.home=new V3(x,0,z);return g}
+/* ---- each technician's own laptop + phone finish (the phone always matches the laptop) ---- */
+const FINISH=[0x5d6168,0xc9ced3,0x232a3d,0xd9a79a,0x8fa792,0xd8c39a,0x2a2a2c,0x9cc0dc,0xe8e1d3];   // space grey, silver, midnight, rose gold, sage, champagne, graphite, sky blue, starlight
+const finishM=hex=>M['fin'+hex]||(M['fin'+hex]=std(hex,.32,.72,{envMapIntensity:1.1}));
+const isLight=hex=>{const c=new THREE.Color(hex);return .299*c.r+.587*c.g+.114*c.b>.5};
+// the company's "D with a dot" mark from DEVOCRAT OS (models/hospital/screens/dmark.png)
+const dMarkImg=new Image();dMarkImg.src='models/hospital/screens/dmark.png';dMarkImg.onload=()=>UI.forEach(r=>r());
+const dMarkTex=shotL.load('models/hospital/screens/dmark.png');dMarkTex.encoding=THREE.sRGBEncoding;
+// the laptop lid: D mark, DEVOCRAT (DEV gold; OCRAT black on a light finish, ivory on a dark one) and THE JOINT FAMILY, as in the DEVOCRAT OS intro
+const lidTexs={};function lidTex(hex){return lidTexs[hex]||(lidTexs[hex]=uiScreen(512,340,(x,w,h)=>{x.clearRect(0,0,w,h);if(dMarkImg.complete&&dMarkImg.naturalWidth)x.drawImage(dMarkImg,w/2-62,18,124,124);
+ wordmark(x,w/2,192,58,isLight(hex),'center');x.save();x.font=`700 25px ${F_TITLE}`;x.textAlign='center';x.textBaseline='middle';const t='T H E   J O I N T   F A M I L Y';if(isLight(hex)){x.shadowColor='rgba(60,40,10,.45)';x.shadowBlur=2}x.fillStyle=goldFill(x,254,25);x.fillText(t,w/2,256);x.restore()}))}
+const lidM=hex=>M['lid'+hex]||(M['lid'+hex]=new THREE.MeshStandardMaterial({map:lidTex(hex),transparent:true,roughness:.35,metalness:.25,depthWrite:false}));
+// a phone on a little gold dock: screen shows the prototype's mobile view; the back case is the laptop's colour with the gold D mark
+function deskPhone(x,z,ry,shot,hex=0x2a2a2c){const g=grp(x,.775,z,ry);box(.07,.008,.05,M.gold,0,.004,.0,g);const ph=grp(0,.085,-.006,0,g);ph.rotation.x=-.18;rbox(.075,.155,.009,.012,finishM(hex),0,0,0,ph);
+ const sc=new THREE.Mesh(new THREE.PlaneGeometry(.067,.145),new THREE.MeshBasicMaterial({map:shot?shotTex(shot):null,color:shot?0xffffff:0x111111,toneMapped:false}));sc.position.z=.0118;ph.add(sc);
+ const bz=new THREE.Mesh(new THREE.PlaneGeometry(.069,.149),M.black);bz.position.z=.0116;ph.add(bz);sc.position.z=.0119;   /* black glass round the screen */
+ const dm=new THREE.Mesh(new THREE.PlaneGeometry(.036,.036),new THREE.MeshStandardMaterial({map:dMarkTex,transparent:true,roughness:.25,metalness:.6,depthWrite:false}));dm.rotation.y=Math.PI;dm.position.set(0,.005,-.0052);ph.add(dm);
+ const cam=rbox(.026,.026,.002,.006,std(0x15161a,.3,.3),-.017,.052,-.0058,ph);return g}
+/* ---- reception screens: drawn like real front-desk software, with a live clock ---- */
+const UI=[];   // screens that redraw themselves every 20 s (clock, queue)
+function uiScreen(w,h,draw){const c=document.createElement('canvas');c.width=w;c.height=h;const t=new THREE.CanvasTexture(c);t.encoding=THREE.sRGBEncoding;t.anisotropy=4;
+ const r=()=>{draw(c.getContext('2d'),w,h,new Date());t.needsUpdate=true};r();UI.push(r);return t}
+setInterval(()=>UI.forEach(r=>r()),20000);
+function rr(x,X,Y,W,H,R){x.beginPath();x.moveTo(X+R,Y);x.arcTo(X+W,Y,X+W,Y+H,R);x.arcTo(X+W,Y+H,X,Y+H,R);x.arcTo(X,Y+H,X,Y,R);x.arcTo(X,Y,X+W,Y,R);x.closePath()}
+const hm=d=>d.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'}),dayS=d=>d.toLocaleDateString('en-IN',{weekday:'short',day:'numeric',month:'short'});
+/* ---- the DEVOCRAT OS look for every in-world display: black, metallic gold, ivory cream, gold Art Deco lines; Cinzel titles, Lexend text ---- */
+const OS={bg:'#0b0b0c',bg2:'#17140e',ivory:'#f3ead8',mute:'#a89f8c',gold:'#c9a24a',line:'rgba(201,162,74,.38)',card:'rgba(243,234,216,.05)'},F_TITLE='Cinzel, Georgia, serif',F_UI='Lexend, Manrope, sans-serif';
+function goldFill(x,y,s){const g=x.createLinearGradient(0,y-s*.55,0,y+s*.5);g.addColorStop(0,'#fff1bd');g.addColorStop(.38,'#e3bd5e');g.addColorStop(.52,'#a87a22');g.addColorStop(.7,'#d9b04e');g.addColorStop(1,'#f6dc8c');return g}
+// the wordmark: DEV in metallic gold, OCRAT in ivory on dark (light=false) or black on light backgrounds
+function wordmark(x,X,Y,s,light=false,align='left'){x.save();x.font=`700 ${s}px ${F_TITLE}`;x.textBaseline='middle';x.textAlign='left';const a=x.measureText('DEV').width,b=x.measureText('OCRAT').width;
+ const L=align==='center'?X-(a+b)/2:align==='right'?X-a-b:X;x.fillStyle=goldFill(x,Y,s);x.fillText('DEV',L,Y);x.fillStyle=light?'#111111':OS.ivory;x.fillText('OCRAT',L+a,Y);x.restore();return a+b}
+function wordLine(x,before,after,cx,Y,s){x.save();x.font=`600 ${s}px ${F_UI}`;const p=before?x.measureText(before).width:0,q=after?x.measureText(after).width:0;x.font=`700 ${s}px ${F_TITLE}`;const m=x.measureText('DEVOCRAT').width,L=cx-(p+m+q)/2;
+ x.textAlign='left';x.textBaseline='middle';x.font=`600 ${s}px ${F_UI}`;x.fillStyle=OS.ivory;if(before)x.fillText(before,L,Y);wordmark(x,L+p,Y,s);x.font=`600 ${s}px ${F_UI}`;x.fillStyle=OS.ivory;if(after)x.fillText(after,L+p+m,Y);x.restore()}
+// black background with a thin inset gold frame and stepped Art Deco corners
+function osBack(x,w,h){const g=x.createLinearGradient(0,0,w,h);g.addColorStop(0,OS.bg);g.addColorStop(1,OS.bg2);x.fillStyle=g;x.fillRect(0,0,w,h);
+ x.strokeStyle=OS.line;x.lineWidth=2;const m=14;x.strokeRect(m,m,w-2*m,h-2*m);x.lineWidth=1.5;
+ [[m,m,1,1],[w-m,m,-1,1],[m,h-m,1,-1],[w-m,h-m,-1,-1]].forEach(([X,Y,sx,sy])=>{for(let k=1;k<=3;k++){x.beginPath();x.moveTo(X+sx*k*9,Y);x.lineTo(X+sx*k*9,Y+sy*k*9);x.lineTo(X,Y+sy*k*9);x.stroke()}})}
+function osHead(x,w,title,now){x.fillStyle='rgba(201,162,74,.08)';x.fillRect(14,14,w-28,62);x.fillStyle=OS.line;x.fillRect(14,76,w-28,1.5);wordmark(x,36,46,30);
+ x.font=`500 19px ${F_UI}`;x.fillStyle=OS.mute;x.textBaseline='middle';x.textAlign='left';x.fillText('·  '+title,232,47);
+ x.textAlign='right';x.font=`600 24px ${F_UI}`;x.fillStyle=OS.ivory;x.fillText(hm(now),w-36,38);x.font=`400 14px ${F_UI}`;x.fillStyle=OS.mute;x.fillText(dayS(now),w-36,60);x.textAlign='left'}
+// 1) front-desk queue: now serving, counts, the waiting list
+function drawDesk(x,w,h,now){osBack(x,w,h);osHead(x,w,'Front desk',now);x.textBaseline='middle';
+ rr(x,36,98,318,224,14);x.fillStyle='rgba(201,162,74,.1)';x.fill();x.strokeStyle=OS.gold;x.lineWidth=2;x.stroke();
+ x.font=`600 17px ${F_UI}`;x.fillStyle=OS.gold;x.fillText('NOW SERVING',58,128);const tk='A-'+String(7+Math.floor(now.getMinutes()/4)%6).padStart(2,'0');x.font=`700 96px ${F_TITLE}`;x.fillStyle=goldFill(x,206,96);x.fillText(tk,52,208);
+ x.font=`500 20px ${F_UI}`;x.fillStyle=OS.ivory;x.fillText('Laboratory · Desk 3',58,292);
+ [['Waiting',14],['Seen today',38+now.getMinutes()%9],['Avg wait','6 min']].forEach(([l,v],i)=>{const X=372+i*206;rr(x,X,98,190,104,12);x.fillStyle=OS.card;x.fill();x.fillStyle=OS.gold;x.fillRect(X+18,98,40,2);
+  x.font=`600 40px ${F_UI}`;x.fillStyle=OS.ivory;x.fillText(String(v),X+18,140);x.font=`400 16px ${F_UI}`;x.fillStyle=OS.mute;x.fillText(l,X+18,180)});
+ rr(x,372,214,602,108,12);x.fillStyle=OS.card;x.fill();x.font=`600 16px ${F_UI}`;x.fillStyle=OS.ivory;x.fillText('Rooms',392,240);
+ [['Lab',.8],['Consult',.45],['X-ray',.3],['Billing',.6]].forEach(([n,f],i)=>{const X=392+i*146;x.font=`400 14px ${F_UI}`;x.fillStyle=OS.mute;x.fillText(n,X,272);rr(x,X,290,122,8,4);x.fillStyle='rgba(243,234,216,.1)';x.fill();rr(x,X,290,122*f,8,4);x.fillStyle=OS.gold;x.fill()});
+ x.font=`700 20px ${F_TITLE}`;x.fillStyle=OS.ivory;x.fillText('Queue',36,358);
+ const Q=[['A-08','Priya Raman','Laboratory','Waiting'],['A-09','Arjun Mehta','Consultation','Waiting'],['B-02','Kavya Iyer','X-ray','Called'],['A-10','Rahul Nair','Billing','Waiting'],['B-03','Sneha Pillai','Pharmacy','In room']],SC={Waiting:'#d9b04e',Called:'#8fcf9c','In room':'#e9dcc0'};
+ Q.forEach(([t,n,d,s],i)=>{const Y=378+i*44;rr(x,36,Y,938,38,8);x.fillStyle=i%2?'rgba(243,234,216,.03)':'rgba(243,234,216,.06)';x.fill();x.font=`600 18px ${F_UI}`;x.fillStyle=OS.gold;x.fillText(t,54,Y+20);x.fillStyle=OS.ivory;x.font=`500 18px ${F_UI}`;x.fillText(n,150,Y+20);x.fillStyle=OS.mute;x.fillText(d,430,Y+20);
+  const c=SC[s];rr(x,814,Y+7,140,24,12);x.strokeStyle=c;x.lineWidth=1.5;x.stroke();x.fillStyle=c;x.font=`500 14px ${F_UI}`;x.textAlign='center';x.fillText(s,884,Y+20);x.textAlign='left'})}
+// 2) today's appointments: a day timeline
+function drawAppt(x,w,h,now){osBack(x,w,h);osHead(x,w,'Appointments',now);x.textBaseline='middle';
+ const cols=['Laboratory','Consultation','X-ray','Pharmacy'],cw=212,X0=118;cols.forEach((c,i)=>{x.font=`700 16px ${F_TITLE}`;x.fillStyle=OS.gold;x.fillText(c.toUpperCase(),X0+i*cw+10,102)});
+ for(let i=0;i<=4;i++){const Y=124+i*112;x.strokeStyle='rgba(201,162,74,.22)';x.lineWidth=1;x.beginPath();x.moveTo(X0,Y);x.lineTo(w-30,Y);x.stroke();x.font=`400 15px ${F_UI}`;x.fillStyle=OS.mute;x.fillText((9+i*2)+':00',36,Y)}
+ const B=[[0,0,.8,'Prototype demo','Sahakārya'],[0,1.2,.9,'Live walkthrough','RESTOcrat'],[1,.4,1,'Discuss a project','with Lucky & Venky'],[1,2.1,.8,'Quote & timeline','Interior studio'],[2,.2,.7,'How we work','Design → build'],[2,1.5,.9,'Code review','HMScrat'],[3,.8,.6,'Services','Websites & apps'],[3,2.4,.9,'Support plan','SALONcrat']];
+ B.forEach(([c,s,d,t,sub])=>{const X=X0+c*cw+6,Y=124+s*112+4,H=d*112-8;rr(x,X,Y,cw-14,H,8);x.fillStyle='rgba(201,162,74,.1)';x.fill();x.fillStyle=OS.gold;x.fillRect(X,Y+6,3,H-12);x.font=`600 16px ${F_UI}`;x.fillStyle=OS.ivory;x.fillText(t,X+14,Y+22);x.font=`400 14px ${F_UI}`;x.fillStyle=OS.mute;x.fillText(sub,X+14,Y+44)});
+ const nowY=124+((now.getHours()+now.getMinutes()/60-9)/2)*112;if(nowY>124&&nowY<572){x.strokeStyle='#e6c77a';x.lineWidth=2;x.beginPath();x.moveTo(X0-6,nowY);x.lineTo(w-30,nowY);x.stroke();x.fillStyle='#e6c77a';x.beginPath();x.arc(X0-6,nowY,5,0,7);x.fill()}}
+// 3) the visitors' check-in tablet
+function drawKiosk(x,w,h,now){osBack(x,w,h);x.textAlign='center';x.textBaseline='middle';x.font=`500 20px ${F_UI}`;x.fillStyle=OS.mute;x.fillText('WELCOME TO',w/2,70);wordmark(x,w/2,124,58,false,'center');
+ x.fillStyle=OS.line;x.fillRect(w/2-60,166,120,1.5);rr(x,w/2-160,196,320,70,35);x.fillStyle=goldFill(x,231,60);x.fill();x.fillStyle='#16130c';x.font=`600 26px ${F_UI}`;x.fillText('Tap to check in',w/2,232);
+ x.fillStyle=OS.mute;x.font=`400 18px ${F_UI}`;x.fillText('Your token will be called on the screen',w/2,306);x.fillStyle=OS.ivory;x.fillText(hm(now),w/2,340);x.textAlign='left'}
+// redraw every screen once the brand fonts have arrived
+if(document.fonts&&document.fonts.load)Promise.all(['700 40px Cinzel','500 20px Lexend','600 20px Lexend','400 20px Lexend'].map(f=>document.fonts.load(f))).then(()=>UI.forEach(r=>r())).catch(()=>{});
+// a slim monitor: thin bezel, warm-white back with a gold emblem, brushed stand on an oval base
+function deskMonitor(x,y,z,ry,p,kind){const g=grp(x,y,z,ry,p),shell=M.monShell||(M.monShell=std(0xece8e1,.35,.15));
+ const base=new THREE.Mesh(new THREE.CylinderGeometry(.11,.11,.012,32),M.steel);base.scale.set(1,1,.7);base.position.set(0,.006,-.03);g.add(base);
+ const neck=box(.06,.3,.014,M.steel,0,.16,-.07,g);neck.rotation.x=-.12;
+ const pan=grp(0,.32,0,0,g);pan.rotation.x=-.08;rbox(.64,.39,.02,.01,shell,0,0,-.012,pan);rbox(.64,.39,.006,.008,M.black,0,0,.001,pan);
+ const sc=new THREE.Mesh(new THREE.PlaneGeometry(.62,.364),new THREE.MeshBasicMaterial({map:uiScreen(1024,600,kind==='appt'?drawAppt:drawDesk),toneMapped:false}));sc.position.set(0,.008,.0118);pan.add(sc);
+ const em=new THREE.Mesh(new THREE.CircleGeometry(.035,24),M.gold);em.rotation.y=Math.PI;em.position.set(0,.04,-.023);pan.add(em);return g}
+function checkInTablet(t){t.rotation.x=0;const st=grp(0,0,0,0,t);box(.12,.01,.08,M.steel,0,.005,0,st);const arm=box(.02,.12,.012,M.steel,0,.065,-.01,st);arm.rotation.x=-.25;
+ const pan=grp(0,.15,.0,0,t);pan.rotation.x=-.42;rbox(.27,.19,.012,.012,M.black,0,0,0,pan);const sc=new THREE.Mesh(new THREE.PlaneGeometry(.25,.17),new THREE.MeshBasicMaterial({map:uiScreen(600,400,drawKiosk),toneMapped:false}));sc.position.z=.0118;pan.add(sc)}
+function monitor(x,y,z,ry,p,lines){const g=grp(x,y,z,ry,p);box(.04,.02,.18,M.black,0,.01,0,g);box(.03,.2,.03,M.black,0,.11,-.04,g);rbox(.56,.34,.03,.01,M.black,0,.33,0,g);const s=new THREE.Mesh(new THREE.PlaneGeometry(.52,.3),new THREE.MeshBasicMaterial({map:screenTex(lines||['DEVOCRAT','Patient desk']),toneMapped:false}));s.position.set(0,.33,.017);g.add(s);return g}
 function art(x,y,z,ry,w,h,seed){const t=tex(cnv(300,220,(c,W,H)=>{const r=(s=>()=>(s=(s*16807)%2147483647)/2147483647)(seed);c.fillStyle='#f4efe6';c.fillRect(0,0,W,H);for(let i=0;i<7;i++){c.fillStyle=['#86a28a','#c9a24a','#efe6d3','#5f7d66','#d9a66b','#8a4f2a'][i%6];c.globalAlpha=.75;c.beginPath();c.ellipse(r()*W,r()*H,40+r()*90,20+r()*60,r()*3,0,7);c.fill()}c.globalAlpha=1}));
  const g=grp(x,y,z,ry);box(w+.08,h+.08,.04,M.gold,0,0,0,g,false);const p=new THREE.Mesh(new THREE.PlaneGeometry(w,h),new THREE.MeshStandardMaterial({map:t,roughness:.8}));p.position.z=.022;g.add(p)}
 function wallClock(x,y,z,ry){const g=grp(x,y,z,ry);const ct=tex(cnv(128,128,(c,w,h)=>{c.fillStyle='#fbf7ee';c.beginPath();c.arc(64,64,62,0,7);c.fill();c.strokeStyle='#2a2620';c.lineWidth=4;for(let i=0;i<12;i++){const a=i/12*Math.PI*2;c.beginPath();c.moveTo(64+Math.cos(a)*50,64+Math.sin(a)*50);c.lineTo(64+Math.cos(a)*58,64+Math.sin(a)*58);c.stroke()}
@@ -328,22 +495,39 @@ function louvrePanel(x,z,w,h,ry,p=scene){const g=grp(x,0,z,ry,p);const pl=box(w,
  const kick=new THREE.Mesh(new THREE.CylinderGeometry(2.1,2.1,.1,48,1,true,...seg),std(0x1c1a18,.6));kick.position.set(0,.05,-1.4);g.add(kick);
  const kl=new THREE.Mesh(new THREE.CylinderGeometry(2.14,2.14,.012,48,1,true,...seg),M.led);kl.position.set(0,.1,-1.4);g.add(kl);
  const glow=new THREE.Mesh(new THREE.RingGeometry(2.1,2.6,48,1,Math.PI/2-seg[0]-seg[1],seg[1]),new THREE.MeshBasicMaterial({map:glowT,transparent:true,blending:THREE.AdditiveBlending,opacity:.35,depthWrite:false}));glow.rotation.x=-Math.PI/2;glow.position.set(0,.01,-1.4);g.add(glow);
- const ledge=new THREE.Mesh(new THREE.CylinderGeometry(2.42,2.42,.05,48,1,false,...seg),M.marble);ledge.position.set(0,1.1,-1.4);ledge.castShadow=ledge.receiveShadow=true;g.add(ledge);
- const le=new THREE.Mesh(new THREE.CylinderGeometry(2.425,2.425,.012,48,1,true,...seg),M.gold);le.position.set(0,1.08,-1.4);g.add(le);
- const nt=tex(cnv(512,96,(c,w,h)=>{c.clearRect(0,0,w,h);c.font='800 64px Manrope, sans-serif';c.textAlign='center';c.textBaseline='middle';c.fillStyle='#fbf7ee';c.fillText('DEV',w/2-88,h/2+2);c.fillStyle='#e2bd62';c.fillText('OCRAT',w/2+78,h/2+2)}));
+ // a curved slab between two radii (seen from above: a ring segment), centred on the desk's arc centre
+ const arcSlab=(r1,r2,th,y,mat)=>{const s=new THREE.Shape(),n=40,P2=(r,a)=>[r*Math.sin(a),-r*Math.cos(a)];let p=P2(r2,seg[0]);s.moveTo(...p);
+  for(let i=1;i<=n;i++)s.lineTo(...P2(r2,seg[0]+seg[1]*i/n));for(let i=n;i>=0;i--)s.lineTo(...P2(r1,seg[0]+seg[1]*i/n));
+  const m=new THREE.Mesh(new THREE.ExtrudeGeometry(s,{depth:th,bevelEnabled:true,bevelThickness:.006,bevelSize:.006,bevelSegments:2,curveSegments:2}),mat);m.rotation.x=-Math.PI/2;m.position.set(0,y,-1.4);m.castShadow=m.receiveShadow=true;g.add(m);return m};
+ // visitors' side: a narrow marble transaction ledge with a thin gold edge; staff side: a lower marble work surface (the old version was one solid slab that buried the receptionist)
+ arcSlab(2.02,2.44,.05,1.08,M.marble);const le=new THREE.Mesh(new THREE.CylinderGeometry(2.447,2.447,.014,48,1,true,...seg),M.gold);le.position.set(0,1.105,-1.4);g.add(le);
+ arcSlab(1.5,2.19,.04,.9,M.marble);const inner=new THREE.Mesh(new THREE.CylinderGeometry(1.52,1.52,.86,48,1,true,...seg),Object.assign(M.cream.clone(),{side:THREE.DoubleSide}));inner.position.set(0,.46,-1.4);g.add(inner);
+ const up=new THREE.Mesh(new THREE.CylinderGeometry(2.03,2.03,.15,48,1,true,...seg),Object.assign(M.sage.clone(),{side:THREE.DoubleSide}));up.position.set(0,1.01,-1.4);g.add(up);   /* upstand between work surface and ledge */
+ const LED2=new THREE.Mesh(new THREE.CylinderGeometry(2.02,2.02,.008,48,1,true,...seg),M.led);LED2.position.set(0,1.075,-1.4);g.add(LED2);
+ // where things sit on the desk: polar position round the arc centre (angle from the front, radius)
+ const at=(a,r,y)=>new V3(r*Math.sin(a),y,-1.4+r*Math.cos(a));const her=new V3(0,0,-.25);
+ [[-.34,'desk'],[.3,'appt']].forEach(([a,kind])=>{const p=at(a,1.78,.94),side=Math.sign(a);const ry=Math.atan2(her.x+side*.15-p.x,her.z-p.z);
+  deskMonitor(p.x,p.y,p.z,ry,g,kind);const kb=at(a*.85,1.6,.945);const k=grp(kb.x,kb.y,kb.z,ry,g);rbox(.36,.012,.12,.004,std(0xe8e6e2,.4),0,.006,0,k);box(.33,.004,.095,std(0xcfcac2,.5),0,.014,0,k,false);rbox(.06,.018,.1,.008,std(0xe8e6e2,.35),.27*side,.009,0,k)});
+ {const p=at(.62,2.24,1.13);const t=grp(p.x,p.y,p.z,.62,g);checkInTablet(t)}   /* visitors' check-in tablet on the ledge */
+ {const p=at(-.06,2.25,1.13);const s=grp(p.x,p.y,p.z,-.06,g);rbox(.3,.11,.012,.004,M.gold,0,.065,0,s);const pl=new THREE.Mesh(new THREE.PlaneGeometry(.28,.09),new THREE.MeshBasicMaterial({map:tex(cnv(512,160,(c,w,h)=>{c.fillStyle='#1d2621';c.fillRect(0,0,w,h);c.fillStyle='#e2bd62';c.font='700 46px Manrope, sans-serif';c.textAlign='center';c.textBaseline='middle';c.fillText('RECEPTION',w/2,h/2-18);c.fillStyle='#f3ead8';c.font='500 26px Manrope, sans-serif';c.fillText('Please wait to be called',w/2,h/2+30)}))}));pl.position.set(0,.065,.007);s.add(pl);box(.12,.01,.05,M.gold,0,.005,-.01,s)}
+ const nt=uiScreen(1024,192,(c,w,h)=>{c.clearRect(0,0,w,h);wordmark(c,w/2,h/2+4,120,false,'center')});   /* front of the desk: gold DEV, ivory OCRAT on the sage */
  const nm=new THREE.Mesh(new THREE.PlaneGeometry(1.6,.3),new THREE.MeshBasicMaterial({map:nt,transparent:true}));nm.position.set(0,.7,.815);g.add(nm);
- rbox(3.7,.04,.62,.01,M.marble,0,.76,-.95,g);box(3.6,.72,.02,M.cream,0,.38,-1.25,g);monitor(-.8,.78,-1.05,0,g,['DEVOCRAT','Patient check-in']);monitor(.75,.78,-1.05,0,g,['Appointments','Queue: 3 waiting']);
- box(.42,.015,.14,M.black,-.8,.79,-.75,g);box(.22,.04,.16,M.black,.2,.8,-.8,g);cyl(.05,.07,.22,M.glass,1.35,1.23,-1.05,g,16);for(let i=0;i<5;i++){const f=new THREE.Mesh(new THREE.SphereGeometry(.05,10,8),std([0xf2f2f2,0xe9c4d0,0xf6e3a0][i%3],.8));f.position.set(1.35+Math.cos(i*1.3)*.06,1.42+RND()*.06,-1.05+Math.sin(i*1.3)*.06);g.add(f)}
- cyl(.04,.05,.04,M.gold,-1.4,1.145,-.45,g,16);solid(0,4.9,4.6,2.2);blob(0,5.4,5.2,3,.5);
+ {const v=at(-.95,2.2,1.24);cyl(.05,.07,.22,M.glass,v.x,v.y,v.z,g,16);for(let i=0;i<5;i++){const f=new THREE.Mesh(new THREE.SphereGeometry(.05,10,8),std([0xf2f2f2,0xe9c4d0,0xf6e3a0][i%3],.8));f.position.set(v.x+Math.cos(i*1.3)*.06,1.43+RND()*.06,v.z+Math.sin(i*1.3)*.06);g.add(f)}
+  const b=at(-.42,2.26,1.155);cyl(.04,.05,.04,M.gold,b.x,b.y,b.z,g,16)}
+ solid(0,4.9,4.6,2.2);blob(0,5.4,5.2,3,.5);
  const fw=grp(0,0,2.95);box(6.2,WH,.12,M.wall,0,WH/2,0,fw);const wn=box(3.8,WH,.05,M.walnut,0,WH/2,.08,fw);wn.material=M.walnut.clone();wn.material.map=M.walnut.map.clone();wn.material.map.repeat.set(3,1);wn.material.map.needsUpdate=true;
  [-2.5,2.5].forEach(x=>{louvrePanel(x,.1,1.15,WH,0,fw);box(.012,WH,.03,M.gold,x+(x<0?.58:-.58),WH/2,.12,fw,false)});
- const lt=tex(cnv(1024,512,(x,w,h)=>{const gg=x.createLinearGradient(0,0,0,h);gg.addColorStop(0,'#fffaf0');gg.addColorStop(1,'#f3e7cf');x.fillStyle=gg;x.fillRect(0,0,w,h);x.fillStyle='#86a28a';x.fillRect(w/2-28,70,56,150);x.fillRect(w/2-75,117,150,56);x.font='800 96px Manrope, sans-serif';x.textAlign='center';x.fillStyle='#2a2620';x.fillText('DEV',w/2-126,340);x.fillStyle='#c9a24a';x.fillText('OCRAT',w/2+112,340);x.fillStyle='#5f7d66';x.font='700 40px Manrope, sans-serif';x.fillText('H O S P I T A L',w/2,420)}));
+ // waiting-area TVs on the louvres: today's appointments (left) and the queue / now serving (right), as in real hospital lobbies
+ [[-2.5,drawAppt],[2.5,drawDesk]].forEach(([x,d])=>{const tv=grp(x,1.95,.2,0,fw);rbox(1.0,.6,.035,.012,M.black,0,0,0,tv);box(.004,.6,.036,M.gold,.5,0,0,tv,false);box(.004,.6,.036,M.gold,-.5,0,0,tv,false);
+  const sc=new THREE.Mesh(new THREE.PlaneGeometry(.97,.57),new THREE.MeshBasicMaterial({map:uiScreen(1024,600,d),toneMapped:false}));sc.position.z=.019;tv.add(sc)});
+ const lt=uiScreen(1024,512,(x,w,h)=>{const gg=x.createLinearGradient(0,0,0,h);gg.addColorStop(0,'#fffaf0');gg.addColorStop(1,'#f3e7cf');x.fillStyle=gg;x.fillRect(0,0,w,h);x.fillStyle='#86a28a';x.fillRect(w/2-28,70,56,150);x.fillRect(w/2-75,117,150,56);wordmark(x,w/2,318,104,true,'center');x.textAlign='center';x.fillStyle='#5f7d66';x.font=`500 38px ${F_UI}`;x.fillText('H O S P I T A L',w/2,420)});
  rbox(3.0,1.56,.08,.03,M.gold,0,1.78,.13,fw);const lp=new THREE.Mesh(new THREE.PlaneGeometry(2.9,1.46),new THREE.MeshBasicMaterial({map:lt}));lp.position.set(0,1.78,.175);fw.add(lp);
  [-1.5,1.5].forEach(x=>{const up=new THREE.Mesh(new THREE.PlaneGeometry(.8,2.6),new THREE.MeshBasicMaterial({map:glowT,transparent:true,blending:THREE.AdditiveBlending,opacity:.22,depthWrite:false}));up.position.set(x,2.6,.11);fw.add(up)});
  solid(0,2.95,6.2,.3);
  // waiting area: the shell chairs in pairs around oval marble tables, a wall TV, a water dispenser
- [[-3.6,8.9],[3.6,8.9]].forEach(([x,z])=>{marbleTable(x,z,1.4,.8,.46);[-1,1].forEach(s=>{chair(x+s*.45,z-.85,0);chair(x+s*.45,z+.85,Math.PI)});chair(x-1.05,z,Math.PI/2);chair(x+1.05,z,-Math.PI/2)});
- [[-3.6,11.6],[3.6,11.6]].forEach(([x,z])=>[-1.1,-.37,.37,1.1].forEach(dx=>chair(x+dx,z,Math.PI)));
+ {let k=1;const vc=(x,z,ry)=>velvetChair(x,z,ry,k++);   /* the waiting area: velvet scallop chairs, each a little different */
+ [[-3.6,8.9],[3.6,8.9]].forEach(([x,z])=>{marbleTable(x,z,1.4,.8,.46);[-1,1].forEach(s=>{vc(x+s*.45,z-.85,0);vc(x+s*.45,z+.85,Math.PI)});vc(x-1.05,z,Math.PI/2);vc(x+1.05,z,-Math.PI/2)});
+ [[-3.6,11.6],[3.6,11.6]].forEach(([x,z])=>[-1.1,-.37,.37,1.1].forEach(dx=>vc(x+dx,z,Math.PI)))}
  const tv=grp(-5.86,1.95,9.2,Math.PI/2);rbox(1.86,1.08,.06,.02,M.black,0,0,0,tv);const tvs=new THREE.Mesh(new THREE.PlaneGeometry(1.78,1.0),new THREE.MeshBasicMaterial({map:screenTex(['Welcome to DEVOCRAT','Websites · Apps · Software'])}));tvs.position.z=.032;tv.add(tvs);
  const wc=grp(5.5,0,13.2,-Math.PI/2);rbox(.34,1.0,.34,.03,M.cream,0,.5,0,wc);cyl(.15,.15,.42,new THREE.MeshPhysicalMaterial({color:C(0x9fd6f0),transparent:true,opacity:.55,roughness:.05}),0,1.22,0,wc);solid(5.5,13.2,.4,.4);
  plant(-5.3,13.2,1.25);plant(-5.3,2.75,1.1);plant(5.3,2.75,1.1);art(5.88,1.7,8.9,-Math.PI/2,1.4,1,11);wallClock(-1.1,2.75,13.86,Math.PI);exitSign(0,13.8,Math.PI);extinguisher(5.85,6.2,-Math.PI/2)}
@@ -351,17 +535,17 @@ function louvrePanel(x,z,w,h,ry,p=scene){const g=grp(x,0,z,ry,p);const pl=box(w,
 // ---- Laboratory (Prototypes): a desk per prototype (marble top, black legs), the shell chairs, a long kitchen-style cabinet run with lit shelves of lab jars
 const LAB=[];{const n=(typeof appMeta!=='undefined'?appMeta.length:9),cols=3;
  for(let i=0;i<n;i++){const c=i%cols,rr=Math.floor(i/cols),x=-14.9+c*3.2,z=-11.6+rr*2.8,a=appMeta?.[i];
-  desk(x,z,1.5,.8);const lp=laptop(scene,x,z-.12,Math.PI,a?a.name.split(' ').slice(0,2).join(' '):'Prototype');
-  const ph=grp(x+.52,.775,z-.05,0);box(.08,.15,.01,M.black,0,.08,0,ph,false);box(.06,.02,.06,M.gold,0,.01,.02,ph,false);
-  chair(x,z-.75,0);chair(x,z+.75,Math.PI);LAB.push({x,z,app:a,laptop:lp})}
+  desk(x,z,1.5,.8,0,false);/* no front panel: the technician's knees go under the desk */const lp=laptop(scene,x,z-.12,Math.PI,a?a.name.split(' ').slice(0,2).join(' '):'Prototype',a&&a.id+'-d',FINISH[i%FINISH.length]);
+  deskPhone(x+.5,z-.05,Math.PI+.25,a&&a.id+'-m',FINISH[i%FINISH.length]);
+  saddleStool(x,z-.75,0);chair(x,z+.75,Math.PI);LAB.push({x,z,app:a,laptop:lp,mouse:deskMouse(x-.38,z-.26)})}
  cabinetRun(-17.6,-9,6.6,Math.PI/2,{openAt:0,openW:1.4,jars:[0x3fa7d6,0xd8344a,0x2aa35a,0xe0a43a,0xffffff]});
  const mc=grp(-17.55,.94,-11.6);box(.26,.04,.2,M.black,0,.02,0,mc);cyl(.025,.025,.32,M.black,-.07,.2,0,mc);cyl(.035,.03,.17,std(0xf2f2f2,.4),.02,.34,0,mc).rotation.z=-.6;
  louvrePanel(-17.85,-4.6,.9,WH,Math.PI/2);art(-6.12,1.75,-6,Math.PI/2,1.2,.85,21);wallClock(-12,2.75,-13.88,0);extinguisher(-6.15,-12.8,Math.PI/2);plant(-6.7,-3.7);plant(-17.3,-13.3,.9)}
 
 // ---- Consultation (Discuss): a walnut desk for Lucky & Venky with gold edge, two visitor shell chairs, a rug, sage cabinets with a lit shelf of books, exam couch with curtain, certificates
-{const z=-10.2;const dk=grp(0,0,z);rbox(2.4,.06,1.05,.02,M.walnut,0,.76,0,dk);box(2.41,.01,1.06,M.gold,0,.725,0,dk,false);rbox(2.3,.7,.05,.02,M.walnut,0,.4,-.45,dk);[-1.1,1.1].forEach(x=>rbox(.06,.73,1.0,.02,M.walnut,x,.37,0,dk));solid(0,z,2.4,1.05);blob(0,z,2.9,1.6,.5);
- const exec=std(0x2a2622,.55);chair(-.6,z-.85,0,scene,exec);chair(.6,z-.85,0,scene,exec);chair(-.55,z+.95,Math.PI);chair(.55,z+.95,Math.PI);
- laptop(scene,.45,z-.1,0,'DEVOCRAT');box(.3,.02,.22,M.white,-.5,.8,z);const lm=grp(-1,.79,z-.3);cyl(.08,.1,.03,M.gold,0,.015,0,lm);cyl(.01,.01,.45,M.gold,0,.24,0,lm);cyl(.05,.11,.14,M.cream,0,.48,0,lm);
+{const z=-10.2;const dk=grp(0,0,z);rbox(2.4,.06,1.05,.02,M.walnut,0,.76,0,dk);box(2.41,.01,1.06,M.gold,0,.725,0,dk,false);rbox(2.3,.7,.05,.02,M.walnut,0,.4,.45,dk);[-1.1,1.1].forEach(x=>rbox(.06,.73,1.0,.02,M.walnut,x,.37,0,dk));solid(0,z,2.4,1.05);blob(0,z,2.9,1.6,.5);
+ royalChair(-.6,z-1.03,0,1);royalChair(.6,z-1.03,0,2);/* Lucky & Venky on royal blue-and-gold chairs */chair(-.55,z+.95,Math.PI);chair(.55,z+.95,Math.PI);
+ laptop(scene,.45,z-.1,0,'DEVOCRAT');box(.3,.02,.22,M.white,-.5,.8,z);const lm=grp(-1.02,.79,z+.3);cyl(.08,.1,.03,M.gold,0,.015,0,lm);cyl(.01,.01,.45,M.gold,0,.24,0,lm);cyl(.05,.11,.14,M.cream,0,.48,0,lm);
  const rug=new THREE.Mesh(new THREE.PlaneGeometry(3.4,2.4),new THREE.MeshStandardMaterial({map:tex(cnv(256,180,(c,w,h)=>{c.fillStyle='#e8ddc9';c.fillRect(0,0,w,h);c.strokeStyle='#86a28a';c.lineWidth=8;c.strokeRect(10,10,w-20,h-20);c.strokeStyle='#c9a24a';c.lineWidth=3;c.strokeRect(24,24,w-48,h-48)})),roughness:.95}));rug.rotation.x=-Math.PI/2;rug.position.set(0,.008,z);rug.receiveShadow=true;scene.add(rug);
  cabinetRun(0,-13.6,4.8,0,{openAt:0,openW:1.6,fill:'none',plant:true});{const sb=grp(0,1.615,-13.42);for(let b=0;b<11;b++){const h=.22+RND()*.06;box(.06,h,.2,std([0x8a2b2b,0x23466e,0x2e6b4a,0xc9a24a,0x5a4a3a][b%5],.8),-.65+b*.13,h/2,0,sb,false)}}
  const bed=grp(4.3,0,-11.4);box(.8,.5,1.9,M.cream,0,.4,0,bed);rbox(.75,.12,1.85,.04,std(0xe9e1d2,.8),0,.71,0,bed);rbox(.6,.1,.35,.04,M.white,0,.82,-.7,bed);solid(4.3,-11.4,.9,2);blob(4.3,-11.4,1.2,2.3,.45);
@@ -420,14 +604,21 @@ function animFig(g,dt,speed){const u=g.userData;u.ph+=dt*(speed>.05?speed*4.2:1.
  const w=clamp(speed/1.5,0,1.6);u.hip.position.y=.92+Math.abs(c)*.035*w+(1-Math.min(w,1))*Math.sin(u.ph*.5)*.004;
  u.L.t.rotation.x=s*.55*w;u.R.t.rotation.x=-s*.55*w;u.L.k.rotation.x=Math.max(0,-c)*.8*w;u.R.k.rotation.x=Math.max(0,c)*.8*w;
  u.A.a.rotation.x=-s*.45*w;u.B.a.rotation.x=s*.45*w;u.A.e.rotation.x=u.B.e.rotation.x=-.25*w-.08;u.A.a.rotation.z=.06;u.B.a.rotation.z=-.06;u.hip.rotation.y=s*.06*w;u.head.rotation.y=lerp(u.head.rotation.y,0,.1)}
-const NPC=[];function npc(x,z,ry,o,label,cast){const f=figure(o);f.position.set(x,0,z);f.rotation.y=ry;scene.add(f);NPC.push({f,label,cast,x,z,ry,sit:o.mode==='sit'});if(o.mode!=='sit')solid(x,z,.5,.5);return f}   // standing people are solid; seated ones sit on solid chairs
+const NPC=[];function npc(x,z,ry,o,label,cast){const f=figure(o);f.position.set(x,o.lift||0,z);f.rotation.y=ry;scene.add(f);NPC.push({f,label,cast,x,z,ry,sit:o.mode==='sit',lift:o.lift||0});/* lift: sits that much higher (saddle stools) */if(o.mode!=='sit')solid(x,z,.5,.5);return f}   // standing people are solid; seated ones sit on solid chairs
 // staff and visitors: receptionist, waiting visitors, lab technicians, Lucky & Venky, pharmacist, radiologist, cashier.
 // The last argument names the real 3D character that replaces the stand-in once it has loaded (models/hospital/<cast>.glb).
-npc(0,3.75,0,{female:true,dress:true,top:0x0b8f9f,skin:0xc99070,hair:0x1c120c},'Receptionist','recep');
+npc(0,4.95,0,{female:true,dress:true,top:0x0b8f9f,skin:0xc99070,hair:0x1c120c},'Receptionist','recep');
 npc(-4.05,8.05,0,{mode:'sit',top:0xc9476a,female:true,dress:true,skin:0xb98a6a},'Visitor','woman');npc(3.15,9.75,Math.PI,{mode:'sit',top:0x5a7fa8,skin:0x9a6440},'Visitor','remy');
-LAB.forEach((d,i)=>npc(d.x,d.z-.75,0,{mode:'sit',coat:true,top:[0x3b7fc4,0xc9476a,0x2aa35a][i%3],female:i%2===1,skin:[0xc08a62,0xa86f4a,0xd29b78][i%3]},'Lab technician',i%2?'techf':'techm'));
-npc(-.6,-11.05,0,{mode:'sit',top:0x1d2a33,skin:0x9a6440,hair:0x15100c},'Lucky','lucky');npc(.6,-11.05,0,{mode:'sit',top:0xf1ead8,skin:0x8a5634,hair:0x15100c},'Venky','cashier');   // Venky: a stand-in character until his own avatar arrives
+LAB.forEach((d,i)=>npc(d.x,d.z-.75,0,{mode:'sit',lift:.08,coat:true,top:[0x3b7fc4,0xc9476a,0x2aa35a][i%3],female:i%2===1,skin:[0xc08a62,0xa86f4a,0xd29b78][i%3]},'Lab technician','lab'+i));   // lab<i> → that desk's look in LABLOOK (below)
+npc(-.6,-11.23,0,{mode:'sit',lift:.08,top:0x1d2a33,skin:0x9a6440,hair:0x15100c},'Lucky','lucky');npc(.6,-11.23,0,{mode:'sit',lift:.08,top:0xf1ead8,skin:0x8a5634,hair:0x15100c},'Venky','venky');   // Lucky and Venky: their own Avaturn avatars
 npc(-12,7.2,Math.PI,{coat:true,top:0x2aa35a,skin:0xc08a62},'Pharmacist','techf');npc(14.5,-9.8,-Math.PI/2,{coat:true,top:0x5a6b7a,female:true,skin:0xd29b78},'Radiologist','techm');npc(12,9.9,Math.PI,{female:true,dress:true,top:0xd0892a,skin:0xb98a6a},'Cashier','cashier');
+// a busy waiting area: almost every lobby chair taken. People round the two tables chat with each other; the rows face the desk and wait.
+// Three chairs stay free (as in a real lobby, and for the visitor to sit later).
+{const seats=[];[[-3.6,8.9],[3.6,8.9]].forEach(([x,z])=>{[-1,1].forEach(s=>seats.push([x+s*.45,z-.85,0,1],[x+s*.45,z+.85,Math.PI,1]));seats.push([x-1.05,z,Math.PI/2,1],[x+1.05,z,-Math.PI/2,1])});
+ [[-3.6,11.6],[3.6,11.6]].forEach(([x,z])=>[-1.1,-.37,.37,1.1].forEach(dx=>seats.push([x+dx,z,Math.PI,0])));
+ const taken=new Set(['-4.05,8.05','3.15,9.75','4.65,8.90','-2.50,11.60','3.97,11.60']);let i=0;
+ seats.forEach(([x,z,ry,table])=>{const k=x.toFixed(2)+','+z.toFixed(2);if(taken.has(k)||(k==='-4.05,8.05'))return;
+  npc(x,z,ry,{mode:'sit',top:[0x5a7fa8,0xc9476a,0x2aa35a,0xd0892a][i%4],female:i%2===1,dress:i%4===1,skin:[0xc08a62,0xa86f4a,0xd29b78,0x8a5634][i%4]},table?'Chatting':'Visitor','vis'+i);i++})}
 
 /* ================= real people: Mixamo characters + Lucky's Avaturn avatar, all sharing one set of Mixamo motions =================
    models/hospital/<name>.glb are the characters (bones named Hips, Spine, LeftArm … like Mixamo without its prefix);
@@ -453,16 +644,72 @@ function play(p,name,fade=.45,once=false){const a=p.act[name];if(!a||(p.cur===a&
 const BEH={
  'Lab technician':{base:['type','type','type','sitidle1','sitidle2'],hold:[10,24]},
  'Visitor':{base:['sitidle1','sitidle2','sitidle1'],hold:[12,26]},
- 'Lucky':{base:['meetm'],hold:[60,90]},'Venky':{base:['sittalk2','meetm'],hold:[30,50]},
+ 'Chatting':{base:['sittalk1','sitidle1','sittalk2','sitidle2','laugh','talk5'],hold:[8,20]},
+ 'Lucky':{base:['meetm'],hold:[60,90]},'Venky':{base:['sittalk1','meetm'],hold:[30,50]},   /* sittalk2 rests the hands where the desk is */
  'Receptionist':{base:['idle'],gest:['talk1','talk3','look2','look3']},
  'Cashier':{base:['idle'],gest:['textstand','look1','talk4']},
  '*':{base:['idle'],gest:['look1','look2','look3','talk2','talk4']}};
 const beh=n=>BEH[n.label]||BEH['*'];
 // the waiting lady is the same woman the visitor can be — if the visitor chose her, the lady is played by another character
-const castOf=n=>n.cast==='woman'&&who==='f'?'guest3':n.cast;
-function cast(n){const name=castOf(n);n.used=name;loadG(name).then(g=>{if(n.used!==name)return;if(n.p)scene.remove(n.p.o);const p=person(g,n.x,n.z,n.ry);const b=beh(n);n.base=pick(b.base);play(p,n.base,0);p.baseAt=clock+rnd(...(b.hold||[20,40]));scene.remove(n.f);n.p=p}).catch(e=>console.warn('character',name,e))}
+const castOf=n=>{if(/^lab\d/.test(n.cast)){n.look=LABLOOK[+n.cast.slice(3)%LABLOOK.length];return n.look.cast}
+ if(/^vis\d/.test(n.cast)){n.look=visLook(+n.cast.slice(3));return n.look.cast}return n.cast==='woman'&&who==='f'&&n.label==='Visitor'?'guest3':n.cast};
+/* lab technicians all look different: a different base person at each desk, clothes re-dyed, hair colour changed, some wear another person's hairstyle.
+   tint: {meshNamePart: colour} — the garment's texture keeps its folds and stitching but takes the new colour. hair: whose hairstyle to wear. */
+const LABLOOK=[
+ {cast:'techm',tint:{Hoodie:0x3f97ad,Pants:0x2c3646}},
+ {cast:'techf'},
+ {cast:'cashier',tint:{Sweater:0x5f86bd,Collar:0xffffff,Pants:0x2d3340},hairCol:0x4a2c18},
+ {cast:'recep',tint:{Suit:0x8c2f45,Pants:0x3a3d44,Shirt:0xf6ecef},hair:'woman',hairCol:0x2a1a10},
+ {cast:'man',tint:{Shirt:0x5d97d2,Pants:0x33363d},hair:'techm',hairCol:0x1c1410},
+ {cast:'woman',tint:{Cloth:0x4f9e68,Socks:0xffffff},hair:'techf',hairCol:0x6b4226},
+ {cast:'remy',tint:{Tops:0xc07a48,Bottoms:0x2f3540},hairCol:0x22180f},
+ {cast:'techf',tint:{Shirt:0x9a7bd0,Pants:0x2a2a40},hair:'recep',hairCol:0x7a4a2a},
+ {cast:'techm',tint:{Hoodie:0xd6a23e,Pants:0x2f3b30},hair:'cashier',hairCol:0x0f0c0a}];
+// waiting visitors: every one a different mix of person, everyday clothes colours and hairstyle (same result on every visit)
+const VIS_BASE=[['man','Shirt','Pants','m'],['woman','Cloth','Socks','f'],['techm','Hoodie','Pants','m'],['techf','Shirt','Pants','f'],['cashier','Sweater','Pants','m'],['recep','Suit','Pants','f'],['remy','Tops','Bottoms','m']],
+ TOPS=[0xb5413a,0x2f5d8a,0x4f8a5b,0xd8b04a,0x7a4e8c,0xe8e2d4,0x2b2b2b,0xd47a5a,0x5b9aa8,0x8a6b4a,0xc9476a,0x3c4f78,0x9bb08a,0xf0c9a8],
+ BOTTOMS=[0x2d3340,0x3a3f48,0x5a4a3a,0x1f2a3a,0x6b6f76,0x2a2a2a,0x40525e],HAIRS=[0x0f0c0a,0x22180f,0x3a2414,0x5a3a22,0x7a4a2a,0x2a1a10],
+ HAIR_M=['techm','cashier',null],HAIR_F=['woman','techf','recep'];
+function visLook(i){const r=k=>{const x=Math.sin(i*12.9898+k*78.233)*43758.5453;return x-Math.floor(x)},b=VIS_BASE[(i*3+1)%VIS_BASE.length],t={};
+ t[b[1]]=TOPS[Math.floor(r(1)*TOPS.length)];t[b[2]]=b[2]==='Socks'?0xffffff:BOTTOMS[Math.floor(r(2)*BOTTOMS.length)];if(b[0]==='recep')t.Shirt=0xf6f1ea;
+ const pool=b[3]==='f'?HAIR_F:HAIR_M,h=b[0]==='remy'?null:pool[Math.floor(r(3)*pool.length)];
+ return {cast:b[0],tint:t,hair:h===b[0]?null:h,hairCol:HAIRS[Math.floor(r(4)*HAIRS.length)]}}
+// re-dye: the texture is turned to grey (light/shade only) and multiplied by the new colour, so even black clothes can become pastel
+function recolor(m,hex,k=1.5,b=.16){const n=m.material.clone();n.color=new THREE.Color(hex).convertSRGBToLinear();n.onBeforeCompile=s=>{s.fragmentShader=s.fragmentShader.replace('#include <map_fragment>',
+ `#ifdef USE_MAP\n vec4 texelColor=mapTexelToLinear(texture2D(map,vUv));float lum=dot(texelColor.rgb,vec3(.299,.587,.114));texelColor.rgb=vec3(clamp(lum*${k.toFixed(2)}+${b.toFixed(2)},0.,1.));diffuseColor*=texelColor;\n#endif`)};
+ n.customProgramCacheKey=()=>'recolor'+k+b;m.material=n}
+// another person's hairstyle: their hair mesh re-bound to this person's bones (same bone names), own hair hidden
+function wearHair(p,g){const d=g.scene;let src=null;d.traverse(m=>{if(m.isSkinnedMesh&&/Hair$/i.test(m.name))src=m});if(!src)return null;
+ const B={};p.o.traverse(x=>{if(x.isBone&&!B[x.name])B[x.name]=x});const bones=src.skeleton.bones.map(b=>B[b.name]);if(bones.some(b=>!b))return null;
+ p.o.traverse(m=>{if(m.isSkinnedMesh&&/Hair$/i.test(m.name))m.visible=false});
+ const h=new THREE.SkinnedMesh(src.geometry,src.material.clone());h.name='SwapHair';h.frustumCulled=false;h.castShadow=true;p.o.add(h);h.bind(new THREE.Skeleton(bones,src.skeleton.boneInverses),src.bindMatrix);return h}
+function dress(p,L){p.o.traverse(m=>{if(!m.isMesh)return;for(const k in (L.tint||{}))if(m.name.includes(k))recolor(m,L.tint[k])});
+ const hairTint=()=>{if(L.hairCol)p.o.traverse(m=>{if(m.isMesh&&m.visible&&/Hair$/i.test(m.name))recolor(m,L.hairCol,2.6,.35)})};
+ if(L.hair)loadG(L.hair).then(g=>{wearHair(p,g);hairTint()}).catch(()=>{});else hairTint()}
+function cast(n){const name=castOf(n);n.used=name;loadG(name).then(g=>{if(n.used!==name)return;if(n.p)scene.remove(n.p.o);const p=person(g,n.x,n.z,n.ry);p.o.position.y=n.lift;if(n.look)dress(p,n.look);if(n.sit)p.o.traverse(m=>{m.castShadow=false});/* seated people: the chair's soft contact shadow is enough (saves a lot of drawing in the full lobby) */const b=beh(n);n.base=pick(b.base);play(p,n.base,0);p.baseAt=clock+rnd(...(b.hold||[20,40]));scene.remove(n.f);n.p=p}).catch(e=>console.warn('character',name,e))}
 // staff talk with their hands now and then; the receptionist waves when the visitor walks up to the desk
-function tickNPC(n,dt){const p=n.p,b=beh(n);p.mx.update(dt);
+/* hands resting on the lap: the motions were made for a slimmer body, so palms can sink into the thighs. After each animation step the palm is
+   measured against both thighs (bone line + thigh radius); if it is too close, the forearm is lifted just enough, smoothly. */
+const _a=new V3(),_b=new V3(),_c=new V3(),_d=new V3(),_ab=new V3(),_ax=new V3(),_q=new THREE.Quaternion(),_qp=new THREE.Quaternion();
+function lapFix(p,dt){const o=p.o;if(!p.B){const f=k=>o.getObjectByName(k);p.B={};p.lap={};['Left','Right'].forEach(s=>{p.B[s]={fa:f(s+'ForeArm'),h:f(s+'Hand'),m:f(s+'HandMiddle1'),ul:f(s+'UpLeg'),l:f(s+'Leg')};p.lap[s]=0})}
+ o.updateMatrixWorld(true);_ax.set(1,0,0).applyQuaternion(o.quaternion);const R=.118;
+ for(const s of ['Left','Right']){const b=p.B[s];if(!b.fa||!b.h||!b.ul||!b.l)continue;
+  b.h.getWorldPosition(_a);if(b.m){b.m.getWorldPosition(_b);_a.lerp(_b,.6)}   /* the palm, between wrist and knuckles */
+  let need=0;for(const t of ['Left','Right']){const T=p.B[t];T.ul.getWorldPosition(_c);T.l.getWorldPosition(_d);_ab.subVectors(_d,_c);const u=clamp(_b.subVectors(_a,_c).dot(_ab)/_ab.lengthSq(),0,1);
+   const d=_a.distanceTo(_b.copy(_c).addScaledVector(_ab,u));if(d<R)need=Math.max(need,R-d)}
+  b.fa.getWorldPosition(_b);const L=_b.distanceTo(_a)||.25,th=clamp(need/L*1.3,0,.6);p.lap[s]+=(th-p.lap[s])*Math.min(1,dt*(th>p.lap[s]?16:5));   /* lift quickly, lower gently */
+  if(p.lap[s]>.003){b.fa.parent.getWorldQuaternion(_qp);_q.setFromAxisAngle(_ax,-p.lap[s]);b.fa.quaternion.premultiply(_qp.clone().invert().multiply(_q).multiply(_qp))}}}
+/* lab technicians use the mouse: now and then the right arm swings from the keyboard to the mouse (the typing motion keeps the fingers busy),
+   and while the hand is on it the mouse slides with the hand across the pad; otherwise it stays where it was left */
+const _Y=new V3(0,1,0);
+function mouseHand(n,dt){const p=n.p,d=n.cast&&/^lab\d/.test(n.cast)?LAB[+n.cast.slice(3)]:null;if(!d||!d.mouse)return;const m=p.mh||(p.mh={w:0,on:false,t:clock+rnd(3,9)});
+ if(clock>m.t){m.on=!m.on;m.t=clock+(m.on?rnd(2.5,5.5):rnd(5,12))}if(n.base!=='type')m.on=false;
+ m.w+=((m.on?1:0)-m.w)*Math.min(1,dt*3.5);if(m.w<.01)return;
+ const B=p.B2||(p.B2={a:p.o.getObjectByName('RightArm'),h:p.o.getObjectByName('RightHand'),mid:p.o.getObjectByName('RightHandMiddle1')});if(!B.a||!B.h)return;
+ B.a.parent.getWorldQuaternion(_qp);_q.setFromAxisAngle(_Y,-.55*m.w);B.a.quaternion.premultiply(_qp.clone().invert().multiply(_q).multiply(_qp));
+ if(m.w>.75){p.o.updateMatrixWorld(true);B.h.getWorldPosition(_a);if(B.mid){B.mid.getWorldPosition(_b);_a.lerp(_b,.45)}const ms=d.mouse,k=Math.min(1,dt*12);
+  ms.position.x+=(clamp(_a.x,d.x-.5,d.x-.26)-ms.position.x)*k;ms.position.z+=(clamp(_a.z+.04,d.z-.34,d.z-.16)-ms.position.z)*k}}
+function tickNPC(n,dt){const p=n.p,b=beh(n);p.mx.update(dt);if(n.sit)lapFix(p,dt);if(n.label==='Lab technician')mouseHand(n,dt);
  // seated people drift between their loops (typing ↔ pausing, shifting how they sit)
  if(!b.gest){if(clock>p.baseAt){p.baseAt=clock+rnd(...(b.hold||[20,40]));const nb=pick(b.base);if(nb!==n.base){n.base=nb;play(p,nb,.9)}}return}
  const near=Math.hypot(P.x-n.x,P.z-n.z);
@@ -502,7 +749,7 @@ function collide(){for(const c of colliders){if(!c.on)continue;const nx=clamp(P.
  if(d<RAD){if(d>1e-5){P.x=nx+dx/d*RAD;P.z=nz+dz/d*RAD}else{const l=P.x-c.x1,r=c.x2-P.x,t=P.z-c.z1,b=c.z2-P.z,m=Math.min(l,r,t,b);if(m===l)P.x=c.x1-RAD;else if(m===r)P.x=c.x2+RAD;else if(m===t)P.z=c.z1-RAD;else P.z=c.z2+RAD}}}}
 const inRoom=(x,z)=>ROOMS.find(r=>r.id!=='corridor'&&x>r.x1&&x<r.x2&&z>r.z1&&z<r.z2)||R.corridor;
 let curRoom=null,roomT;
-function showRoom(r){const e=$('#room');e.querySelector('b').textContent=r.name;const s=e.querySelector('span');s.textContent=r.sub;s.hidden=!r.sub;s.style.background=r.col;e.classList.add('show');clearTimeout(roomT);roomT=setTimeout(()=>e.classList.remove('show'),3200);chime()}
+function showRoom(r){const e=$('#room');e.querySelector('b').textContent=r.name;const s=e.querySelector('span');s.textContent=r.sub;if(/DEVOCRAT/.test(r.sub))s.innerHTML=r.sub.replace('DEVOCRAT','<span class="wm dark"><span class="d">DEV</span><span class="o">OCRAT</span></span>');s.hidden=!r.sub;s.style.background=r.col;e.classList.add('show');clearTimeout(roomT);roomT=setTimeout(()=>e.classList.remove('show'),3200);chime()}
 function step(dt){clock+=dt;
  // input → wanted motion
  let fwd=0,turn=0,run=keys.shift;fwd+=(keys.arrowup||keys.w?1:0)-(keys.arrowdown||keys.s?1:0);turn+=(keys.arrowleft||keys.a?1:0)-(keys.arrowright||keys.d?1:0);
@@ -524,7 +771,10 @@ function step(dt){clock+=dt;
  // footsteps in time with the stride
  meAnim(dt);if(P.speed>.3){const k=Math.floor(me.userData.ph/Math.PI);if(k!==step.k){step.k=k;foot(P.speed>2.2)}}
  me.position.set(P.x,0,P.z);me.rotation.y=P.h;
- NPC.forEach(n=>n.p?tickNPC(n,dt):animFig(n.f,dt,0));
+ // only people you could see are drawn and animated: those in your room, or near you while you are in the corridor (glass doors)
+ const here=curRoom?curRoom.id:'reception';
+ NPC.forEach(n=>{const r=n.room||(n.room=inRoom(n.x,n.z).id),d=Math.hypot(P.x-n.x,P.z-n.z),see=r===here||(d<13&&(here==='corridor'||r==='corridor'))||d<5;
+  const o=n.p?n.p.o:n.f;o.visible=see;if(!see)return;n.p?tickNPC(n,dt):animFig(n.f,dt,0)});
  // camera: follows behind, eases round when walking (unless the visitor has been looking around), never through a wall
  if(P.speed>.3&&clock-camS.lastDrag>1.6){let dy=((P.h-camS.yaw+Math.PI)%(Math.PI*2)+Math.PI*2)%(Math.PI*2)-Math.PI;camS.yaw+=dy*Math.min(1,dt*1.8)}}
 const tgt=new V3(),cpos=new V3();
@@ -560,12 +810,18 @@ function audioOn(){if(!soundOn)return;if(ac){if(ac.state==='suspended')ac.resume
  amb2={g};roomAudio()}catch(e){ac=null}}
 /* live ambience: a real recording for each room, looped, cross-faded as the visitor walks from room to room (no music).
    sounds/hosp/<room>.mp3 — reception, corridor, lab, consult, pharmacy, xray, billing. A room without its file stays on the soft air-conditioning bed. */
-const AMB={},AMBVOL={reception:.55,corridor:.45,lab:.5,consult:.35,pharmacy:.45,xray:.45,billing:.45};
+const AMB={},AMBVOL={reception:.62,corridor:.42,lab:.42,consult:.14,pharmacy:.3,xray:.4,billing:.34,entrance:.45};   // the files are all levelled to the same loudness; these set how busy each room feels
+let regBuf=null,regAt=0;   // the billing till: a real cash-register recording, now and then
 function roomAudio(){Object.keys(AMBVOL).forEach(id=>{if(AMB[id])return;const g=ac.createGain();g.gain.value=0;g.connect(ac.destination);AMB[id]={g,ok:false};
- fetch('sounds/hosp/'+id+'.mp3').then(r=>{if(!r.ok)throw 0;return r.arrayBuffer()}).then(b=>ac.decodeAudioData(b)).then(buf=>{const s=ac.createBufferSource();s.buffer=buf;s.loop=true;s.connect(g);s.start(0,Math.random()*buf.duration);AMB[id].ok=true}).catch(()=>{})})}
+ fetch('sounds/hosp/'+id+'.mp3').then(r=>{if(!r.ok)throw 0;return r.arrayBuffer()}).then(b=>ac.decodeAudioData(b)).then(buf=>{const s=ac.createBufferSource();s.buffer=buf;s.loop=true;s.connect(g);s.start(0,Math.random()*buf.duration);AMB[id].ok=true}).catch(()=>{})});
+ if(!regBuf)fetch('sounds/hosp/register.mp3').then(r=>r.arrayBuffer()).then(b=>ac.decodeAudioData(b)).then(b=>regBuf=b).catch(()=>{})}
 // called every frame: the room you are in is full, the corridor is heard faintly through open doors, everything else fades out
 function ambTick(){if(!ac||!soundOn)return;const id=curRoom?curRoom.id:'reception',t=ac.currentTime;let any=false;
- for(const k in AMB){const a=AMB[k];let v=k===id?1:(k==='corridor'&&id!=='reception'?.18:(id==='corridor'&&k!=='corridor'?.08:0));if(!a.ok)v=0;else if(k===id)any=true;a.g.gain.setTargetAtTime(v*AMBVOL[k],t,.6)}
+ for(const k in AMB){const a=AMB[k];let v=k===id?1:(k==='corridor'&&id!=='reception'?.18:(id==='corridor'&&k!=='corridor'?.08:0));
+  if(k==='entrance')v=id==='reception'?clamp((P.z-7)/5.5,0,1):0;   // street doors: louder as you walk up to the main entrance
+  if(!a.ok)v=0;else if(k===id)any=true;a.g.gain.setTargetAtTime(v*AMBVOL[k],t,.6)}
+ if(regBuf&&clock>regAt){regAt=clock+rnd(14,32);const d=Math.hypot(P.x-12,P.z-9.9),v=id==='billing'?.32:id==='corridor'?.05:0;
+  if(v){const s=ac.createBufferSource(),g=ac.createGain();s.buffer=regBuf;g.gain.value=v*clamp(1.6-d/8,.3,1);s.connect(g);g.connect(ac.destination);s.start()}}
  amb2.g.gain.setTargetAtTime(any?.012:.05,t,.8)}
 function chime(){}   // entering a room is announced on screen only — no musical tones
 function whoosh(){if(!ac||!soundOn)return;const t=ac.currentTime,s=ac.createBufferSource();s.buffer=ac.createBuffer(1,ac.sampleRate*.6,ac.sampleRate);const d=s.buffer.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1;

@@ -272,14 +272,14 @@ function renderLogin() {
   else body = `<form data-f="otp2"><p>Enter the 6-digit login code for <b>${esc(LG.mobile)}</b>.</p><input name="otp" class="otp" inputmode="numeric" maxlength="6" autocomplete="one-time-code" required aria-label="Login code">${LG.demoOtp ? `<div class="demo" style="margin-top:10px">Trial version (no SMS): your code is <b>${LG.demoOtp}</b></div>` : ''}<p></p><button class="btn" style="width:100%">Verify & open my records</button><p style="margin-top:10px"><button type="button" class="btn g sm" data-a="otpback" data-id="">Change number</button></p></form>`;
   const fl = [['plus', 6, 12, 90], ['heart', 70, 8, 70], ['pill', 18, 72, 60], ['flask', 82, 64, 80], ['plus', 45, 86, 50], ['steth', 30, 30, 64], ['plus', 92, 30, 44]];
   $('#root').innerHTML = `<div class="login"><div class="floaters" aria-hidden="true">${fl.map(([k, x, y, s], i) => `<span style="left:${x}%;top:${y}%;width:${s}px;height:${s}px;animation-delay:-${i * 2.3}s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">${IC[k]}</svg></span>`).join('')}</div>
-  <section class="hero"><div class="logo"><span class="mark">${MARK}</span><span>Hospital management<br><span style="opacity:.75;font-weight:600">Reception to bedside, one record</span></span></div>
+  <section class="hero"><div class="logo"><span class="mark">${MARK}</span><span><span class="sora" style="font-size:20px;letter-spacing:-.01em">HMS<span style="font-weight:600;opacity:.85">crat</span></span><br><span style="opacity:.8;font-weight:600">Hospital management by DEVOCRAT</span></span></div>
   <h1>${esc((LIC && LIC.hospital) || 'Devocrat Multi-Speciality Hospital').replace('Multi-Speciality', '<em>Multi-Speciality</em>')}</h1><p class="lead">Reception, doctors, nurses, laboratory, X-ray & scan, pharmacy and patients — connected live on phone, tablet and desktop.</p>${ECG}
   <div class="spec">${deps.map(d => `<span>${ic(dIc[d] || 'steth')}${esc(d)}</span>`).join('')}</div><div class="er"><b>${MARK.replace('#e53935', '#fff')}</b>24×7 Emergency & ICU</div></section>
   <section class="pane"><div class="glass"><h2 style="font-size:22px;margin:0">Welcome back</h2><p class="mut" style="margin:2px 0 0">Sign in to your desk or your health records.</p><div class="tabs" role="tablist"><button class="${LG.tab === 'staff' ? 'on' : ''}" data-a="tab" data-id="staff" role="tab">Hospital staff</button><button class="${LG.tab === 'patient' ? 'on' : ''}" data-a="tab" data-id="patient" role="tab">Patient</button></div>${body}${LIC && LIC.expiry ? `<div class="demo" style="margin:16px 0 0;text-align:center;background:var(--pri2);color:var(--pri)">${esc(LIC.plan || 'Trial')} version${LIC.licensedTo ? ' · ' + esc(LIC.licensedTo) : ''} · valid until ${fd(LIC.expiry)} (${LIC.daysLeft} day${LIC.daysLeft === 1 ? '' : 's'} left)</div>` : ''}<p class="tiny" style="margin:12px 0 0;text-align:center">${ic('shield', 14)} Secure sign-in · every action is recorded with your name</p></div></section></div>`;
 }
 
 // ---------- licence lock, setup, offline ----------
-function shell(inner) { return `<div class="login"><div class="hero"><div class="logo"><span class="mark">${MARK}</span><span>${esc((LIC && LIC.hospital) || 'Devocrat Multi-Speciality Hospital')}<br><span style="opacity:.75;font-weight:600">Hospital management</span></span></div>${ECG}</div><section class="pane"><div class="glass">${inner}</div></section></div>`; }
+function shell(inner) { return `<div class="login"><div class="hero"><div class="logo"><span class="mark">${MARK}</span><span>${esc((LIC && LIC.hospital) || 'Devocrat Multi-Speciality Hospital')}<br><span style="opacity:.8;font-weight:600">HMScrat · hospital management</span></span></div>${ECG}</div><section class="pane"><div class="glass">${inner}</div></section></div>`; }
 function renderLocked() {
   clearInterval(pollT); closeM();
   const L = LIC || {}, sus = L.reason === 'suspended';
@@ -300,14 +300,14 @@ function trialNote() {
 // ---------- app shell ----------
 function render() {
   if (!S) return renderLogin();
-  U = S.me; const R = ROLES[U.role]; document.title = S.hospital;
+  U = S.me; const R = ROLES[U.role]; document.title = S.hospital + ' · HMScrat';
   if (!VIEWS[V] || (V !== 'consult' && !R.nav.some(n => n[0] === V) && !(U.role === 'admin' && V === 'audit'))) V = R.nav[0][0];
   const badge = { rxq: S.rx.filter(r => r.status === 'Pending').length, lab: S.orders.filter(o => o.kind === 'lab' && o.status !== 'Approved').length, nlab: S.orders.filter(o => o.kind === 'lab' && o.status === 'Ordered').length, img: S.orders.filter(o => o.kind === 'img' && o.status !== 'Approved').length, queue: U.did ? S.visits.filter(v => v.did === U.did && v.date === TODAY() && v.status !== 'Done').length : 0, billing: S.bills.filter(b => !b.paid).length, meds: S.meds.filter(m => ['Low stock', 'Out of stock'].includes(mstat(m))).length, myreports: U.role === 'patient' ? S.orders.filter(o => o.status === 'Approved').length : 0 };
   const h = new Date().getHours(), greet = h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening', staff = U.role !== 'patient';
   const scrollY = window.scrollY, same = lastView === V;
   $('#root').innerHTML = `<div class="app"><aside class="side"><div class="logo"><span class="mark">${MARK}</span><span>${esc(S.hospital.split(' ')[0])}<br><span style="font-weight:600;opacity:.8">${esc(S.hospital.split(' ').slice(1).join(' '))}</span></span></div>${ECG}<div class="who" style="--c:var(--${U.role})"><div class="av">${esc(ini(U.name))}</div><div><b>${esc(U.name)}</b><span class="duty">${R.t}${staff ? ' · on duty' : ''}</span></div></div>
   ${R.nav.map(([k, t, i]) => `<button class="nav ${V === k || (V === 'consult' && k === 'queue') ? 'on' : ''}" data-a="go" data-id="${k}">${ic(i)}<span>${t}</span>${badge[k] ? `<em>${badge[k]}</em>` : ''}</button>`).join('')}
-  <div class="sfoot"><button data-a="theme" data-id="">${ic(document.documentElement.dataset.theme === 'dark' ? 'sun' : 'moon', 16)}Theme</button><button data-a="logout" data-id="">${ic('out', 16)}Sign out</button></div></aside>
+  <div class="sfoot" style="flex-wrap:wrap"><div style="width:100%;font-size:12.5px;opacity:.75;margin-bottom:6px">HMScrat · by DEVOCRAT</div><button data-a="theme" data-id="">${ic(document.documentElement.dataset.theme === 'dark' ? 'sun' : 'moon', 16)}Theme</button><button data-a="logout" data-id="">${ic('out', 16)}Sign out</button></div></aside>
   <div><div id="alerts"></div>${trialNote()}${navigator.onLine ? '' : '<div class="offline">You are offline — showing the last saved data. Changes need a connection.</div>'}
   <header class="top"><div class="hello"><b class="sora">${greet}, ${esc(U.name.replace(/^(Receptionist|Lab Tech|Radiographer|Pharmacist|Admin) /, ''))}</b><div class="clk" id="clk"></div></div><span class="grow"></span>
   <button class="pending" id="pend" data-a="applypend" data-id="" ${pending ? '' : 'hidden'}>New updates · refresh</button>
@@ -354,7 +354,7 @@ const A = {
   applypend: () => applyPending(),
   close: closeM,
   print: () => { const w = window.open('', '_blank'); if (!w) return toast('Allow pop-ups to print', 1); w.document.write(`<!DOCTYPE html><html><head><title>${esc(S.hospital)}</title><link rel="stylesheet" href="${new URL('app.css', location.href).href}"><style>body{background:#fff;padding:24px}.btn,.acts{display:none!important}</style></head><body>${$('#mbody').innerHTML}</body></html>`); w.document.close(); setTimeout(() => w.print(), 500); },
-  install: async () => { $('.menu')?.remove(); if (deferredInstall) { deferredInstall.prompt(); deferredInstall = null; } else modal(`<h2>Install the app</h2><p><b>Android (Chrome):</b> menu ⋮ → <i>Add to Home screen</i>.</p><p><b>iPhone / iPad (Safari):</b> Share button → <i>Add to Home Screen</i>.</p><p><b>Desktop (Chrome / Edge):</b> the install icon at the right of the address bar.</p>`); },
+  install: async () => { $('.menu')?.remove(); if (deferredInstall) { deferredInstall.prompt(); deferredInstall = null; } else modal(`<h2>Install HMScrat</h2><p><b>Android (Chrome):</b> menu ⋮ → <i>Add to Home screen</i>.</p><p><b>iPhone / iPad (Safari):</b> Share button → <i>Add to Home Screen</i>.</p><p><b>Desktop (Chrome / Edge):</b> the install icon at the right of the address bar.</p>`); },
   file: id => { act('viewFile', { id }, { quiet: true }); modal(chartHTML(id)); },
   rep: id => { modal(reportHTML(id)); loadImages(); },
   inv: id => modal(invoiceHTML(id)),
