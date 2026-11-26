@@ -221,6 +221,7 @@ html.nocur #cur{display:none!important}html.nocur.curon,html.nocur.curon *{curso
   <div class="meter"><i id="lbar"></i></div>
   <p id="timeNote" class="tnote"></p>
   <div class="enterrow"><button id="enter" class="enter" data-music="1" disabled>Loading…</button><button id="enterMute" class="enter mute" data-music="0" disabled>Enter muted</button></div>
+  <p id="bootMsg" class="tnote" role="status" hidden style="max-width:420px;margin:12px auto 0;color:#f3d991"></p>
   <div style="margin-top:14px"><button class="ghost" id="bText0" style="background:transparent;color:#d8c8ab;border-color:rgba(233,200,119,.3);min-height:40px;font-size:13px">Read as text instead</button></div>
  </div>
 </div>
@@ -406,6 +407,14 @@ const Cur=(()=>{const el=$('#cur'),ring=el.querySelector('.ring'),dot=el.querySe
  // called from the 3D view: the name of the object under the mouse (or '' for none)
  return{set(l){canvasLabel=l||'';el.classList.toggle('hover',!!canvasLabel);lab.textContent=canvasLabel},drag(d){el.classList.toggle('drag',d)}}})();
 
+/* ---------------- start-up safety (phones) ----------------
+   If anything goes wrong before the room is entered, say so on the welcome screen (with the reason) instead of leaving dead buttons,
+   offer Try again / the text version, and tell slow phones that the room is still being built. */
+let studioReady=false;
+function bootProblem(why){if(studioReady)return;const p=$('#bootMsg');if(!p)return;p.hidden=false;p.textContent='The 3D room could not start on this device'+(why?' ('+String(why).slice(0,120)+')':'')+'. Try again, or read it as text below.';
+ const e=$('#enter'),m=$('#enterMute');if(e){e.disabled=false;e.textContent='↻ Try again';e.onclick=()=>location.reload()}if(m)m.hidden=true}
+addEventListener('error',e=>{if(!/ResizeObserver|^Script error/i.test(e.message||''))bootProblem(e.message)});   /* (browsers report these harmless notices as errors) */addEventListener('unhandledrejection',e=>bootProblem(e.reason&&(e.reason.message||e.reason)));
+setTimeout(()=>{if(!studioReady&&$('#enter')&&$('#enter').disabled){const p=$('#bootMsg');p.hidden=false;p.textContent='Still building the room — phones can take a little longer. You can also read it as text below.'}},15000);
 /* ---------------- 3D ---------------- */
 let renderer;
 try{renderer=new THREE.WebGLRenderer({canvas:$('#gl'),antialias:!lowQ||devicePixelRatio<2,powerPreference:'high-performance'});if(!renderer.getContext())throw 0}
@@ -414,7 +423,7 @@ catch(e){renderer=null;$('#loader').style.display='none';openText();$('#textv .w
 if(renderer){
 const boot=()=>{
 const V3=THREE.Vector3,lbar=$('#lbar');
-renderer.setPixelRatio(Math.min(devicePixelRatio,lowQ?1.5:2));
+renderer.setPixelRatio(Math.min(devicePixelRatio,isTouch?1.25:lowQ?1.5:2));   /* phones: a lighter render, so the room fits in phone graphics memory */
 renderer.outputEncoding=THREE.sRGBEncoding;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.05;
 renderer.shadowMap.enabled=!lowQ;renderer.shadowMap.type=THREE.PCFSoftShadowMap;
 const scene=new THREE.Scene();scene.background=new THREE.Color(0x2a2018);
@@ -1067,14 +1076,18 @@ lbar.style.width='100%';
 frame();
 // ready: enter the room
 const en=$('#enter'),em=$('#enterMute');en.disabled=em.disabled=false;en.textContent='♪ Enter with music';en.focus();
-let entered=false;
-en.onclick=em.onclick=e=>{if(entered)return;entered=true;Music.set(e.currentTarget.dataset.music==='1');musicUI();$('#loader').style.opacity=0;setTimeout(()=>$('#loader')?.remove(),800);mode='fly';showUI(false);$('#back').hidden=true;
- const p0=HOME.pitch+(innerWidth<innerHeight?.12:0);homeLook={yaw:HOME.yaw,pitch:p0};
- cam.pos.set(HOME.pos.x+.6,HOME.pos.y+.5,HOME.pos.z+.4);flyAngles(HOME.pos,HOME.yaw,p0,2.2,()=>{mode='home';showUI(true);$('#back').hidden=true})};
+let entered=false;$('#bootMsg').hidden=true;
+// the welcome screen always goes first, so nothing after it (music, camera) can leave the visitor stuck on it
+en.onclick=em.onclick=e=>{if(entered)return;entered=true;studioReady=true;const wantMusic=e.currentTarget.dataset.music==='1';$('#loader').style.opacity=0;setTimeout(()=>$('#loader')?.remove(),800);
+ try{Music.set(wantMusic);musicUI()}catch(err){console.warn('music',err)}
+ try{mode='fly';showUI(false);$('#back').hidden=true;const p0=HOME.pitch+(innerWidth<innerHeight?.12:0);homeLook={yaw:HOME.yaw,pitch:p0};
+  cam.pos.set(HOME.pos.x+.6,HOME.pos.y+.5,HOME.pos.z+.4);flyAngles(HOME.pos,HOME.yaw,p0,2.2,()=>{mode='home';showUI(true);$('#back').hidden=true})}
+ catch(err){console.error(err);mode='home';showUI(true)}};
+renderer.domElement.addEventListener('webglcontextlost',ev=>{ev.preventDefault();if(!studioReady)bootProblem('the graphics memory ran out')});
 // test hook: __studio.run(seconds) advances the room by hand (the browser pauses animation in hidden windows)
 window.__studio={go,back,cam,VIEWS,scene,camera,jars,api,run:s=>{for(let i=0;i<Math.round(s*30);i++)step(1/30)}};
 };
-Promise.race([Promise.all(['600 italic 40px "Cormorant Garamond"','700 40px "Cormorant Garamond"','800 20px Manrope','600 20px Manrope'].map(f=>document.fonts.load(f))),new Promise(r=>setTimeout(r,3000))]).catch(()=>{}).then(()=>{try{boot()}catch(err){console.error(err);$('#loader').style.display='none';openText()}});
+Promise.race([Promise.all(['600 italic 40px "Cormorant Garamond"','700 40px "Cormorant Garamond"','800 20px Manrope','600 20px Manrope'].map(f=>document.fonts.load(f))),new Promise(r=>setTimeout(r,3000))]).catch(()=>{}).then(()=>{try{boot()}catch(err){console.error(err);bootProblem(err&&err.message)}});
 }
 }
 </script>
