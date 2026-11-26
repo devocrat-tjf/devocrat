@@ -286,6 +286,9 @@ const esc=t=>String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',
 const store={get(k,d){try{const v=localStorage.getItem('devo_studio_'+k);return v==null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem('devo_studio_'+k,JSON.stringify(v))}catch(e){}}};
 const isTouch=matchMedia('(pointer:coarse)').matches;
 const lowQ=isTouch||(navigator.hardwareConcurrency||8)<=4;
+// Lite mode (phones by default; ?lite=0 / ?lite=1 or a saved choice override): lower render resolution and no decorative cove lights,
+// so the room runs on phone graphics chips. It switches on by itself if a phone shows the room too slowly.
+const LITE=(()=>{const q=new URLSearchParams(location.search).get('lite');if(q==='1')return true;if(q==='0')return false;const s=store.get('lite',null);return s===null?isTouch:!!s})();
 const phone=()=>innerWidth<=760;
 
 /* ---------------- content (all words come from js/content.js) ---------------- */
@@ -411,6 +414,12 @@ const Cur=(()=>{const el=$('#cur'),ring=el.querySelector('.ring'),dot=el.querySe
    If anything goes wrong before the room is entered, say so on the welcome screen (with the reason) instead of leaving dead buttons,
    offer Try again / the text version, and tell slow phones that the room is still being built. */
 let studioReady=false;
+// a small notice over the room (after entering), with Lite mode / Reload / Read as text
+function studioNote(msg,offerLite){let n=document.getElementById('sNote');if(!n){n=document.createElement('div');n.id='sNote';n.setAttribute('role','alert');
+  n.style.cssText='position:fixed;z-index:60;left:50%;transform:translateX(-50%);bottom:max(90px,calc(env(safe-area-inset-bottom) + 80px));width:min(460px,92vw);background:rgba(24,17,11,.94);color:#f3ead8;border:1px solid rgba(233,200,119,.45);border-radius:16px;padding:12px 14px;font:500 14px/1.45 Manrope,system-ui,sans-serif;text-align:center;box-shadow:0 14px 40px rgba(0,0,0,.45)';document.body.appendChild(n)}
+ const lite=offerLite&&!LITE,u=new URL(location.href);u.searchParams.set('lite','1');const bs='margin:8px 4px 0;min-height:40px;padding:0 14px;border-radius:999px;font:700 13px Manrope,system-ui;cursor:pointer;';
+ n.innerHTML=`<div>${msg}</div><div>${lite?`<button data-a="lite" style="${bs}border:0;background:linear-gradient(180deg,#f3d991,#c79a3b);color:#22180f">Switch to Lite mode</button>`:''}<button data-a="reload" style="${bs}border:1px solid rgba(233,200,119,.5);background:transparent;color:#f3ead8">↻ Reload</button><button data-a="text" style="${bs}border:1px solid rgba(233,200,119,.3);background:transparent;color:#d8c8ab">Read as text</button></div>`;
+ n.onclick=e=>{const a=e.target.dataset&&e.target.dataset.a;if(a==='lite'){store.set('lite',true);location.replace(u.href)}else if(a==='reload')location.reload();else if(a==='text'){n.remove();openText()}}}
 function bootProblem(why){if(studioReady)return;const p=$('#bootMsg');if(!p)return;p.hidden=false;p.textContent='The 3D room could not start on this device'+(why?' ('+String(why).slice(0,120)+')':'')+'. Try again, or read it as text below.';
  const e=$('#enter'),m=$('#enterMute');if(e){e.disabled=false;e.textContent='↻ Try again';e.onclick=()=>location.reload()}if(m)m.hidden=true}
 addEventListener('error',e=>{if(!/ResizeObserver|^Script error/i.test(e.message||''))bootProblem(e.message)});   /* (browsers report these harmless notices as errors) */addEventListener('unhandledrejection',e=>bootProblem(e.reason&&(e.reason.message||e.reason)));
@@ -423,7 +432,7 @@ catch(e){renderer=null;$('#loader').style.display='none';openText();$('#textv .w
 if(renderer){
 const boot=()=>{
 const V3=THREE.Vector3,lbar=$('#lbar');
-renderer.setPixelRatio(Math.min(devicePixelRatio,isTouch?1.25:lowQ?1.5:2));   /* phones: a lighter render, so the room fits in phone graphics memory */
+renderer.setPixelRatio(Math.min(devicePixelRatio,LITE?1:isTouch?1.25:lowQ?1.5:2));   /* phones: a lighter render, so the room fits in phone graphics memory */
 renderer.outputEncoding=THREE.sRGBEncoding;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.05;
 renderer.shadowMap.enabled=!lowQ;renderer.shadowMap.type=THREE.PCFSoftShadowMap;
 const scene=new THREE.Scene();scene.background=new THREE.Color(0x2a2018);
@@ -869,7 +878,7 @@ Object.assign(sun.shadow.camera,{left:-11,right:11,top:11,bottom:-11,near:1,far:
 const fill=new THREE.PointLight(0xfff0dc,.3,14,1.5);fill.position.set(-3.5,2.4,-2.2);scene.add(fill);   // daylight bouncing off the floor near the window
 const kitLight=new THREE.PointLight(0xffd9a0,0,6,1.6);kitLight.position.set(-.5,2.2,-7.2);scene.add(kitLight);
 const lampK=new THREE.PointLight(0xffb060,0,4.5,1.8);lampK.position.set(5.45,1.6,3.55);scene.add(lampK);
-const coveLights=[[-5.2,2.9,-1],[5.2,2.9,-1],[0,2.9,5.2],[0,2.9,-7.2]].map(([x,y,z])=>{const l=new THREE.PointLight(0xffd08a,0,6,2);l.position.set(x,y,z);scene.add(l);return l});
+const coveLights=[[-5.2,2.9,-1],[5.2,2.9,-1],[0,2.9,5.2],[0,2.9,-7.2]].map(([x,y,z])=>{const l=new THREE.PointLight(0xffd08a,0,6,2);l.position.set(x,y,z);l.visible=!LITE;scene.add(l);return l});   /* Lite: the cove strips still glow, without their extra lights */
 const C=c=>new THREE.Color(c).convertSRGBToLinear();
 const MODES={
  morning:{name:'Morning',icon:'🌅',note:'Good morning — soft sun is coming in through the window.',hemi:.5,sky:0xfff0dc,ground:0x8a6a4a,amb:.07,sun:2.2,sunCol:0xffd6a0,sunPos:[-11,5.2,2.2],fill:.28,exp:1,bg:0x2a2018,win:'day',chand:0,pend:0,flame:.55,cove:0,kit:0,beam:.12,photo:.97},
@@ -1036,7 +1045,12 @@ const clock=new THREE.Clock(),tmp=new V3(),pv=new V3();
 function toScreen(p){pv.copy(p).project(camera);return{x:(pv.x+1)/2*innerWidth,y:(1-pv.y)/2*innerHeight,ok:pv.z>-1&&pv.z<1&&Math.abs(pv.x)<1.15&&Math.abs(pv.y)<1.15}}
 const DOTP=Object.fromEntries(Object.entries(VIEWS).map(([k,v])=>[k,new V3(...v.dot)]));
 function place(el,x,y){el.style.transform=`translate(${x.toFixed(1)}px,${y.toFixed(1)}px)`}
-function frame(){requestAnimationFrame(frame);step()}
+// the loop never stops on an error: the first one is shown to the visitor (so it can be reported), and a phone that draws the room
+// too slowly is offered (and after a while switched to) Lite mode
+let frameErr=0,pfN=0,pfT=performance.now(),slowRuns=0;
+function frame(){requestAnimationFrame(frame);try{step()}catch(e){if(!frameErr++){console.error(e);studioNote('Something went wrong in the 3D room ('+String(e&&e.message||e).slice(0,100)+').',true)}}
+ if(studioReady&&!document.hidden){pfN++;const now=performance.now();if(now-pfT>2500){const fps=pfN*1000/(now-pfT);pfN=0;pfT=now;slowRuns=fps<(LITE?5:12)?slowRuns+1:0;
+  if(slowRuns===2)studioNote(LITE?'This phone is struggling even with the lighter room. The text version has everything too.':'Your phone is finding the 3D room heavy. Lite mode runs much more smoothly.',true)}}}
 let tFix=0;
 function step(fixedDt){if(paused)return;let dt,t;if(fixedDt){tFix+=fixedDt;dt=fixedDt;t=clock.elapsedTime+tFix}else{dt=Math.min(clock.getDelta(),.05);t=clock.elapsedTime+tFix}
  if(tween){tween.t+=dt/tween.dur;const k=ease(Math.min(tween.t,1));cam.pos.lerpVectors(tween.p0,tween.p1,k);cam.pos.y+=Math.sin(Math.PI*k)*tween.lift;cam.yaw=lerp(tween.y0,tween.y1,k);cam.pitch=lerp(tween.q0,tween.q1,k);if(tween.t>=1){const d=tween.done;tween=null;d&&d()}}
@@ -1083,7 +1097,7 @@ en.onclick=em.onclick=e=>{if(entered)return;entered=true;studioReady=true;const 
  try{mode='fly';showUI(false);$('#back').hidden=true;const p0=HOME.pitch+(innerWidth<innerHeight?.12:0);homeLook={yaw:HOME.yaw,pitch:p0};
   cam.pos.set(HOME.pos.x+.6,HOME.pos.y+.5,HOME.pos.z+.4);flyAngles(HOME.pos,HOME.yaw,p0,2.2,()=>{mode='home';showUI(true);$('#back').hidden=true})}
  catch(err){console.error(err);mode='home';showUI(true)}};
-renderer.domElement.addEventListener('webglcontextlost',ev=>{ev.preventDefault();if(!studioReady)bootProblem('the graphics memory ran out')});
+renderer.domElement.addEventListener('webglcontextlost',ev=>{ev.preventDefault();if(!studioReady)bootProblem('the graphics memory ran out');else studioNote('Your phone’s graphics memory ran out, so the room stopped moving.',true)});
 // test hook: __studio.run(seconds) advances the room by hand (the browser pauses animation in hidden windows)
 window.__studio={go,back,cam,VIEWS,scene,camera,jars,api,run:s=>{for(let i=0;i<Math.round(s*30);i++)step(1/30)}};
 };
