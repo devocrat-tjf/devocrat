@@ -89,7 +89,14 @@ body.pan #subs{left:calc((100vw - min(460px,100vw))/2);width:min(620px,calc(100v
 .pp{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}.pp div{border:1px solid var(--line);border-radius:16px;padding:12px}.pp small{display:block;font:800 10px Manrope;letter-spacing:.14em;color:var(--gold);text-transform:uppercase}.pp h3{margin:4px 0 2px;font:800 16px Manrope}.pp em{font-style:normal;color:var(--ink2);font-size:13px}.pp a{display:inline-block;margin-top:6px;font-weight:800;color:var(--teal-d);text-decoration:none}
 #cform label{display:block;font:700 13px Manrope;margin:10px 0 4px;color:var(--ink)}#cform input,#cform select,#cform textarea{width:100%;box-sizing:border-box;border:1px solid #c7d6d8;border-radius:12px;padding:11px 12px;font:500 15px Manrope;background:#fff}
 .note{font-size:12.5px;color:var(--ink2)}
-/* the live prototype viewer (desktop + phone), opened from a lab desk */
+/* working at a lab desk: the apps live on the 3D screens (CSS3D layer over the canvas), with a small floating bar */
+#css3d{position:fixed;inset:0;z-index:3;pointer-events:none;overflow:hidden}#css3d iframe{border:0;background:#fff;display:block}
+.scr3d{pointer-events:auto;overflow:hidden;background:#fff}.scr3d.ph{border-radius:44px}
+#workBar{position:fixed;z-index:9;top:max(10px,env(safe-area-inset-top));left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:8px;padding:6px;border-radius:999px;background:rgba(251,253,253,.94);box-shadow:var(--shadow);max-width:96vw}
+#workBar[hidden]{display:none}#workBar .ghost{min-height:40px;padding:0 14px;display:inline-flex;align-items:center;text-decoration:none;color:var(--ink);font:700 14px Manrope}
+#workBar .t{padding:0 8px;text-align:center;min-width:0}#workBar small{display:block;color:var(--teal);font:800 10px Manrope;letter-spacing:.14em;text-transform:uppercase}#workBar b{display:block;font:400 18px/1.1 "DM Serif Display",Georgia,serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:34vw}
+body.working #top,body.working #mini,body.working #joy,body.working #room{display:none}
+/* (old viewer styles, kept for reference) */
 #proto{position:fixed;inset:0;z-index:25;display:flex;flex-direction:column;background:linear-gradient(180deg,#f6fbfb,#e3f2f0)}
 #proto[hidden]{display:none}
 #proto .ph{display:flex;align-items:center;gap:12px;padding:max(10px,env(safe-area-inset-top)) 16px 10px;border-bottom:1px solid var(--line);background:rgba(251,253,253,.92)}
@@ -122,14 +129,10 @@ body.pan #subs{left:calc((100vw - min(460px,100vw))/2);width:min(620px,calc(100v
 <div id="toast" role="status"></div>
 <div id="subs" aria-live="polite"><b></b><span></span></div>
 <aside id="panel" aria-label="Information"><div class="top"><span class="kick" id="panelKick"></span><button class="ghost" id="panelX">✕ Close</button></div><div id="panelBody"></div></aside>
-<section id="proto" role="dialog" aria-modal="true" aria-labelledby="protoName" hidden>
- <header class="ph"><button class="ghost" id="protoBack">← Stand up</button><div class="t"><small>Laboratory · live prototype</small><b id="protoName"></b></div><button class="ghost" id="protoFull" title="Full screen">⤢ Full screen</button></header>
- <div class="pb"><div class="wrap">
-  <div class="devices"><div class="dev-d"><div class="devbar"><span>LAPTOP · LIVE PROTOTYPE</span><span class="sp"></span><button type="button" id="pvReload">↻ Reload</button><a id="pvOpen" href="#" target="_blank" rel="noopener">Open in a new tab ↗</a></div><iframe id="pvD" title="Desktop app preview" sandbox="allow-scripts allow-forms allow-modals allow-popups allow-downloads allow-same-origin"></iframe></div>
-   <div class="dev-m"><div class="scr"><iframe id="pvM" title="Mobile app preview" sandbox="allow-scripts allow-forms allow-modals allow-popups allow-downloads allow-same-origin"></iframe></div><p>PHONE</p></div></div>
-  <p class="note" style="margin-top:14px">Working prototypes with sample data. Try them like a real user.</p>
- </div></div>
-</section>
+<!-- working at a lab desk: the live app runs on the 3D laptop and phone screens themselves; this bar floats above them -->
+<div id="workBar" hidden><button class="ghost" id="protoBack">← Stand up</button><div class="t"><small>Laboratory · live prototype</small><b id="protoName"></b></div>
+ <button class="ghost" id="pvReload" title="Reload">↻</button><button class="ghost" id="protoFull" title="Full screen">⤢ Full screen</button><a class="ghost" id="pvOpen" href="#" target="_blank" rel="noopener" title="Open in a new tab">↗</a></div>
+<div id="css3d"></div>
 <section class="scrim" id="mapM" aria-label="Hospital map"><div class="card"><p class="kick">Hospital map</p><h2>Where would you like to go?</h2><p>Tap a room and you will walk there.</p><canvas id="bigmap" width="720" height="560"></canvas><div class="row"><button class="ghost" data-close>Close</button></div></div></section>
 <section class="scrim open" id="intro" aria-label="Welcome"><div class="card">
  <p class="kick"><span class="wm"><span class="d">DEV</span><span class="o">OCRAT</span></span> · Hospital world</p><h2>Welcome to the <span class="wm" style="font-family:Cinzel,Georgia,serif"><span class="d">DEV</span><span class="o">OCRAT</span></span> Hospital</h2>
@@ -529,7 +532,7 @@ function deskPhone(x,z,ry,shot,hex=0x2a2a2c){const g=grp(x,.775,z,ry);box(.07,.0
  const sc=new THREE.Mesh(new THREE.PlaneGeometry(.067,.145),new THREE.MeshBasicMaterial({map:shot?shotTex(shot):null,color:shot?0xffffff:0x111111,toneMapped:false}));sc.position.z=.0118;ph.add(sc);
  const bz=new THREE.Mesh(new THREE.PlaneGeometry(.069,.149),M.black);bz.position.z=.0116;ph.add(bz);sc.position.z=.0119;   /* black glass round the screen */
  const dm=new THREE.Mesh(new THREE.PlaneGeometry(.036,.036),new THREE.MeshStandardMaterial({map:dMarkTex,transparent:true,roughness:.25,metalness:.6,depthWrite:false}));dm.rotation.y=Math.PI;dm.position.set(0,.005,-.0052);ph.add(dm);
- const cam=rbox(.026,.026,.002,.006,std(0x15161a,.3,.3),-.017,.052,-.0058,ph);return g}
+ const cam=rbox(.026,.026,.002,.006,std(0x15161a,.3,.3),-.017,.052,-.0058,ph);g.userData.screen=sc;return g}
 /* ---- reception screens: drawn like real front-desk software, with a live clock ---- */
 const UI=[];   // screens that redraw themselves every 20 s (clock, queue)
 function uiScreen(w,h,draw){const c=document.createElement('canvas');c.width=w;c.height=h;const t=new THREE.CanvasTexture(c);t.encoding=THREE.sRGBEncoding;t.anisotropy=4;
@@ -965,7 +968,7 @@ function roomAudio(){Object.keys(AMBVOL).forEach(id=>{if(AMB[id])return;const g=
 function ambTick(){if(!ac||!soundOn)return;const id=curRoom?curRoom.id:'reception',t=ac.currentTime;let any=false;
  for(const k in AMB){const a=AMB[k];let v=k===id?1:(k==='corridor'&&id!=='reception'?.18:(id==='corridor'&&k!=='corridor'?.08:0));
   if(k==='entrance')v=id==='reception'?clamp((P.z-7)/5.5,0,1):0;   // street doors: louder as you walk up to the main entrance
-  if(!a.ok)v=0;else if(k===id)any=true;if(!$('#proto').hidden)v*=.15;a.g.gain.setTargetAtTime(v*AMBVOL[k],t,.6)}   /* quieter while a live demo is open */
+  if(!a.ok)v=0;else if(k===id)any=true;if(work)v*=.15;a.g.gain.setTargetAtTime(v*AMBVOL[k],t,.6)}   /* quieter while a live demo is open */
  if(regBuf&&clock>regAt){regAt=clock+rnd(14,32);const d=Math.hypot(P.x-12,P.z-9.9),v=id==='billing'?.32:id==='corridor'?.05:0;
   if(v){const s=ac.createBufferSource(),g=ac.createGain();s.buffer=regBuf;g.gain.value=v*clamp(1.6-d/8,.3,1);s.connect(g);g.connect(ac.destination);s.start()}}
  amb2.g.gain.setTargetAtTime(any?.012:.05,t,.8)}
@@ -1018,15 +1021,32 @@ let VOICES=[];const hasTTS='speechSynthesis' in window;if(hasTTS){const lv=()=>{
 function pickVoice(female){const en=VOICES.filter(v=>/^en/i.test(v.lang)),ind=en.filter(v=>/IN/i.test(v.lang)),pool=ind.length?ind:en;
  const f=pool.find(v=>/female|heera|neerja|zira|samantha|aria|jenny|susan|veena|swara/i.test(v.name)),m=pool.find(v=>/\bmale|ravi|prabhat|david|mark|guy|daniel|madhur/i.test(v.name)&&!/female/i.test(v.name));
  return female?(f||pool[0]):(m||pool.find(v=>v!==f)||pool[0])}
+/* Lucky and Venky each have their own voice: a different device voice for each (never the same one, and not the staff's), plus their own pitch and pace.
+   The lists are tried in order; whatever the device has first wins. */
+const PERSONA={
+ lucky:{like:[/prabhat/i,/madhur/i,/google uk english male/i,/ryan|thomas|george/i,/ravi/i,/mark/i,/david/i],pitch:1.06,rate:1.04},
+ venky:{like:[/madhur/i,/prabhat/i,/guy|eric|christopher|andrew|brian/i,/mark/i,/ravi/i,/google uk english male/i,/david/i],pitch:.8,rate:.94}};
+function personaVoice(key){const P2=PERSONA[key],staff=pickVoice(false),en=VOICES.filter(v=>/^en/i.test(v.lang)&&!/female|zira|heera|neerja|aria|jenny|susan|samantha|veena|swara/i.test(v.name));
+ const taken=new Set([staff]);if(key==='venky'){const l=personaVoice.cache.lucky||(personaVoice.cache.lucky=personaVoice('lucky'));taken.add(l)}
+ for(const re of P2.like){const v=en.find(x=>re.test(x.name)&&!taken.has(x));if(v)return v}return en.find(x=>!taken.has(x))||null}
+personaVoice.cache={};if(hasTTS)speechSynthesis.addEventListener?.('voiceschanged',()=>{personaVoice.cache={}});
+// real recordings, when the user supplies them: sounds/hosp/voice/<clip>.mp3 plays instead of the device voice for that line
+// add a clip's name here once its file is in sounds/hosp/voice/ (e.g. 'lucky-intro', 'venky-intro')
+const VOICE_FILES=['lucky-intro','venky-intro'];   /* generated character voices for now (Lucky = bright Mark, Venky = deeper David); replace the files with real recordings later, same names */
+const clipOK=k=>Promise.resolve(VOICE_FILES.includes(k));
 let talkTok=0;
 // lines: [speaker, text, female?, the person who says it]
 function say(lines,done){const tok=++talkTok;if(hasTTS)try{speechSynthesis.cancel()}catch(e){}let i=0;
  const next=()=>{if(tok!==talkTok)return;if(i>=lines.length){$('#subs').classList.remove('show');lines.forEach(l=>l[3]&&talkAnim(l[3],false));done&&done();return}
-  const [who,text,female,n]=lines[i++];$('#subs b').textContent=who;$('#subs span').textContent=text;$('#subs').classList.add('show');lines.forEach(l=>l[3]&&l[3]!==n&&talkAnim(l[3],false));if(n)talkAnim(n,true);
+  const [who,text,female,n,o={}]=lines[i++];$('#subs b').textContent=who;$('#subs span').textContent=text;$('#subs').classList.add('show');lines.forEach(l=>l[3]&&l[3]!==n&&talkAnim(l[3],false));if(n)talkAnim(n,true);
   let ended=false;const end=()=>{if(ended||tok!==talkTok)return;ended=true;setTimeout(next,280)};
-  if(soundOn&&hasTTS){const u=new SpeechSynthesisUtterance(text),v=pickVoice(female);if(v){u.voice=v;u.lang=v.lang}else u.lang='en-IN';u.rate=1;u.pitch=female?1.08:.92;u.onend=end;u.onerror=end;speechSynthesis.speak(u);setTimeout(end,Math.max(3000,text.length*95+1500))}
-  else setTimeout(end,Math.max(2400,text.length*60))};next()}
-function stopSpeech(){talkTok++;if(hasTTS)try{speechSynthesis.cancel()}catch(e){}$('#subs').classList.remove('show');NPC.forEach(n=>n.talking&&talkAnim(n,false))}
+  const tts=()=>{if(soundOn&&hasTTS){const u=new SpeechSynthesisUtterance(text),pr=o.voice&&PERSONA[o.voice],v=pr?(personaVoice.cache[o.voice]||(personaVoice.cache[o.voice]=personaVoice(o.voice))):pickVoice(female);
+    if(v){u.voice=v;u.lang=v.lang}else u.lang='en-IN';u.rate=pr?pr.rate:1;u.pitch=pr?pr.pitch:(female?1.08:.92);u.onend=end;u.onerror=end;speechSynthesis.speak(u);setTimeout(end,Math.max(3000,text.length*95+1500))}
+   else setTimeout(end,Math.max(2400,text.length*60))};
+  // a real recording for this line, if one has been added; otherwise the device voice
+  if(soundOn&&o.clip)clipOK(o.clip).then(ok=>{if(tok!==talkTok)return;if(!ok)return tts();const au=new Audio('sounds/hosp/voice/'+o.clip+'.mp3');sayAudio=au;au.onended=end;au.onerror=tts;au.play().catch(tts)});else tts()};next()}
+let sayAudio=null;
+function stopSpeech(){talkTok++;if(hasTTS)try{speechSynthesis.cancel()}catch(e){}if(sayAudio){sayAudio.pause();sayAudio=null}$('#subs').classList.remove('show');NPC.forEach(n=>n.talking&&talkAnim(n,false))}
 // act it out: standing staff talk with their hands, seated people talk sitting down; afterwards they go back to what they were doing
 function talkAnim(n,on){const p=n.p;if(!p||!!n.talking===on)return;n.talking=on;
  if(on){play(p,n.sit?pick(['sittalk1','talk5']):pick(['talk1','talk2','talk3','talk4']),.35)}else{play(p,n.base,.5);p.gestEnd=0;p.gestAt=clock+rnd(5,10);p.baseAt=clock+rnd(8,16)}}
@@ -1035,7 +1055,7 @@ const SPEECH={
  services:()=>{const n=npcBy('Pharmacist');return [['Pharmacist','Here is what we prescribe.',1,n],...SERVICES.map(([i,t,d])=>['Pharmacist',`${t}. ${d}`,1,n])]},
  process:()=>{const n=npcBy('Radiologist');return [['Radiologist',`${PROC.title} Here is how we work.`,0,n],...PROC.steps.map(([t,d],k)=>['Radiologist',`${k+1}. ${t}. ${d}`,0,n])]},
  offers:()=>{const n=npcBy('Cashier');return [['Cashier','Our latest offers will be announced here soon. Until then, tell us about your project in the consultation room.',0,n]]},
- team:()=>{const l=npcBy('Lucky'),v=npcBy('Venky');return [[`Lucky · ${TEAM_ROLES.des[2]}`,`Hi! I'm Manoj, Lucky to my friends. I design the screens people use: clear, simple and easy to love.`,0,l],[`Venky · ${TEAM_ROLES.dev[2]}`,`And I'm Venky. I build the software behind them. Tell us your idea and we'll get back to you personally.`,0,v]]}};
+ team:()=>{const l=npcBy('Lucky'),v=npcBy('Venky');return [[`Lucky · ${TEAM_ROLES.des[2]}`,`Hi! I'm Manoj, Lucky to my friends. I design the screens people use: clear, simple and easy to love.`,0,l,{voice:'lucky',clip:'lucky-intro'}],[`Venky · ${TEAM_ROLES.dev[2]}`,`And I'm Venky. I build the software behind them. Tell us your idea and we'll get back to you personally.`,0,v,{voice:'venky',clip:'venky-intro'}]]}};
 function talk(kind){openPanel(kind);say(SPEECH[kind]())}
 
 /* the lab: walk to the visitor chair, sit down, the technician turns the laptop and phone round, then the live prototype opens */
@@ -1045,43 +1065,74 @@ let camOver=null,seatDesk=null;
 function labTry(i){const d=LAB[i],a=d.app;if(!a||P.sit)return;closePanel();P.auto=[[d.x,d.z+1.35]];P.onArrive=()=>sitAt(i)}
 function sitAt(i){const d=LAB[i],a=d.app,tech=NPC.find(n=>n.cast==='lab'+i);seatDesk=d;P.sit=true;P.x=d.x;P.z=d.z+.78;P.h=Math.PI;P.speed=0;
  camOver={pos:new V3(d.x+.32,1.42,d.z+1.55),look:new V3(d.x,.9,d.z-.12)};NAV.open('hosp:seat',rawStand,NH('lab-'+a.id));
- const fem=tech&&['techf','woman','recep'].includes(tech.used);say([['Lab technician',`This is ${a.name}. ${APP_BLURB[a.id]||a.desc} Let me turn the laptop round for you.`,fem,tech]]);
- setTimeout(()=>{if(seatDesk!==d)return;tween(d.laptop.rotation,'y',0,1.1);d.phone&&tween(d.phone.rotation,'y',.25,1.1,()=>setTimeout(()=>{if(seatDesk===d)openProto(a.id)},700))},1300)}
-function rawStand(){const d=seatDesk;if(!d)return;seatDesk=null;rawCloseProto(true);tween(d.laptop.rotation,'y',Math.PI,1);d.phone&&tween(d.phone.rotation,'y',Math.PI+.25,1);P.sit=false;P.z=d.z+1.35;camOver=null;camS.yaw=Math.PI;stopSpeech()}
+ const fem=tech&&['techf','woman','recep'].includes(tech.used);
+ // the laptop and phone turn only once the technician has finished saying so, then the live app opens
+ say([['Lab technician',`This is ${a.name}. ${APP_BLURB[a.id]||a.desc} Let me turn the laptop round for you.`,fem,tech]],()=>{if(seatDesk!==d)return;
+  // only now: the laptop turns to the visitor, the phone slides beside it, the view moves to the visitor's eyes, and the app starts on both screens
+  if(d.phone){tween(d.phone.rotation,'y',.12,1.1);tween(d.phone.position,'x',d.x+.3,1.1);tween(d.phone.position,'z',d.z+.04,1.1)}
+  tween(d.laptop.rotation,'y',0,1.1,()=>{if(seatDesk===d)startWork(d)})})}
+function rawStand(){const d=seatDesk;if(!d)return;seatDesk=null;endWork();tween(d.laptop.rotation,'y',Math.PI,1);
+ if(d.phone){tween(d.phone.rotation,'y',Math.PI+.25,1);tween(d.phone.position,'x',d.x+.5,1);tween(d.phone.position,'z',d.z-.05,1)}P.sit=false;P.z=d.z+1.35;camOver=null;camS.yaw=Math.PI;me.visible=true;stopSpeech()}
 function stand(){if(!seatDesk)return;rawStand();NAV.closed('hosp:seat')}
-// the live prototype viewer, as in the other worlds
+/* the live app ON the 3D laptop and phone: real web pages placed exactly on the two screens (CSS3D), so you click, scroll and type on them in place */
 const appUrl=(id,ph)=>{const a=appMeta.find(x=>x.id===id);return 'apps/'+((a&&ph&&a.mobilePath)||(a&&a.path)||id+'.html')};
-function setFrame(f,url){if(window.dvcFrame)return dvcFrame(f,url?{src:url}:null);f.removeAttribute('srcdoc');f.src=url||'about:blank'}
-let protoId=null;
-function openProto(id){const a=appMeta.find(x=>x.id===id);protoId=id;$('#protoName').textContent=a.name;$('#proto').hidden=false;setFrame($('#pvD'),appUrl(id));setFrame($('#pvM'),appUrl(id,true));$('#pvOpen').href=appUrl(id);
- $('#protoBack').focus()}
-function rawCloseProto(fromStand){if($('#proto').hidden)return;$('#proto').hidden=true;['pvD','pvM'].forEach(i=>setFrame($('#'+i),null));if(document.fullscreenElement)document.exitFullscreen().catch(()=>{});if(!fromStand)stand()}
+// load a screen; the site's dvcFrame swaps in a fresh iframe (so the back button history stays clean) — keep the new element
+function setFrame(s,url,doc){if(window.dvcFrame){s.f=dvcFrame(s.f,url?{src:url}:doc?{srcdoc:doc}:null);return}const f=s.f;f.removeAttribute('srcdoc');if(doc){f.srcdoc=doc;return}f.src=url||'about:blank'}
+const LW=1280,LH=800,PW=390,PH=844,SBOX='allow-scripts allow-forms allow-modals allow-popups allow-downloads allow-same-origin';
+// each screen is a flat web page warped (one perspective matrix) onto the 3D screen's four corners as seen by the camera
+const mkScreen=(w,h,cls,title)=>{const el=document.createElement('div');el.className='scr3d '+cls;Object.assign(el.style,{position:'absolute',left:0,top:0,width:w+'px',height:h+'px',transformOrigin:'0 0',display:'none'});
+ const f=document.createElement('iframe');f.title=title;f.setAttribute('sandbox',SBOX);f.style.width=w+'px';f.style.height=h+'px';el.appendChild(f);$('#css3d').appendChild(el);return {el,f,w,h,o:{set visible(v){el.style.display=v?'block':'none'}}}};
+// the perspective (homography) that maps a w×h rectangle onto four points on the display
+function quadMatrix(w,h,q){const adj=m=>[m[4]*m[8]-m[5]*m[7],m[2]*m[7]-m[1]*m[8],m[1]*m[5]-m[2]*m[4],m[5]*m[6]-m[3]*m[8],m[0]*m[8]-m[2]*m[6],m[2]*m[3]-m[0]*m[5],m[3]*m[7]-m[4]*m[6],m[1]*m[6]-m[0]*m[7],m[0]*m[4]-m[1]*m[3]],
+  mm=(a,b)=>{const c=[];for(let i=0;i<3;i++)for(let j=0;j<3;j++){let s=0;for(let k=0;k<3;k++)s+=a[3*i+k]*b[3*k+j];c[3*i+j]=s}return c},mv=(m,v)=>[0,1,2].map(i=>m[3*i]*v[0]+m[3*i+1]*v[1]+m[3*i+2]*v[2]),
+  basis=(p)=>{const m=[p[0][0],p[1][0],p[2][0],p[0][1],p[1][1],p[2][1],1,1,1],v=mv(adj(m),[p[3][0],p[3][1],1]);return mm(m,[v[0],0,0,0,v[1],0,0,0,v[2]])};
+ const t=mm(basis(q),adj(basis([[0,0],[w,0],[0,h],[w,h]])));for(let i=0;i<9;i++)t[i]/=t[8];return `matrix3d(${t[0]},${t[3]},0,${t[6]},${t[1]},${t[4]},0,${t[7]},0,0,1,0,${t[2]},${t[5]},0,${t[8]})`}
+const SCR={lap:mkScreen(LW,LH,'lap','Laptop – live prototype'),ph:mkScreen(PW,PH,'ph','Phone – live prototype')};
+let work=null;
+const phonePH=a=>'<!DOCTYPE html><meta name="viewport" content="width=device-width,initial-scale=1"><body style="margin:0;height:100vh;display:grid;place-items:center;background:#f6fbfb;color:#12262a;font:15px/1.5 system-ui,sans-serif;text-align:center;padding:24px;box-sizing:border-box"><div><p style="margin:0 0 14px">This app is heavy to run on both screens at once.</p><button onclick="parent.postMessage(\'hosp-load-phone\',\'*\')" style="padding:12px 18px;border:0;background:#0b8f9f;color:#fff;border-radius:999px;font:inherit;font-weight:700">Load it on the phone</button></div></body>';
+addEventListener('message',e=>{if(e.data==='hosp-load-phone'&&work&&e.source===SCR.ph.f.contentWindow)setFrame(SCR.ph,appUrl(work.id,true))});
+function startWork(d){const a=d.app;work={d,id:a.id};$('#protoName').textContent=a.name;$('#pvOpen').href=appUrl(a.id);$('#workBar').hidden=false;document.body.classList.add('working');$('#act').hidden=true;
+ setFrame(SCR.lap,appUrl(a.id));if(a.lazyMobile)setFrame(SCR.ph,null,phonePH(a));else setFrame(SCR.ph,appUrl(a.id,true));
+ me.visible=false;fitWorkCam();SCR.lap.o.visible=SCR.ph.o.visible=true;$('#protoBack').focus();
+ const t=NPC.find(n=>n.cast==='lab'+LAB.indexOf(d));if(t&&t.p){t.base='sitidle2';play(t.p,'sitidle2',.8);t.p.baseAt=1e9;work.tech=t}}   /* the technician sits back and watches while you use their laptop */
+function endWork(){if(!work)return;const t=work.tech;if(t&&t.p){t.base='type';play(t.p,'type',.8);t.p.baseAt=clock+rnd(10,24)}work=null;SCR.lap.o.visible=SCR.ph.o.visible=false;[SCR.lap,SCR.ph].forEach(s=>setFrame(s,null));$('#workBar').hidden=true;document.body.classList.remove('working');if(document.fullscreenElement)document.exitFullscreen().catch(()=>{})}
+// the visitor's own view: close enough that the laptop and phone fill the screen (further back on a narrow phone screen so both still fit)
+function fitWorkCam(){const d=work.d,cx=d.x+.09,vf=camera.fov*Math.PI/360,hf=Math.atan(Math.tan(vf)*camera.aspect),D=Math.max(.74/2/Math.tan(hf),.36/2/Math.tan(vf))+.04;
+ camOver={pos:new V3(cx,.93+D*.42,d.z-.1+D*.92),look:new V3(cx,.9,d.z-.1)}}
+// keep each web page glued to its screen (they move while the laptop turns and the phone slides)
+// (the web pages live in a 1000× larger copy of the world with a matching camera: same picture, but Chrome can click a page that is
+//  shrunk 0.26×, not one shrunk 0.0003×)
+const _wp=new V3();
+function placeScreens(){if(!work)return;const d=work.d;camera.updateMatrixWorld();
+ [[SCR.lap,d.laptop.userData.screen,.33,.206],[SCR.ph,d.phone&&d.phone.userData.screen,.067,.145]].forEach(([s,m,w,h])=>{if(!m)return;m.updateWorldMatrix(true,false);
+  const q=[[-w/2,h/2],[w/2,h/2],[-w/2,-h/2],[w/2,-h/2]].map(([x,y])=>{_wp.set(x,y,0);m.localToWorld(_wp);_wp.project(camera);return [(_wp.x+1)/2*innerWidth,(1-_wp.y)/2*innerHeight]});   /* top-left, top-right, bottom-left, bottom-right */
+  s.el.style.transform=quadMatrix(s.w,s.h,q)})}
 $('#protoBack').onclick=()=>stand();
-$('#pvReload').onclick=()=>protoId&&(setFrame($('#pvD'),appUrl(protoId)),setFrame($('#pvM'),appUrl(protoId,true)));
-$('#protoFull').onclick=()=>{const f=$('#pvD');if(f.requestFullscreen)f.requestFullscreen().catch(()=>window.open(appUrl(protoId),'_blank','noopener'));else window.open(appUrl(protoId),'_blank','noopener')};
+$('#pvReload').onclick=()=>work&&(setFrame(SCR.lap,appUrl(work.id)),setFrame(SCR.ph,appUrl(work.id,true)));
+$('#protoFull').onclick=()=>{if(!work)return;const f=SCR.lap.f;if(f.requestFullscreen)f.requestFullscreen().catch(()=>window.open(appUrl(work.id),'_blank','noopener'));else window.open(appUrl(work.id),'_blank','noopener')};
 
 /* where you can interact: near the receptionist, pharmacist, radiologist, cashier, Lucky & Venky, and in front of each lab desk */
 const HOTS=[{x:0,z:6.9,r:2.2,label:'Talk',run:()=>talk('about')},{x:-12,z:5,r:2.2,label:'Talk',run:()=>talk('services')},{x:12,z:-11,r:3,label:'Ask',run:()=>talk('process')},
  {x:12,z:7.7,r:2.2,label:'Talk',run:()=>talk('offers')},{x:0,z:-8.5,r:2.3,label:'Talk',run:()=>talk('team')},
  ...LAB.map((d,i)=>({x:d.x,z:d.z+1.35,r:.95,label:'Try '+(d.app?d.app.name.split(' ').slice(0,2).join(' '):'the app'),run:()=>labTry(i)}))];
 let hotOn=null;
-function hotTick(){let best=null,bd=1e9;if(!P.sit&&!P.auto&&$('#proto').hidden)for(const h of HOTS){const d=Math.hypot(P.x-h.x,P.z-h.z);if(d<h.r&&d<bd){bd=d;best=h}}
+function hotTick(){let best=null,bd=1e9;if(!P.sit&&!P.auto&&!work)for(const h of HOTS){const d=Math.hypot(P.x-h.x,P.z-h.z);if(d<h.r&&d<bd){bd=d;best=h}}
  if(best!==hotOn){hotOn=best;const b=$('#act');b.hidden=!best;if(best)b.textContent=best.label}
  if(panelOn&&!best&&!P.auto){const far=HOTS.every(h=>Math.hypot(P.x-h.x,P.z-h.z)>h.r+2.5);if(far)closePanel()}}   /* walking away closes the panel */
 $('#act').onclick=()=>{audioOn();hotOn&&hotOn.run()};
 addEventListener('keydown',e=>{if(e.target.closest&&e.target.closest('input,textarea,select'))return;const k=e.key.toLowerCase();
  if((k==='e'||k==='enter')&&hotOn&&!e.repeat){e.preventDefault();hotOn.run()}
- if(k==='escape'){if(!$('#proto').hidden||seatDesk)stand();else if(panelOn)closePanel()}});
+ if(k==='escape'){if(seatDesk)stand();else if(panelOn)closePanel()}});
 
 /* ================= start ================= */
 function enter(sound){soundOn=sound;store.set('sound',sound);soundUI();makeMe();$('#intro').classList.remove('open');if(sound)audioOn();P.x=0;P.z=11.6;P.h=Math.PI;camS.yaw=Math.PI;placeCam(true);
  setTimeout(()=>showRoom(R.reception),400);toast(isTouch?'Use the joystick to walk. Tap the map to go to a room.':'Walk with the arrow keys. Press M for the map.',4200)}
 $('#bEnterS').onclick=()=>enter(true);$('#bEnterM').onclick=()=>enter(false);
-function resize(){renderer.setSize(innerWidth,innerHeight,false);camera.aspect=innerWidth/innerHeight;camera.fov=innerWidth<innerHeight?72:60;camera.updateProjectionMatrix()}addEventListener('resize',resize);resize();
-let last=performance.now();function frame(now){const dt=Math.min(.05,(now-last)/1000);last=now;step(dt);ambTick();placeCam(false);renderer.render(scene,camera);drawMap($('#mini'),false);requestAnimationFrame(frame)}
+function resize(){renderer.setSize(innerWidth,innerHeight,false);camera.aspect=innerWidth/innerHeight;camera.fov=innerWidth<innerHeight?72:60;camera.updateProjectionMatrix();if(work)fitWorkCam()}addEventListener('resize',resize);resize();
+let last=performance.now();function frame(now){const dt=Math.min(.05,(now-last)/1000);last=now;step(dt);ambTick();placeCam(false);renderer.render(scene,camera);placeScreens();drawMap($('#mini'),false);requestAnimationFrame(frame)}
 placeCam(true);renderer.compile(scene,camera);$('#load').style.opacity=0;setTimeout(()=>$('#load').remove(),700);requestAnimationFrame(frame);
 // test hook: advance the world by hand when the page is in the background
-window.__hosp={P,camS,R,run:s=>{for(let i=0;i<Math.round(s*30);i++)step(1/30);placeCam(true);renderer.render(scene,camera);drawMap($('#mini'),false)},walkTo:id=>walkTo(R[id]),enter};
+window.__hosp={P,camS,R,run:s=>{for(let i=0;i<Math.round(s*30);i++)step(1/30);placeCam(true);renderer.render(scene,camera);placeScreens();drawMap($('#mini'),false)},walkTo:id=>walkTo(R[id]),enter};
 </script>
 </body>
 </html>
