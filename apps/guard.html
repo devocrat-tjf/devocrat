@@ -84,11 +84,11 @@ function now(){return new Date().toLocaleTimeString("en-IN",{hour:"2-digit",minu
 function go(r){S.role=r;S.tab=R[r].tabs[0][0];viewSlip=null;render()}
 function tab(t){S.tab=t;viewSlip=null;render()}
 function login(){var p=R[S.pick];if(!$("pw").value){toast("Enter the password");return}go(S.pick)}
-function pick(r){S.pick=r;render()}
+function pick(r){S.pick=r;go(r)}
 function out(){S.role=null;render()}
 function render(){var a=$("app");
 if(!S.role){var ch=Object.keys(R).map(function(k){return '<button class="btn sm '+(S.pick===k?"acc":"ghost")+'" onclick="pick(\''+k+'\')">'+R[k].l+'</button>'}).join("");
-a.innerHTML='<div class="top"><div class="mark">🛡</div><div><b>Guard Management App</b><small>Demo with sample data</small></div></div><div class="wrap"><div class="card"><h2>Sign in</h2><p class="m">Each person gets a login from admin and sees only their own area. For this demo, pick a role:</p><div class="chips">'+ch+'</div><label>User ID</label><input value="'+R[S.pick].u+'" readonly><label>Password</label><input id="pw" type="password" value="demo1234"><button class="btn big" onclick="login()">Sign in as '+R[S.pick].l+'</button></div></div>';return}
+a.innerHTML='<div class="top"><div class="mark">🛡</div><div><b>Guard Management App</b><small>Demo with sample data</small></div></div><div class="wrap"><div class="card"><h2>Sign in</h2><p class="m">Each person gets a login from admin and sees only their own area. This demo needs no password: tap a role to go straight in.</p><div class="chips">'+ch+'</div></div></div>';return}
 var r=R[S.role];
 a.innerHTML='<div class="top"><div class="mark">🛡</div><div><b>'+r.name+'</b><small>'+r.l+'</small></div><div class="sp"></div><button class="btn sm ghost" style="color:#fff;border-color:#ffffff66" onclick="out()">Sign out</button></div><div class="tabs">'+r.tabs.map(function(t){return '<button class="'+(S.tab===t[0]?"on":"")+'" onclick="tab(\''+t[0]+'\')">'+t[1]+'</button>'}).join("")+'</div><div class="wrap">'+(V[S.role+"_"+S.tab]?V[S.role+"_"+S.tab]():"")+'</div>'}
 var V={};

@@ -650,6 +650,14 @@ const appMeta=[
     "desc": "Table QR ordering, kitchen screen, floor and reports",
     "path": "restaurant/index.html",
     "mobilePath": "restaurant/index.html?demo=guest"
+  },
+  {
+    "id": "crmcrat",
+    "name": "CRMcrat",
+    "kind": "CRM for small business",
+    "icon": "🤝",
+    "desc": "Customers, deals pipeline, follow-ups and GST bills",
+    "path": "crmcrat/index.html"
   }
 ];
 
@@ -662,7 +670,8 @@ const APP_BLURB={
   "apparel": "1,000-product clothing store with cart, checkout and store admin.",
   "hospital": "Reception, doctors, nurses, lab, X-ray, pharmacy and patient app.",
   "salonpro": "Reception desk, bookings, billing, stylists, attendance and payroll.",
-  "restaurant": "Guests order from the table QR (phone); staff see it live (desktop)."
+  "restaurant": "Guests order from the table QR (phone); staff see it live (desktop).",
+  "crmcrat": "Customers, deals pipeline, follow-ups and GST bills for two partners."
 };
 
 // Hospital world: the "How we work" steps (sticky list on the left, details on the right).

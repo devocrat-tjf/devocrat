@@ -118,6 +118,7 @@ textarea{min-height:90px;resize:vertical}
 #tags{position:fixed;inset:0;z-index:7;pointer-events:none}
 .tag{position:absolute;left:0;top:0;transform:translate(-50%,0);pointer-events:auto;border:1px solid var(--line);background:var(--glass);border-radius:999px;padding:5px 11px;font:800 12px Manrope;white-space:nowrap;box-shadow:0 6px 18px rgba(34,24,15,.25);min-height:32px}
 .tag:hover,.tag:focus-visible{background:#fff;border-color:var(--brass)}
+@media (orientation:portrait){.tag{background:#fffaf0;color:#22180f;border:1.5px solid var(--brass);font:800 12px Manrope;padding:4px 10px;min-height:30px;max-width:46vw;overflow:hidden;text-overflow:ellipsis}}
 /* prototype viewer */
 #proto{position:fixed;inset:0;z-index:20;display:flex;flex-direction:column;background:radial-gradient(120% 80% at 50% -10%,#fff7e6,transparent 60%),linear-gradient(180deg,#f4ead8,#eadcc2);overflow:hidden}
 #proto .ph{display:flex;align-items:center;gap:12px;padding:max(12px,env(safe-area-inset-top)) max(16px,env(safe-area-inset-right)) 12px max(16px,env(safe-area-inset-left));border-bottom:1px solid var(--line);background:rgba(248,241,228,.85)}
@@ -306,7 +307,7 @@ const HOT=[
  {id:'offers',obj:'Dining table',sec:'Offers'},
  {id:'discuss',obj:'Swing',sec:'Discuss'}];
 const H=Object.fromEntries(HOT.map(h=>[h.id,h]));
-const SHORT={guard:'Guard',interior:'Interior',pica:'Pica & Co.',sahakarya:'Sahakārya',apparel:'E-COMcrat',hospital:'HMScrat',salonpro:'SALONcrat',restaurant:'RESTOcrat'};
+const SHORT={guard:'Guard',interior:'Interior',pica:'Pica & Co.',sahakarya:'Sahakārya',apparel:'E-COMcrat',hospital:'HMScrat',salonpro:'SALONcrat',restaurant:'RESTOcrat',crmcrat:'CRMcrat'};
 const shortName=a=>SHORT[a.id]||a.name.split(' ').slice(0,2).join(' ');
 const nextOf=id=>HOT[(HOT.findIndex(h=>h.id===id)+1)%HOT.length];
 const foot=id=>{const n=nextOf(id);return `<div class="foot"><button class="ghost" data-back>← The room</button><button class="ghost" data-go="${n.id}">${esc(n.obj)} · ${esc(n.sec)} →</button></div>`};
@@ -945,9 +946,13 @@ function showUI(on){$('#bar').hidden=!on;$('#dots').hidden=!on;$('#back').hidden
 const NAV=window.DVCNav||{open(){},closed(){},hash:s=>'#'+s},NH=s=>NAV.hash?NAV.hash(s):'#'+s;
 function go(id){if(!VIEWS[id])return;if(mode==='focus'&&focus===id)return;NAV.open('spot',rawBack,NH(id));closePanel();if(focus)onLeave(focus);if(mode==='home')homeLook={yaw:cam.yaw,pitch:cam.pitch};
  mode='fly';focus=id;showUI(false);$('#hint').classList.add('off');const v=VIEWS[id];
- setShiftFor(id);flyTo(id==='services'?tvPos():viewPos(v),new V3(...v.look),1.5,()=>{mode='focus';openPanel(id)})}
+ setShiftFor(id);flyTo(id==='services'?tvPos():viewPos(v),lookOf(v),1.5,()=>{mode='focus';openPanel(id)})}
 // tall phone screens see less from side to side, so step back from the object (and a little up)
-function viewPos(v){const p=new V3(...v.pos),l=new V3(...v.look),a=innerWidth/innerHeight;if(a>=1)return p;const k=clamp(.62/a,1,1.55);const q=l.clone().add(p.sub(l).multiplyScalar(k));q.y+=(k-1)*.35;return q}
+// on tall screens the coffee rack gets its own framing: centred on the jars, far enough back that the whole rack fits side to side
+const JAR_C=new V3(-1.45,1.7,-7.8);
+const lookOf=v=>v===VIEWS.prototypes&&innerWidth<innerHeight?JAR_C.clone():new V3(...v.look);
+function viewPos(v){const p=new V3(...v.pos),l=new V3(...v.look),a=innerWidth/innerHeight;if(a>=1)return p;
+ if(v===VIEWS.prototypes){const t=Math.tan(37*Math.PI/180)*a,d=clamp(1.32/t,2.4,5.6);return new V3(JAR_C.x,1.98,JAR_C.z+d)}const k=clamp(.62/a,1,1.55);const q=l.clone().add(p.sub(l).multiplyScalar(k));q.y+=(k-1)*.35;return q}
 function back(){if(mode==='home')return;rawBack();NAV.closed('spot')}
 function rawBack(){if(mode==='home')return;if(!$('#proto').hidden)rawCloseProto();closePanel();onLeave(focus);mode='fly';focus=null;shiftT={x:0,y:0};flyAngles(HOME.pos,homeLook.yaw,homeLook.pitch,1.3,()=>{mode='home';showUI(true)})}
 $('#back').onclick=back;
@@ -1017,7 +1022,7 @@ function resetBrew(){const j=brewJar;if(j){j.g.position.copy(j.home);j.g.rotatio
  grounds.forEach(g=>g.m.visible=false);steam.forEach(s=>s.s.visible=false);bubbles.forEach(b=>b.m.visible=false);brew=null;brewJar=null;skipping=false}
 api.afterProto=()=>{if(!(mode==='focus'&&focus==='prototypes'))return;if(!brew){showTags(true);return}
  $('#dive').classList.add('on');
- setTimeout(()=>{resetBrew();const v=VIEWS.prototypes,p=viewPos(v),a=ang(p,new V3(...v.look));tween=null;cam.pos.copy(p);cam.yaw=a.yaw;cam.pitch=a.pitch;setShiftFor('prototypes');
+ setTimeout(()=>{resetBrew();const v=VIEWS.prototypes,p=viewPos(v),a=ang(p,lookOf(v));tween=null;cam.pos.copy(p);cam.yaw=a.yaw;cam.pitch=a.pitch;setShiftFor('prototypes');
   $('#back').hidden=false;openPanel('prototypes');showTags(true);const b=$('#bBrew');if(b){b.textContent='☕ Pick another jar';b.disabled=true}
   setTimeout(()=>$('#dive').classList.remove('on'),120)},560)};
 
@@ -1082,7 +1087,9 @@ function step(fixedDt){if(paused)return;let dt,t;if(fixedDt){tFix+=fixedDt;dt=fi
  renderer.render(scene,camera);
  // dots
  if(mode==='home'){HOT.forEach(h=>{const s=toScreen(DOTP[h.id]),d=dotEls[h.id];d.style.visibility=s.ok?'visible':'hidden';place(d,s.x,s.y)})}
- if(!$('#tags').hidden){$$('#tags [data-jar]').forEach(b=>{const j=jars.find(q=>q.id===b.dataset.jar);tmp.copy(j.g.position).applyMatrix4(kit.matrixWorld);tmp.y-=.07;const s=toScreen(tmp);place(b,s.x,s.y);b.style.visibility=s.ok?'visible':'hidden'})}
+ if(!$('#tags').hidden){const tall=innerWidth<innerHeight;$$('#tags [data-jar]').forEach(b=>{const i=jars.findIndex(q=>q.id===b.dataset.jar),j=jars[i],up=tall&&i>=5;tmp.copy(j.g.position).applyMatrix4(kit.matrixWorld);tmp.y+=up?.33:-.05;const s=toScreen(tmp);
+  /* tall screens: jars sit close together, so every other name drops (or, on the top shelf, rises) one step to keep the names apart */
+  const st=tall?(i%2)*(b.offsetHeight+4):0;const w=b.offsetWidth;place(b,tall?clamp(s.x-w/2,4,innerWidth-w-4):s.x,up?s.y-b.offsetHeight-st:s.y+st);b.style.visibility=s.ok?'visible':'hidden'})}
  if(focus==='family'&&mode==='focus'&&!phone()){const ls=$('#family .person.l'),rs=$('#family .person.r');if(ls&&rs){const a=toScreen(new V3(-5.0,1.25,3.35)),b=toScreen(new V3(-5.0,1.25,.65));const W=innerWidth,lw=ls.offsetWidth,rw=rs.offsetWidth;place(ls,clamp(a.x-lw-8,12,W-lw-12),clamp(a.y-40,90,innerHeight-ls.offsetHeight-80));place(rs,clamp(b.x+8,12,W-rw-12),clamp(b.y-40,90,innerHeight-rs.offsetHeight-80))}}}
 
 function resize(){renderer.setSize(innerWidth,innerHeight,false);camera.aspect=innerWidth/innerHeight;if(focus)setShiftFor(focus);camera.updateProjectionMatrix()}

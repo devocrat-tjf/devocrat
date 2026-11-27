@@ -715,6 +715,7 @@ function bindPinPad(root, id, onDone) {
   document.addEventListener('keydown', kh);
 }
 function askPin(reason) {
+  return Promise.resolve(true); /* website demo: no PIN checks */
   return new Promise(res => {
     let done = false;
     const el = openModal(`${mHead('Confirm it’s you')}<div class="modal-b" style="align-items:center;text-align:center"><p class="muted" style="margin:0">${esc(reason)}<br>Enter your 4-digit PIN, ${esc(me().name)}.</p>${pinPadHTML('rp')}</div>`, { onClose: () => { if (!done) res(false); } });
@@ -751,7 +752,7 @@ function renderLock(step = 'pick', uidv = null) {
     const first = synced() && !D.local.deviceUsers.length;
     const list = step === 'other' ? activeUsers().filter(u => !D.local.deviceUsers.includes(u.id)) : lockCandidates();
     L.innerHTML = `${head}<p class="muted" style="margin:0">${step === 'other' ? 'Who else will use this phone?' : first ? 'Who are you? This phone will open for you.' : 'Who is using the app?'}</p>
-      <div class="ucards">${list.map(u => `<button class="ucard" data-lk="${step === 'other' ? 'addDevice' : 'pick'}" data-id="${u.id}">${avatar(u.id, 54)}<span>${esc(u.name)}</span><span class="tiny muted">${pinOf(u.id) ? 'Enter PIN' : 'Set up PIN'}</span></button>`).join('') || '<p class="muted small">Everyone in the workspace already uses this phone.</p>'}</div>
+      <div class="ucards">${list.map(u => `<button class="ucard" data-lk="${step === 'other' ? 'addDevice' : 'pick'}" data-id="${u.id}">${avatar(u.id, 54)}<span>${esc(u.name)}</span><span class="tiny muted">Tap to open</span></button>`).join('') || '<p class="muted small">Everyone in the workspace already uses this phone.</p>'}</div>
       ${step === 'other' ? `<button class="btn ghost sm" data-lk="back">${ic('back')} Back</button>` : devMode ? '<button class="btn ghost sm" data-lk="other">Someone else on this phone?</button>' : ''}
       <p class="tiny muted" style="max-width:36ch;margin:0">${synced() ? `Connected to Google Sheets${D.sync.sheetName ? ' · ' + esc(D.sync.sheetName) : ''}. Your PIN stays on this phone.` : 'Saved on this device only. Each person keeps a private PIN.'}</p></div>`;
     return;
@@ -784,7 +785,7 @@ function unlock(id, text) {
 $('#lock').addEventListener('click', async e => {
   const b = e.target.closest('[data-lk]'); if (!b) return;
   const k = b.dataset.lk;
-  if (k === 'pick') renderLock('pin', b.dataset.id);
+  if (k === 'pick') unlock(b.dataset.id, 'signed in'); /* website demo: no PIN, tap a name to go straight in */
   if (k === 'back') renderLock('pick');
   if (k === 'other') renderLock('other');
   if (k === 'addDevice') approveDeviceUser(b.dataset.id);
@@ -2354,7 +2355,7 @@ D = load();
   boot();
 })();
 </script>
-<div class="devo-demo-tag" role="note">Demo · sample data · PIN <b>1234</b></div>
+<div class="devo-demo-tag" role="note">Demo · sample data · no PIN needed</div>
 <style>.devo-demo-tag{position:fixed;left:8px;bottom:8px;z-index:2147483000;padding:5px 10px;border-radius:999px;background:#1f2937e6;color:#fff;font:600 11px/1.2 system-ui,sans-serif;letter-spacing:.02em;pointer-events:none}</style>
 </body>
 </html>

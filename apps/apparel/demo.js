@@ -6,7 +6,7 @@ DevoGAS.install({
   key: 'devo-demo-apparel',
   alsoClear: ['devo-cart', 'devo-wish', 'devo-orders', 'devo-tok', 'devo-sheet'],
   name: 'E-COMcrat — demo',
-  badge: { text: 'admin password <b>demo1234</b>' },
+  badge: { text: 'demo · no password needed' },
   async seed({ fn, ss, props }) {
     fn('setup')();
     props.setProperty('ADMIN_PASSWORD', 'demo1234');
@@ -30,3 +30,13 @@ DevoGAS.install({
     });
   },
 });
+
+/* Website demo: no password. When the store admin sign-in appears, it signs itself in. */
+new MutationObserver(() => {
+  const f = document.getElementById('lgf');
+  if (!f || f.dataset.auto) return;
+  f.dataset.auto = '1'; f.password.value = 'demo1234';
+  f.style.visibility = 'hidden';
+  const n = f.parentElement.querySelector('.note'); if (n) n.textContent = 'Opening the store admin (demo, no password needed)…';
+  setTimeout(() => f.requestSubmit(), 150);
+}).observe(document.documentElement, { childList: true, subtree: true });

@@ -68,9 +68,21 @@ kbd{display:inline-block;min-width:22px;padding:1px 6px;border:1px solid #c7d6d8
 #joy i{position:absolute;left:50%;top:50%;width:56px;height:56px;margin:-28px 0 0 -28px;border-radius:50%;background:var(--teal);box-shadow:0 4px 14px rgba(6,96,107,.45)}
 body.touch #joy{display:block}
 #act{position:fixed;z-index:7;right:max(22px,env(safe-area-inset-right));bottom:max(30px,env(safe-area-inset-bottom));min-width:96px;min-height:64px;padding:0 20px;border-radius:999px;border:0;background:var(--gold);color:#2a1f08;font:800 15px Manrope;box-shadow:var(--shadow)}
+#standBtn{position:fixed;z-index:13;right:max(22px,env(safe-area-inset-right));bottom:max(30px,env(safe-area-inset-bottom));min-width:96px;min-height:56px;padding:0 20px;border-radius:999px;border:0;background:#fffdf8;color:var(--ink);font:800 15px Manrope;box-shadow:var(--shadow);border:1.5px solid #d9b45a}
+#standBtn[hidden]{display:none}body.pan #standBtn{right:calc(min(460px,100vw) + 18px)}@media(max-width:700px){body.pan #standBtn{right:auto;left:16px;top:max(12px,env(safe-area-inset-top));bottom:auto;z-index:14}}
 #toast{position:fixed;z-index:15;left:50%;bottom:max(24px,env(safe-area-inset-bottom));transform:translateX(-50%) translateY(20px);opacity:0;transition:.3s;background:var(--ink);color:#fff;padding:10px 18px;border-radius:999px;font-weight:700;font-size:14px;pointer-events:none;max-width:92vw;text-align:center}
 #toast.show{opacity:1;transform:translateX(-50%)}
 body.touch #toast{bottom:max(170px,calc(env(safe-area-inset-bottom) + 150px))}
+/* the text version of the whole hospital */
+#textv{position:fixed;inset:0;z-index:28;overflow:auto;background:#fbfdfd;padding:max(16px,env(safe-area-inset-top)) 16px 40px}#textv[hidden]{display:none}
+#textv .wrap{max-width:760px;margin:0 auto}#textv section{border-top:1px solid var(--line);padding:18px 0 6px}#textv h1{font:400 38px/1.1 "DM Serif Display",Georgia,serif;margin:8px 0 6px}
+#textv h2{font:400 28px/1.15 "DM Serif Display",Georgia,serif;margin:4px 0 8px}#textv h3{margin:10px 0 4px;font:800 16px Manrope}#textv p,#textv li{color:var(--ink2);line-height:1.6}#textv a{color:var(--teal-d);font-weight:700}
+/* speech bubbles over the staff ("Hi! Come, let's talk") */
+#bubbles{position:fixed;inset:0;z-index:4;pointer-events:none;overflow:hidden}
+body.working #bubbles{display:none}
+.bub{position:absolute;left:0;top:0;transform-origin:50% 100%;background:#fffdf8;color:#1d2621;border:1.5px solid #d9b45a;border-radius:16px;padding:6px 12px 7px;font:700 13px/1.25 Manrope,sans-serif;white-space:nowrap;box-shadow:0 6px 18px rgba(10,30,30,.22);opacity:0;transition:opacity .35s}
+.bub::after{content:"";position:absolute;left:50%;bottom:-8px;width:12px;height:12px;margin-left:-6px;background:#fffdf8;border-right:1.5px solid #d9b45a;border-bottom:1.5px solid #d9b45a;transform:rotate(45deg)}
+.bub.on{opacity:1}.bub i{font-style:normal;margin-right:4px}
 /* conversations: what is being said, with who says it */
 #subs{position:fixed;z-index:8;left:50%;bottom:max(112px,calc(env(safe-area-inset-bottom) + 96px));transform:translateX(-50%) translateY(8px);width:min(720px,92vw);background:rgba(12,13,13,.84);color:#f3ead8;border-radius:16px;padding:12px 18px 13px;font:400 16px/1.45 Lexend,Manrope,sans-serif;text-align:center;opacity:0;transition:opacity .3s,transform .3s;pointer-events:none;box-shadow:var(--shadow)}
 #subs.show{opacity:1;transform:translateX(-50%)}#subs b{display:block;font:700 11px/1.4 Manrope;letter-spacing:.18em;text-transform:uppercase;color:#e6c77a;margin-bottom:2px}
@@ -119,14 +131,16 @@ body.working #top,body.working #mini,body.working #joy,body.working #room{displa
 <header id="top">
  <div class="brandrow"><button class="chip" id="bWorlds" aria-label="All worlds"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg><span class="t">All worlds</span></button>
   <div class="brand"><div class="logo wm"><span class="d">DEV</span><span class="o">OCRAT</span></div><small>Hospital</small></div></div>
- <div class="btns"><button class="chip" id="bMap" title="Map (M)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 4l-6 2v14l6-2 6 2 6-2V4l-6 2-6-2zM9 4v14M15 6v14"/></svg><span class="t">Map</span></button>
+ <div class="btns"><button class="chip" id="bText" title="Read as text"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h10"/></svg><span class="t">Text</span></button><button class="chip" id="bMap" title="Map (M)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 4l-6 2v14l6-2 6 2 6-2V4l-6 2-6-2zM9 4v14M15 6v14"/></svg><span class="t">Map</span></button>
   <button class="chip" id="bSound" title="Sound" aria-label="Sound"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5L6 9H3v6h3l5 4V5z"/><path d="M15.5 8.5a5 5 0 010 7M18.5 6a9 9 0 010 12" class="w"/></svg></button></div>
 </header>
 <div id="room"><b></b><span></span></div>
 <canvas id="mini" width="300" height="236" aria-label="Map"></canvas>
 <div id="joy" aria-hidden="true"><i></i></div>
-<button id="act" hidden>Talk</button>
+<button id="act" hidden>Talk</button><button id="standBtn" hidden>Stand up</button>
 <div id="toast" role="status"></div>
+<section id="textv" aria-label="DEVOCRAT Hospital as text" hidden><div class="wrap"><div class="row" style="margin:0 0 8px"><button class="ghost" id="textX">← Back to the hospital</button></div><div id="textBody"></div></div></section>
+<div id="bubbles" aria-hidden="true"></div>
 <div id="subs" aria-live="polite"><b></b><span></span></div>
 <aside id="panel" aria-label="Information"><div class="top"><span class="kick" id="panelKick"></span><button class="ghost" id="panelX">✕ Close</button></div><div id="panelBody"></div></aside>
 <!-- working at a lab desk: the live app runs on the 3D laptop and phone screens themselves; this bar floats above them -->
@@ -141,6 +155,7 @@ body.working #top,body.working #mini,body.working #joy,body.working #room{displa
  <div class="who"><button data-who="m" aria-pressed="true"><svg viewBox="0 0 64 64"><circle cx="32" cy="18" r="10" fill="#3a2a1e"/><circle cx="32" cy="20" r="9" fill="#c08a62"/><path d="M14 60c0-12 8-22 18-22s18 10 18 22z" fill="#0b8f9f"/></svg>A man</button>
   <button data-who="f" aria-pressed="false"><svg viewBox="0 0 64 64"><path d="M20 22c0-9 5-14 12-14s12 5 12 14v14H20z" fill="#2a1c14"/><circle cx="32" cy="21" r="9" fill="#c99070"/><path d="M14 60c0-12 8-22 18-22s18 10 18 22z" fill="#c9476a"/></svg>A woman</button></div>
  <div class="row" style="justify-content:center"><button class="cta" id="bEnterS">Enter with sound</button><button class="ghost" id="bEnterM">Enter muted</button></div>
+ <div class="row" style="justify-content:center;margin-top:8px"><button class="ghost" id="bText0" style="min-height:38px;font-size:13px">Read as text instead</button></div>
  <p class="keys" id="keysPC">Walk with <kbd>↑</kbd> <kbd>↓</kbd> (or <kbd>W</kbd> <kbd>S</kbd>), turn with <kbd>←</kbd> <kbd>→</kbd>, hold <kbd>Shift</kbd> to hurry. Drag to look around, <kbd>M</kbd> for the map.</p>
  <p class="keys" id="keysTouch" hidden>Move with the joystick (push further to hurry). Drag the screen to look around. Tap the map to walk to a room.</p>
  <p class="keys" style="font-size:11px;opacity:.6;margin-top:6px">Ambience recordings from Freesound, incl. “hospital room ambience” by nixeno (CC BY 4.0). Characters &amp; motions: Mixamo.</p>
@@ -164,8 +179,10 @@ $('#bWorlds').onclick=()=>{try{if(parent!==window&&typeof parent.closeWorld==='f
 
 /* ================= renderer, scene, light ================= */
 const lowQ=isTouch||devicePixelRatio>2;
-const renderer=new THREE.WebGLRenderer({canvas:$('#gl'),antialias:!lowQ,powerPreference:'high-performance'});renderer.setPixelRatio(Math.min(devicePixelRatio,lowQ?1.5:2));
-renderer.outputEncoding=THREE.sRGBEncoding;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=.82;renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+// Lite mode — phones by default (?lite=0 / ?lite=1 override): normal-resolution render, no shadows, half the lights, fewer waiting visitors
+const LITE=(()=>{const q=new URLSearchParams(location.search).get('lite');return q==='1'?true:q==='0'?false:isTouch})();
+const renderer=new THREE.WebGLRenderer({canvas:$('#gl'),antialias:!lowQ,powerPreference:'high-performance'});renderer.setPixelRatio(Math.min(devicePixelRatio,LITE?1:lowQ?1.5:2));
+renderer.outputEncoding=THREE.sRGBEncoding;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=.82;renderer.shadowMap.enabled=!LITE;renderer.shadowMap.type=THREE.PCFSoftShadowMap;
 const scene=new THREE.Scene();scene.background=new THREE.Color(0xdfe9ea);scene.fog=new THREE.Fog(0xdfe9ea,40,90);
 const camera=new THREE.PerspectiveCamera(60,1,.08,120);
 // reflections: a soft studio-room environment, so polished floors, glass, steel and quartz pick up the room's light like the real thing
@@ -356,7 +373,8 @@ wall('z',-6,-HD,-3);wall('z',6,-HD,-3);wall('z',-6,2,HD,[[7,2.6]]);wall('z',6,2,
  [12,2.8,-6.8,.34,0xcad8ff],[12,1.75,-12.9,.85,0xb8dcff],
  [-12,2.8,8,.85,0xfff4e6],
  [12,2.8,9.2,.75,0xffd5a0],[16.4,2.0,8,.7,0xffe0b0],
- [-9,2.8,-.5,.5,0xfff0dc],[9,2.8,-.5,.5,0xfff0dc]].forEach(([x,y,z,i,c])=>{const l=new THREE.PointLight(c,i,11,2);l.position.set(x,y,z);scene.add(l)});
+ [-9,2.8,-.5,.5,0xfff0dc],[9,2.8,-.5,.5,0xfff0dc]].forEach(([x,y,z,i,c],k)=>{if(LITE&&![0,3,5,8,9,10,13].includes(k))return;   /* Lite: one main light per room */
+  const l=new THREE.PointLight(c,LITE&&[3,5,13].includes(k)?i*1.35:i,11,2);l.position.set(x,y,z);scene.add(l)});
 scene.children.filter(o=>o.isHemisphereLight).forEach(h=>{h.color.set(0xfff1dc);h.groundColor.set(0xb8a890);h.intensity=.38});renderer.toneMappingExposure=.82;
 
 /* ================= doors: walnut sliding leaves with a slim vision panel and a long black pull (the kitchen's walnut door), signs above ================= */
@@ -760,8 +778,8 @@ npc(-12,7.2,Math.PI,{coat:true,top:0x2aa35a,skin:0xc08a62},'Pharmacist','techf')
 // Three chairs stay free (as in a real lobby, and for the visitor to sit later).
 {const seats=[];[[-3.6,8.9],[3.6,8.9]].forEach(([x,z])=>{[-1,1].forEach(s=>seats.push([x+s*.45,z-.85,0,1],[x+s*.45,z+.85,Math.PI,1]));seats.push([x-1.05,z,Math.PI/2,1],[x+1.05,z,-Math.PI/2,1])});
  [[-3.6,11.6],[3.6,11.6]].forEach(([x,z])=>[-1.1,-.37,.37,1.1].forEach(dx=>seats.push([x+dx,z,Math.PI,0])));
- const taken=new Set(['-4.05,8.05','3.15,9.75','4.65,8.90','-2.50,11.60','3.97,11.60']);let i=0;
- seats.forEach(([x,z,ry,table])=>{const k=x.toFixed(2)+','+z.toFixed(2);if(taken.has(k)||(k==='-4.05,8.05'))return;
+ const taken=new Set(['-4.05,8.05','3.15,9.75','4.65,8.90','-2.50,11.60','3.97,11.60']);let i=0,j=0;
+ seats.forEach(([x,z,ry,table])=>{const k=x.toFixed(2)+','+z.toFixed(2);if(taken.has(k)||(k==='-4.05,8.05'))return;if(LITE&&(j++%2))return;   /* Lite (phones): about half the waiting visitors */
   npc(x,z,ry,{mode:'sit',top:[0x5a7fa8,0xc9476a,0x2aa35a,0xd0892a][i%4],female:i%2===1,dress:i%4===1,skin:[0xc08a62,0xa86f4a,0xd29b78,0x8a5634][i%4]},table?'Chatting':'Visitor','vis'+i);i++})}
 
 /* ================= real people: Mixamo characters + Lucky's Avaturn avatar, all sharing one set of Mixamo motions =================
@@ -843,6 +861,13 @@ function lapFix(p,dt){const o=p.o;if(!p.B){const f=k=>o.getObjectByName(k);p.B={
    const d=_a.distanceTo(_b.copy(_c).addScaledVector(_ab,u));if(d<R)need=Math.max(need,R-d)}
   b.fa.getWorldPosition(_b);const L=_b.distanceTo(_a)||.25,th=clamp(need/L*1.3,0,.6);p.lap[s]+=(th-p.lap[s])*Math.min(1,dt*(th>p.lap[s]?16:5));   /* lift quickly, lower gently */
   if(p.lap[s]>.003){b.fa.parent.getWorldQuaternion(_qp);_q.setFromAxisAngle(_ax,-p.lap[s]);b.fa.quaternion.premultiply(_qp.clone().invert().multiply(_q).multiply(_qp))}}}
+/* a seated wave: the right arm lifts sideways and up from the shoulder and the forearm waves, over ~2.6 s, then settles back (they never leave the chair) */
+const _F=new V3();
+function seatedWave(n,dt){const p=n.p,w=p&&p.wave;if(!w)return;w.t+=dt;const T=2.6,k=Math.min(1,w.t/.35,(T-w.t)/.4);if(w.t>=T){p.wave=null;return}
+ const B=p.WB||(p.WB={a:p.o.getObjectByName('RightArm'),f:p.o.getObjectByName('RightForeArm')});if(!B.a||!B.f)return;p.o.updateMatrixWorld(true);
+ _F.set(0,0,1).applyQuaternion(p.o.quaternion);
+ B.a.parent.getWorldQuaternion(_qp);_q.setFromAxisAngle(_F,-2.2*k);B.a.quaternion.premultiply(_qp.clone().invert().multiply(_q).multiply(_qp));
+ B.f.updateWorldMatrix(true,false);B.f.parent.getWorldQuaternion(_qp);_q.setFromAxisAngle(_F,(-.5+Math.sin(w.t*9)*.45)*k);B.f.quaternion.premultiply(_qp.clone().invert().multiply(_q).multiply(_qp))}
 /* lab technicians use the mouse: now and then the right arm swings from the keyboard to the mouse (the typing motion keeps the fingers busy),
    and while the hand is on it the mouse slides with the hand across the pad; otherwise it stays where it was left */
 const _Y=new V3(0,1,0);
@@ -853,11 +878,12 @@ function mouseHand(n,dt){const p=n.p,d=n.cast&&/^lab\d/.test(n.cast)?LAB[+n.cast
  B.a.parent.getWorldQuaternion(_qp);_q.setFromAxisAngle(_Y,-.55*m.w);B.a.quaternion.premultiply(_qp.clone().invert().multiply(_q).multiply(_qp));
  if(m.w>.75){p.o.updateMatrixWorld(true);B.h.getWorldPosition(_a);if(B.mid){B.mid.getWorldPosition(_b);_a.lerp(_b,.45)}const ms=d.mouse,k=Math.min(1,dt*12);
   ms.position.x+=(clamp(_a.x,d.x-.5,d.x-.26)-ms.position.x)*k;ms.position.z+=(clamp(_a.z+.04,d.z-.34,d.z-.16)-ms.position.z)*k}}
-function tickNPC(n,dt){const p=n.p,b=beh(n);p.mx.update(dt);if(n.sit)lapFix(p,dt);if(n.label==='Lab technician'&&!n.talking)mouseHand(n,dt);if(n.talking)return;   /* while talking, the talk motion plays on */
+function tickNPC(n,dt){const p=n.p,b=beh(n);p.mx.update(dt);if(n.sit)lapFix(p,dt);if(n.label==='Lab technician'&&!n.talking)mouseHand(n,dt);seatedWave(n,dt);if(n.talking)return;   /* while talking, the talk motion plays on */
+ // staff wave when the visitor comes near (once, then not again for a while): standing staff with the wave motion, seated people raise an arm
+ const near=Math.hypot(P.x-n.x,P.z-n.z);
+ if(n.bub&&near<(n.sit?2.6:3.6)&&clock>(n.waveCool||0)&&!P.sit){n.waveCool=clock+25;if(n.sit)p.wave={t:0};else{p.gestEnd=clock+play(p,'wave3',.3,true)-.35;p.gestAt=p.gestEnd+.2;n.then=n.label==='Receptionist'?'talk2':null;return}}
  // seated people drift between their loops (typing ↔ pausing, shifting how they sit)
  if(!b.gest){if(clock>p.baseAt){p.baseAt=clock+rnd(...(b.hold||[20,40]));const nb=pick(b.base);if(nb!==n.base){n.base=nb;play(p,nb,.9)}}return}
- const near=Math.hypot(P.x-n.x,P.z-n.z);
- if(n.label==='Receptionist'&&near<3.4&&clock>(n.waveCool||0)){n.waveCool=clock+25;p.gestEnd=clock+play(p,'wave3',.3,true)-.35;p.gestAt=p.gestEnd+.2;n.then='talk2';return}
  if(p.gestEnd&&clock>p.gestEnd){p.gestEnd=0;if(n.then){const t=n.then;n.then=null;p.gestEnd=clock+play(p,t,.35,true)-.4}else{play(p,n.base,.5);p.gestAt=clock+rnd(6,14)}}
  else if(!p.gestEnd&&clock>p.gestAt){p.gestEnd=clock+Math.min(14,play(p,pick(b.gest),.5,true))-.5}}
 
@@ -926,7 +952,13 @@ function step(dt){clock+=dt;
  // camera: follows behind, eases round when walking (unless the visitor has been looking around), never through a wall
  if(P.speed>.3&&clock-camS.lastDrag>1.6){let dy=((P.h-camS.yaw+Math.PI)%(Math.PI*2)+Math.PI*2)%(Math.PI*2)-Math.PI;camS.yaw+=dy*Math.min(1,dt*1.8)}}
 const tgt=new V3(),cpos=new V3();
-function placeCam(snap){if(camOver){camera.position.lerp(camOver.pos,snap?1:.08);tgt.lerp(camOver.look,snap?1:.08);camera.lookAt(tgt);return}   /* seated at a lab desk: look over the shoulder at the laptop */
+function placeCam(snap){
+ // with a side panel open on a wide screen, centre the 3D picture in the part of the screen that is still visible
+ const pw=document.body.classList.contains('pan')&&innerWidth>700?Math.min(460,innerWidth):0;camera.userData.ox=lerp(camera.userData.ox||0,pw/2,snap?1:.12);
+ if(camera.userData.ox>1)camera.setViewOffset(innerWidth,innerHeight,camera.userData.ox,0,innerWidth,innerHeight);else camera.clearViewOffset();
+ if(camOver&&camOver.fp){camera.position.lerp(camOver.pos,snap?1:.12);const q=clamp(camS.pitch-.3,-.5,.7);   /* seated in a chair: your own eyes; dragging looks around */
+  camera.lookAt(camera.position.x+Math.sin(camS.yaw)*Math.cos(q),camera.position.y-Math.sin(q),camera.position.z+Math.cos(camS.yaw)*Math.cos(q));return}
+ if(camOver){camera.position.lerp(camOver.pos,snap?1:.08);tgt.lerp(camOver.look,snap?1:.08);camera.lookAt(tgt);return}   /* seated at a lab desk: look over the shoulder at the laptop */
  tgt.set(P.x,1.55,P.z);let d=camS.dist;const dir=new V3(-Math.sin(camS.yaw)*Math.cos(camS.pitch),Math.sin(camS.pitch),-Math.cos(camS.yaw)*Math.cos(camS.pitch));
  for(let s=.25;s<=d;s+=.12){const x=tgt.x+dir.x*s,z=tgt.z+dir.z*s,y=tgt.y+dir.y*s;if(y>WH-.15||colliders.some(c=>c.on&&x>c.x1-.12&&x<c.x2+.12&&z>c.z1-.12&&z<c.z2+.12&&y<WH)){d=Math.max(.6,s-.18);break}}
  cpos.copy(tgt).addScaledVector(dir,d);cpos.x=clamp(cpos.x,-HW+.35,HW-.35);cpos.z=clamp(cpos.z,-HD+.35,HD-.35);if(snap)camera.position.copy(cpos);else camera.position.lerp(cpos,.25);camera.lookAt(tgt.x,tgt.y-.1,tgt.z);
@@ -1057,6 +1089,30 @@ const SPEECH={
  offers:()=>{const n=npcBy('Cashier');return [['Cashier','Our latest offers will be announced here soon. Until then, tell us about your project in the consultation room.',0,n]]},
  team:()=>{const l=npcBy('Lucky'),v=npcBy('Venky');return [[`Lucky · ${TEAM_ROLES.des[2]}`,`Hi! I'm Manoj, Lucky to my friends. I design the screens people use: clear, simple and easy to love.`,0,l,{voice:'lucky',clip:'lucky-intro'}],[`Venky · ${TEAM_ROLES.dev[2]}`,`And I'm Venky. I build the software behind them. Tell us your idea and we'll get back to you personally.`,0,v,{voice:'venky',clip:'venky-intro'}]]}};
 function talk(kind){openPanel(kind);say(SPEECH[kind]())}
+/* text version: every room's content in order, plus the live app links and how to reach us */
+function textHTML(){const strip=h=>{const d=document.createElement('div');d.innerHTML=h;d.querySelectorAll('.row,form,button').forEach(n=>n.remove());return d.innerHTML};
+ const room=(where,k)=>{const p=PANELS[k]();return `<section><p class="kick">${esc(where)}</p>${strip(p.html)}</section>`};
+ return `<p class="kick">${WMH} · Hospital world</p><h1>The ${WMH} Hospital, as text</h1><p>Everything in the 3D hospital, without the 3D. Each room of the hospital is one part of DEVOCRAT.</p>`+
+  room('Reception · About us','about')+
+  `<section><p class="kick">Laboratory · Our prototypes</p><h2>${esc(WC.lab||'Our prototypes')}</h2><p>Working apps with sample data — open any of them:</p><ul>${appMeta.map(a=>`<li><a href="${appUrl(a.id)}" target="_blank" rel="noopener">${esc(a.name)}</a> — ${esc(APP_BLURB[a.id]||a.desc)}</li>`).join('')}</ul></section>`+
+  room('Pharmacy · Our services','services')+room('X-ray · How we work','process')+room('Billing · Offers','offers')+
+  `<section><p class="kick">Consultation · Talk to us</p><h2>Meet the family.</h2>${[TEAM_ROLES.des,TEAM_ROLES.dev].map(([n,a,r,t])=>`<h3>${esc(n)} (${esc(a)})</h3><p>${esc(r)} · <a href="tel:+91${t}">${t}</a></p>`).join('')}
+   <p>WhatsApp <a href="https://wa.me/${ENQUIRY_WHATSAPP}" target="_blank" rel="noopener">+${ENQUIRY_WHATSAPP}</a> · Email <a href="mailto:${ENQUIRY_EMAIL}">${ENQUIRY_EMAIL}</a></p></section>`}
+function rawCloseText(){$('#textv').hidden=true}
+function openText(){$('#textBody').innerHTML=textHTML();$('#textv').hidden=false;$('#textv').scrollTop=0;$('#textX').focus();NAV.open('hosp:text',rawCloseText,NH('text'))}
+function closeText(){if($('#textv').hidden)return;rawCloseText();NAV.closed('hosp:text')}
+$('#bText').onclick=openText;$('#bText0').onclick=openText;$('#textX').onclick=closeText;
+/* speech bubbles: always above each member of staff (when they are in view), hidden while that person is talking */
+const BUBBLE={Receptionist:'Hi! Welcome — come, let’s talk',Pharmacist:'Hi! Come, let’s talk about our services',Radiologist:'Come, see how we work',Cashier:'Hi! Ask me about our offers',
+ Lucky:'Hi! Come, sit — let’s talk',Venky:'Tell us your idea!','Lab technician':''};
+const _bh=new V3();
+NPC.forEach((n,i)=>{if(!(n.label in BUBBLE))return;const t=n.label==='Lab technician'?(()=>{const d=LAB[+String(n.cast).slice(3)];return d&&d.app?'Hi! Try '+d.app.name.split(' ').slice(0,2).join(' '):''})():BUBBLE[n.label];if(!t)return;
+ const el=document.createElement('div');el.className='bub';el.innerHTML='<i>👋</i>'+esc(t);$('#bubbles').appendChild(el);n.bub=el});
+function placeBubbles(){if(!document.body.classList.contains('working'))NPC.forEach(n=>{const el=n.bub;if(!el)return;const o=n.p?n.p.o:n.f,show=o.visible&&!n.talking&&!(seatChair&&seatChair.hideBubbles);
+  if(!show){el.classList.remove('on');return}const head=n.p&&(n.p.head||(n.p.head=n.p.o.getObjectByName('Head')));if(head){head.getWorldPosition(_bh);_bh.y+=.38}else _bh.set(n.x,(n.sit?1.6:2.15)+(n.lift||0),n.z);
+  const d=camera.position.distanceTo(_bh);_bh.project(camera);if(_bh.z>1||d>16||Math.abs(_bh.x)>1.1||Math.abs(_bh.y)>1.1){el.classList.remove('on');return}
+  const s=clamp(3.6/d,.78,1.1),x=(_bh.x+1)/2*innerWidth,y=(1-_bh.y)/2*innerHeight;el.style.transform=`translate(${x}px,${y}px) translate(-50%,-100%) scale(${s.toFixed(3)})`;el.style.zIndex=String(1000-Math.round(d*10));el.classList.add('on')});
+ else NPC.forEach(n=>n.bub&&n.bub.classList.remove('on'))}
 
 /* the lab: walk to the visitor chair, sit down, the technician turns the laptop and phone round, then the live prototype opens */
 const TW=[];function tween(o,key,to,dur,done){TW.push({o,key,from:o[key],to,t:0,dur,done})}
@@ -1111,9 +1167,21 @@ $('#protoBack').onclick=()=>stand();
 $('#pvReload').onclick=()=>work&&(setFrame(SCR.lap,appUrl(work.id)),setFrame(SCR.ph,appUrl(work.id,true)));
 $('#protoFull').onclick=()=>{if(!work)return;const f=SCR.lap.f;if(f.requestFullscreen)f.requestFullscreen().catch(()=>window.open(appUrl(work.id),'_blank','noopener'));else window.open(appUrl(work.id),'_blank','noopener')};
 
-/* where you can interact: near the receptionist, pharmacist, radiologist, cashier, Lucky & Venky, and in front of each lab desk */
+/* sitting down: a free lobby chair, or the consultation chair while you talk with Lucky & Venky — seen through the visitor's own eyes.
+   Drag to look around; Stand up / Esc / the back button gets up again. app = where the visitor walks to first (behind the chair when a table is in front). */
+let seatChair=null;
+const LOBBY_FREE=[{x:4.65,z:8.9,ry:-Math.PI/2,app:[5.45,8.9]},{x:-2.5,z:11.6,ry:Math.PI,app:[-2.5,10.85]},{x:3.97,z:11.6,ry:Math.PI,app:[3.97,10.85]}];
+const CONSULT_SEAT={x:-.55,z:-9.25,ry:Math.PI,look:Math.PI-.27,app:[-.55,-8.45],pitch:.16,hideBubbles:true};   /* look: between Lucky and Venky */
+function sitInChair(c,after){if(P.sit||seatChair)return;closePanel();P.auto=[c.app];P.onArrive=()=>{seatChair=c;P.sit=true;P.x=c.x;P.z=c.z;P.h=c.ry;P.speed=0;me.visible=false;
+  const fx=Math.sin(c.ry),fz=Math.cos(c.ry);camS.yaw=c.look!=null?c.look:c.ry;camS.pitch=.3+(c.pitch||0);camOver={fp:true,pos:new V3(c.x+fx*.08,1.16,c.z+fz*.08)};
+  $('#standBtn').hidden=false;$('#act').hidden=true;NAV.open('hosp:chair',rawStandChair,NH('seat'));after&&after()}}
+function rawStandChair(){const c=seatChair;if(!c)return;seatChair=null;P.sit=false;P.x=c.app[0];P.z=c.app[1];camOver=null;me.visible=true;camS.yaw=c.ry+Math.PI;camS.pitch=.3;$('#standBtn').hidden=true;rawClosePanel();stopSpeech()}
+function standChair(){if(!seatChair)return;rawStandChair();NAV.closed('hosp:chair')}
+$('#standBtn').onclick=()=>standChair();
+/* where you can interact: near the receptionist, pharmacist, radiologist, cashier, Lucky & Venky, each lab desk, and the free lobby chairs */
 const HOTS=[{x:0,z:6.9,r:2.2,label:'Talk',run:()=>talk('about')},{x:-12,z:5,r:2.2,label:'Talk',run:()=>talk('services')},{x:12,z:-11,r:3,label:'Ask',run:()=>talk('process')},
- {x:12,z:7.7,r:2.2,label:'Talk',run:()=>talk('offers')},{x:0,z:-8.5,r:2.3,label:'Talk',run:()=>talk('team')},
+ {x:12,z:7.7,r:2.2,label:'Talk',run:()=>talk('offers')},{x:0,z:-8.5,r:2.3,label:'Sit & talk',run:()=>sitInChair(CONSULT_SEAT,()=>talk('team'))},
+ ...LOBBY_FREE.map(c=>({x:c.app[0],z:c.app[1],r:1.0,label:'Sit down',run:()=>sitInChair(c)})),
  ...LAB.map((d,i)=>({x:d.x,z:d.z+1.35,r:.95,label:'Try '+(d.app?d.app.name.split(' ').slice(0,2).join(' '):'the app'),run:()=>labTry(i)}))];
 let hotOn=null;
 function hotTick(){let best=null,bd=1e9;if(!P.sit&&!P.auto&&!work)for(const h of HOTS){const d=Math.hypot(P.x-h.x,P.z-h.z);if(d<h.r&&d<bd){bd=d;best=h}}
@@ -1122,17 +1190,17 @@ function hotTick(){let best=null,bd=1e9;if(!P.sit&&!P.auto&&!work)for(const h of
 $('#act').onclick=()=>{audioOn();hotOn&&hotOn.run()};
 addEventListener('keydown',e=>{if(e.target.closest&&e.target.closest('input,textarea,select'))return;const k=e.key.toLowerCase();
  if((k==='e'||k==='enter')&&hotOn&&!e.repeat){e.preventDefault();hotOn.run()}
- if(k==='escape'){if(seatDesk)stand();else if(panelOn)closePanel()}});
+ if(k==='escape'){if(!$('#textv').hidden)closeText();else if(seatDesk)stand();else if(seatChair)standChair();else if(panelOn)closePanel()}});
 
 /* ================= start ================= */
 function enter(sound){soundOn=sound;store.set('sound',sound);soundUI();makeMe();$('#intro').classList.remove('open');if(sound)audioOn();P.x=0;P.z=11.6;P.h=Math.PI;camS.yaw=Math.PI;placeCam(true);
  setTimeout(()=>showRoom(R.reception),400);toast(isTouch?'Use the joystick to walk. Tap the map to go to a room.':'Walk with the arrow keys. Press M for the map.',4200)}
 $('#bEnterS').onclick=()=>enter(true);$('#bEnterM').onclick=()=>enter(false);
 function resize(){renderer.setSize(innerWidth,innerHeight,false);camera.aspect=innerWidth/innerHeight;camera.fov=innerWidth<innerHeight?72:60;camera.updateProjectionMatrix();if(work)fitWorkCam()}addEventListener('resize',resize);resize();
-let last=performance.now();function frame(now){const dt=Math.min(.05,(now-last)/1000);last=now;step(dt);ambTick();placeCam(false);renderer.render(scene,camera);placeScreens();drawMap($('#mini'),false);requestAnimationFrame(frame)}
+let last=performance.now();function frame(now){const dt=Math.min(.05,(now-last)/1000);last=now;step(dt);ambTick();placeCam(false);renderer.render(scene,camera);placeScreens();placeBubbles();drawMap($('#mini'),false);requestAnimationFrame(frame)}
 placeCam(true);renderer.compile(scene,camera);$('#load').style.opacity=0;setTimeout(()=>$('#load').remove(),700);requestAnimationFrame(frame);
 // test hook: advance the world by hand when the page is in the background
-window.__hosp={P,camS,R,run:s=>{for(let i=0;i<Math.round(s*30);i++)step(1/30);placeCam(true);renderer.render(scene,camera);placeScreens();drawMap($('#mini'),false)},walkTo:id=>walkTo(R[id]),enter};
+window.__hosp={P,camS,R,run:s=>{for(let i=0;i<Math.round(s*30);i++)step(1/30);placeCam(true);renderer.render(scene,camera);placeScreens();placeBubbles();drawMap($('#mini'),false)},walkTo:id=>walkTo(R[id]),enter};
 </script>
 </body>
 </html>

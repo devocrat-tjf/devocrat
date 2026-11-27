@@ -3,9 +3,35 @@
    logins, customers, today's appointments, the last three weeks of bills and attendance). The app's own
    service menu, products and membership plans are used as they are. Nothing leaves the device.
    Logins:  admin / admin@123 · reception / demo123 · manager / demo123 · stylists kavya, arjun, meera, sana / demo123 */
+
+/* No passwords in the website demo: the sign-in card gets "Enter as" buttons that sign in with the demo login. */
+(function () {
+  var ROLES = [['Admin', 'admin', 'admin@123'], ['Reception', 'reception', 'demo123'], ['Manager', 'manager', 'demo123'], ['Stylist', 'kavya', 'demo123']];
+  var setVal = function (el, v) { var d = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value'); d.set.call(el, v); el.dispatchEvent(new Event('input', { bubbles: true })); };
+  var enter = function (u, p) {
+    var ui = document.querySelector('input[placeholder="Enter your username"]'), pi = document.querySelector('input[placeholder="Enter account password"]');
+    if (!ui || !pi) return; setVal(ui, u); setVal(pi, p);
+    setTimeout(function () { var f = ui.closest('form'); if (f && f.requestSubmit) f.requestSubmit(); else { var b = f && f.querySelector('button[type=submit]'); if (b) b.click(); } }, 60);
+  };
+  var add = function () {
+    var ui = document.querySelector('input[placeholder="Enter your username"]');
+    if (!ui || document.querySelector('.devo-quick')) return;
+    var f = ui.closest('form'); if (!f) return;
+    var box = document.createElement('div'); box.className = 'devo-quick';
+    box.innerHTML = '<p>Demo: tap to enter, no password needed</p><div>' + ROLES.map(function (r, i) { return '<button type="button" data-i="' + i + '">' + r[0] + '</button>'; }).join('') + '</div>';
+    box.addEventListener('click', function (e) { var b = e.target.closest('button'); if (b) { var r = ROLES[+b.dataset.i]; enter(r[1], r[2]); } });
+    f.parentNode.insertBefore(box, f);
+    if (!document.getElementById('devo-quick-css')) { var st = document.createElement('style'); st.id = 'devo-quick-css';
+      st.textContent = '.devo-quick{margin:0 0 14px;text-align:center}.devo-quick p{margin:0 0 8px;color:#fde68a;font:600 12px system-ui,sans-serif}.devo-quick div{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.devo-quick button{cursor:pointer;padding:11px 8px;border-radius:12px;border:1px solid #f59e0b88;background:#f59e0b1f;color:#fff;font:700 13px system-ui,sans-serif}.devo-quick button:hover{background:#f59e0b40}';
+      document.head.appendChild(st); }
+  };
+  var start = function () { add(); new MutationObserver(add).observe(document.body, { childList: true, subtree: true }); };
+  if (document.body) start(); else document.addEventListener('DOMContentLoaded', start);
+})();
+
 (function () {
   var P = 'devocrat_data_v3_', MARK = 'devocrat_demo_seeded_v1';
-  var LOGINS = 'admin / <b>admin@123</b> · reception / <b>demo123</b>';
+  var LOGINS = 'no password needed · tap a role';
 
   function addBadge() {
     var put = function () {
