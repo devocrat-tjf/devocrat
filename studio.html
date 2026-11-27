@@ -164,6 +164,7 @@ textarea{min-height:90px;resize:vertical}
 #lightMenu button[aria-checked="true"]{background:linear-gradient(180deg,rgba(243,217,145,.6),rgba(199,154,59,.35))}
 /* brass cursor (mouse only) */
 #cur{position:fixed;left:0;top:0;z-index:50;pointer-events:none;display:none}
+#cur,#cur *{pointer-events:none!important}   /* the cursor's own dot also matches the hotspot rule .dot{pointer-events:auto}; it must never catch the click under the mouse */
 html.curon #cur{display:block}
 @media (hover:hover) and (pointer:fine){html.curon,html.curon *{cursor:none!important}html.curon input,html.curon textarea,html.curon select{cursor:text!important}}
 #cur .ring{position:absolute;left:0;top:0;width:34px;height:34px;margin:-17px 0 0 -17px;border-radius:50%;border:1.5px solid #e9c877;box-shadow:0 0 0 1px rgba(34,24,15,.35),0 0 14px rgba(233,200,119,.35);transition:width .25s,height .25s,margin .25s,background .25s,border-radius .25s,opacity .2s}
